@@ -1,0 +1,323 @@
+# Serbian translation for xdg-desktop-portal-gnome.
+# Copyright (C) 2016 xdg-desktop-portal-gnome's COPYRIGHT HOLDER
+# This file is distributed under the same license as the xdg-desktop-portal-gnome package.
+# MirosNik <miroslavnikolic@rocketmail.com>, 2016.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: xdg-desktop-portal-gnome master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/xdg-desktop-portal-"
+"gnome/issues\n"
+"POT-Creation-Date: 2021-12-18 12:27+0000\n"
+"PO-Revision-Date: 2022-03-14 14:22+0100\n"
+"Last-Translator: Марко М. Костић <marko.m.kostic@gmail.com>\n"
+"Language-Team: српски <gnome-sr@googlegroups.org>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: data/xdg-desktop-portal-gnome.desktop.in.in:4
+msgid "Portal"
+msgstr "Портал"
+
+#. TRANSLATORS: Don't translate this text (this is icon name)
+#: data/xdg-desktop-portal-gnome.desktop.in.in:6
+msgid "applications-system-symbolic"
+msgstr "applications-system-symbolic"
+
+#: src/accountdialog.c:151
+msgid "Select an Image"
+msgstr "Изабери слику"
+
+#: src/accountdialog.c:154 src/wallpaperdialog.ui:14
+msgid "Cancel"
+msgstr "Откажи"
+
+#: src/accountdialog.c:155
+msgid "Select"
+msgstr "Изабери"
+
+#: src/accountdialog.c:156
+msgid "Clear"
+msgstr "Очисти"
+
+#: src/accountdialog.c:163
+msgid "Images"
+msgstr "Слике"
+
+#: src/accountdialog.c:224
+#, c-format
+msgid "Share your personal information with %1$s? %2$s"
+msgstr "Да ли желите поделити ваше личне податке са %1$s? %2$s"
+
+#: src/accountdialog.c:230
+#, c-format
+msgid "Share your personal information with the requesting application? %s"
+msgstr "Да ли желите поделити ваше личне податке са овим програмом? %s"
+
+#: src/accountdialog.ui:4
+msgid "Share Details"
+msgstr "Подели појединости"
+
+#: src/accountdialog.ui:12 src/appchooserdialog.ui:12 src/filechooser.c:451
+#: src/remotedesktopdialog.ui:13 src/screencastdialog.ui:14
+#: src/screenshotdialog.ui:12
+msgid "_Cancel"
+msgstr "От_кажи"
+
+#: src/accountdialog.ui:19 src/remotedesktopdialog.ui:21
+#: src/screencastdialog.ui:22 src/screenshotdialog.ui:35
+msgid "_Share"
+msgstr "_Дели"
+
+#: src/accountdialog.ui:72
+msgid "Name"
+msgstr "Име"
+
+#: src/accountdialog.ui:84
+msgid "Username"
+msgstr "Корисничко име"
+
+#: src/appchooserdialog.c:229
+msgid "Failed to start Software"
+msgstr "Нисам успео да покренем Програме"
+
+#: src/appchooserdialog.c:393
+#, c-format
+msgid "Choose an application to open the file “%s”."
+msgstr "Изаберите програм за отварање датотеке „%s“."
+
+#: src/appchooserdialog.c:398
+msgid "Choose an application."
+msgstr "Изаберите програм."
+
+#: src/appchooserdialog.c:415
+#, c-format
+msgid ""
+"No apps installed that can open “%s”. You can find more applications in "
+"Software"
+msgstr ""
+"Нема инсталираних програма који могу отворити „%s“. Можете наћи више "
+"програма у Програмима"
+
+#: src/appchooserdialog.c:420
+msgid "No suitable app installed. You can find more applications in Software."
+msgstr ""
+"Ниједан одговарајући програм није инсталиран. Можете наћи више програма у "
+"Програмима."
+
+#: src/appchooserdialog.ui:5
+msgid "Open With…"
+msgstr "Отвори помоћу…"
+
+#: src/appchooserdialog.ui:20 src/filechooser.c:446
+msgid "_Open"
+msgstr "От_вори"
+
+#: src/appchooserdialog.ui:104
+msgid "No Apps available"
+msgstr "Нема доступних програма"
+
+#: src/appchooserdialog.ui:144
+msgid "_Find More in Software"
+msgstr "_Нађи више у Програмима"
+
+#: src/background.c:214 src/background.c:305
+#, c-format
+msgid "“%s” is running in the background"
+msgstr "Програм „%s“ ради у позадини"
+
+#: src/background.c:216
+msgid ""
+"This might be for a legitimate reason, but the application has not provided "
+"one.\n"
+"\n"
+"Note that forcing an application to quit might cause data loss."
+msgstr ""
+"Ово се можда догађа из исправног разлога, али програм није рекао зашто.\n"
+"\n"
+"Знајте да насилно затварање програма може узроковати губитак података."
+
+#: src/background.c:219
+msgid "Force quit"
+msgstr "Насилно затвори"
+
+#: src/background.c:220
+msgid "Allow"
+msgstr "Дозволи"
+
+#: src/background.c:303
+msgid "Background activity"
+msgstr "Позадинска активност"
+
+#: src/background.c:311
+msgid "Find out more"
+msgstr "Сазнајте више"
+
+#: src/filechooser.c:446
+msgid "_Select"
+msgstr "_Изабери"
+
+#: src/filechooser.c:448
+msgid "_Save"
+msgstr "_Сачувај"
+
+#: src/filechooser.c:614
+msgid "Open files read-only"
+msgstr "Отвори датотеке само за читање"
+
+#: src/remotedesktopdialog.ui:7
+msgid "Remote desktop"
+msgstr "Удаљена радна површ"
+
+#: src/remotedesktopdialog.ui:64
+msgid "Allow remote interaction"
+msgstr "Дозволи удаљено управљање"
+
+#: src/screencastdialog.ui:5
+msgid "Screen Share"
+msgstr "Дељење екрана"
+
+#: src/screencastwidget.c:159
+msgid "Virtual monitor"
+msgstr "Виртуелни екран"
+
+#: src/screencastwidget.c:542
+#, c-format
+msgid "Select monitor to share with %s"
+msgstr "Изаберите екран за дељење са програмом %s"
+
+#: src/screencastwidget.c:544
+#, c-format
+msgid "Select window to share with %s"
+msgstr "Изаберите прозор за дељење са програмом %s"
+
+#: src/screencastwidget.c:549
+msgid "Select monitor to share with the requesting application"
+msgstr "Изаберите екран који треба поделити са програмом"
+
+#: src/screencastwidget.c:550
+msgid "Select window to share with the requesting application"
+msgstr "Изаберите прозор који треба поделити са програмом"
+
+#: src/screencastwidget.ui:16
+msgid "Single Window"
+msgstr "Један прозор"
+
+#: src/screencastwidget.ui:40 src/screencastwidget.ui:86
+msgid "Remember this selection"
+msgstr "Запамти овај избор"
+
+#: src/screencastwidget.ui:64
+msgid "Entire Screen"
+msgstr "Цео екран"
+
+#: src/screenshotdialog.c:442
+#, c-format
+msgid "Share this screenshot with %s?"
+msgstr "Да поделим овај снимак екрана са „%s“?"
+
+#: src/screenshotdialog.c:446
+msgid "Share this screenshot with the requesting application?"
+msgstr "Да поделим овај снимак екрана са програмом који то захтева?"
+
+#: src/screenshotdialog.ui:6
+msgid "Screenshot"
+msgstr "Снимак екрана"
+
+#: src/screenshotdialog.ui:28
+msgid "_Options…"
+msgstr "_Опције…"
+
+#: src/screenshotdialog.ui:53
+msgid "Take _Screenshot"
+msgstr "_Сними екран"
+
+#: src/screenshotdialog.ui:110
+msgid "Take Screenshot"
+msgstr "Направи снимак екрана"
+
+#: src/screenshotdialog.ui:120
+msgid "Grab the whole sc_reen"
+msgstr "Сними _целу радну површ"
+
+#: src/screenshotdialog.ui:130
+msgid "Grab the current _window"
+msgstr "Сними _тренутни прозор"
+
+#: src/screenshotdialog.ui:140
+msgid "Select _area to grab"
+msgstr "Изабери _област за снимање"
+
+#: src/screenshotdialog.ui:152
+msgid "Grab after a _delay of"
+msgstr "Сними након _застоја од"
+
+#: src/screenshotdialog.ui:163
+msgid "seconds"
+msgstr "секунде"
+
+#: src/screenshotdialog.ui:172
+msgid "Effects"
+msgstr "Ефекти"
+
+#: src/screenshotdialog.ui:182
+msgid "Include _pointer"
+msgstr "Укључи _показивач"
+
+#: src/screenshotdialog.ui:190
+msgid "Include the window _border"
+msgstr "Укључи _ивицу прозора"
+
+#: src/settings.c:217
+msgid "Requested setting not found"
+msgstr "Затражено подешавање није нађено"
+
+#: src/wallpaperdialog.ui:8
+msgid "Set Background"
+msgstr "Подеси позадину"
+
+#: src/wallpaperdialog.ui:20
+msgid "Set"
+msgstr "Постави"
+
+#: src/wallpaperdialog.ui:51
+msgid "Failed to load image file"
+msgstr "Нисам успео да учитам датотеку са сликом"
+
+#: src/wallpaperpreview.ui:53
+msgid "Activities"
+msgstr "Активности"
+
+#~ msgid "Pointer"
+#~ msgstr "Показивач"
+
+#~ msgid "Keyboard"
+#~ msgstr "Тастатура"
+
+#~ msgid "Touch screen"
+#~ msgstr "Екран на додир"
+
+#~ msgid "Select devices to share with %s"
+#~ msgstr "Изаберите уређаје за дељење са програмом %s"
+
+#~ msgid "Select devices to share with the requesting application"
+#~ msgstr "Изаберите које уређаје треба поделити са програмом"
+
+#~ msgid "Deny Access"
+#~ msgstr "Забрани приступ"
+
+#~ msgid "Grant Access"
+#~ msgstr "Дозволи приступ"
+
+#, fuzzy
+#~ msgid "No Applications Found"
+#~ msgstr "Изаберите програм"
+
+#, fuzzy
+#~ msgid "Screen casting"
+#~ msgstr "Снимак екрана"

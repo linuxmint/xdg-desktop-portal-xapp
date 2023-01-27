@@ -1,0 +1,324 @@
+# Hebrew translation for xdg-desktop-portal-gnome.
+# Copyright (C) 2021 xdg-desktop-portal-gnome's COPYRIGHT HOLDER
+# This file is distributed under the same license as the xdg-desktop-portal-gnome package.
+# Yaron Shahrabani <sh.yaron@gmail.com>, 2021.
+# Yosef Or Boczko <yoseforb@gmail.com>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xdg-desktop-portal-gnome main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/xdg-desktop-portal-"
+"gnome/issues\n"
+"POT-Creation-Date: 2021-12-18 12:27+0000\n"
+"PO-Revision-Date: 2021-12-29 17:57+0200\n"
+"Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
+"Language-Team: Hebrew <yoseforb@gmail.com>\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 40.0\n"
+
+#: data/xdg-desktop-portal-gnome.desktop.in.in:4
+msgid "Portal"
+msgstr "שער"
+
+#. TRANSLATORS: Don't translate this text (this is icon name)
+#: data/xdg-desktop-portal-gnome.desktop.in.in:6
+msgid "applications-system-symbolic"
+msgstr "applications-system-symbolic"
+
+#: src/accountdialog.c:151
+msgid "Select an Image"
+msgstr "בחירת תמונה"
+
+#: src/accountdialog.c:154 src/wallpaperdialog.ui:14
+msgid "Cancel"
+msgstr "ביטול"
+
+#: src/accountdialog.c:155
+#| msgid "_Select"
+msgid "Select"
+msgstr "בחירה"
+
+#: src/accountdialog.c:156
+msgid "Clear"
+msgstr "ניקוי"
+
+#: src/accountdialog.c:163
+msgid "Images"
+msgstr "תמונות"
+
+#: src/accountdialog.c:224
+#, c-format
+msgid "Share your personal information with %1$s? %2$s"
+msgstr "שיתוף המידע האישי שלך עם %1$s? %2$s"
+
+#: src/accountdialog.c:230
+#, c-format
+#| msgid "Share this screenshot with the requesting application?"
+msgid "Share your personal information with the requesting application? %s"
+msgstr "לשתף את המידע האישי שלך עם היישומים הדורשים זאת? %s"
+
+#: src/accountdialog.ui:4
+msgid "Share Details"
+msgstr "שיתוף פרטים"
+
+#: src/accountdialog.ui:12 src/appchooserdialog.ui:12 src/filechooser.c:451
+#: src/remotedesktopdialog.ui:13 src/screencastdialog.ui:14
+#: src/screenshotdialog.ui:12
+msgid "_Cancel"
+msgstr "_ביטול"
+
+#: src/accountdialog.ui:19 src/remotedesktopdialog.ui:21
+#: src/screencastdialog.ui:22 src/screenshotdialog.ui:35
+msgid "_Share"
+msgstr "_שיתוף"
+
+#: src/accountdialog.ui:72
+msgid "Name"
+msgstr "שם"
+
+#: src/accountdialog.ui:84
+msgid "Username"
+msgstr "שם משתמש"
+
+#: src/appchooserdialog.c:229
+msgid "Failed to start Software"
+msgstr "הפעלת תכנה נכשלה"
+
+#: src/appchooserdialog.c:393
+#, c-format
+msgid "Choose an application to open the file “%s”."
+msgstr "נא לבחור יישום לפתיחת הקובץ „%s”."
+
+#: src/appchooserdialog.c:398
+msgid "Choose an application."
+msgstr "בחירת יישום."
+
+#: src/appchooserdialog.c:415
+#, c-format
+msgid ""
+"No apps installed that can open “%s”. You can find more applications in "
+"Software"
+msgstr ""
+"לא מותקנים יישומים שיכולים לפתוח „%s”. ניתן למצוא יישומים נוספים דרך תכנה"
+
+#: src/appchooserdialog.c:420
+msgid "No suitable app installed. You can find more applications in Software."
+msgstr "לא מותקן יישום מתאים. ניתן למצוא יישומים נוספים בתכנה."
+
+#: src/appchooserdialog.ui:5
+msgid "Open With…"
+msgstr "פתיחה באמצעות…"
+
+#: src/appchooserdialog.ui:20 src/filechooser.c:446
+msgid "_Open"
+msgstr "_פתיחה"
+
+#: src/appchooserdialog.ui:104
+msgid "No Apps available"
+msgstr "אין יישומים זמינים"
+
+#: src/appchooserdialog.ui:144
+msgid "_Find More in Software"
+msgstr "_איתור נוספים בתכנה"
+
+#: src/background.c:214 src/background.c:305
+#, c-format
+msgid "“%s” is running in the background"
+msgstr "‫„%s” פועל ברקע"
+
+#: src/background.c:216
+msgid ""
+"This might be for a legitimate reason, but the application has not provided "
+"one.\n"
+"\n"
+"Note that forcing an application to quit might cause data loss."
+msgstr ""
+"יכול להיות שהסיבה לכך מקובלת, אך היישום לא סיפק סיבה.\n"
+"‬\n"
+"‫‫נא לשים לב שכפיית יציאה על יישום עשוי להוביל לאובדן נתונים."
+
+#: src/background.c:219
+msgid "Force quit"
+msgstr "אילוץ יציאה"
+
+#: src/background.c:220
+msgid "Allow"
+msgstr "אישור"
+
+#: src/background.c:303
+msgid "Background activity"
+msgstr "פעילות רקע"
+
+#: src/background.c:311
+msgid "Find out more"
+msgstr "מידע נוסף"
+
+#: src/filechooser.c:446
+msgid "_Select"
+msgstr "_בחירה"
+
+#: src/filechooser.c:448
+msgid "_Save"
+msgstr "_שמירה"
+
+#: src/filechooser.c:614
+msgid "Open files read-only"
+msgstr "פתיחת קבצים לקריאה בלבד"
+
+#: src/remotedesktopdialog.ui:7
+msgid "Remote desktop"
+msgstr "שולחן עבודה מרוחק"
+
+#: src/remotedesktopdialog.ui:64
+msgid "Allow remote interaction"
+msgstr "לאפשר פעולה הּדודית מרחוק"
+
+#: src/screencastdialog.ui:5
+msgid "Screen Share"
+msgstr "שיתוף מסך"
+
+#: src/screencastwidget.c:159
+msgid "Virtual monitor"
+msgstr "צג וירטואלי"
+
+#: src/screencastwidget.c:542
+#, c-format
+msgid "Select monitor to share with %s"
+msgstr "נא לבחור מסך לשיתוף עם %s"
+
+#: src/screencastwidget.c:544
+#, c-format
+msgid "Select window to share with %s"
+msgstr "נא לבחור חלון לשיתוף עם %s"
+
+#: src/screencastwidget.c:549
+msgid "Select monitor to share with the requesting application"
+msgstr "נא לבחור מסך לשיתוף עם היישום שביקש"
+
+#: src/screencastwidget.c:550
+msgid "Select window to share with the requesting application"
+msgstr "נא לבחור חלון לשיתוף עם היישום שביקש"
+
+#: src/screencastwidget.ui:16
+msgid "Single Window"
+msgstr "חלון בודד"
+
+#: src/screencastwidget.ui:40 src/screencastwidget.ui:86
+msgid "Remember this selection"
+msgstr "לזכור בחירה זו"
+
+#: src/screencastwidget.ui:64
+msgid "Entire Screen"
+msgstr "כל המסך"
+
+#: src/screenshotdialog.c:442
+#, c-format
+msgid "Share this screenshot with %s?"
+msgstr "לשתף את הצילום הזה עם %s?"
+
+#: src/screenshotdialog.c:446
+msgid "Share this screenshot with the requesting application?"
+msgstr "לשתף את צילום המסך הזה עם היישום שביקש?"
+
+#: src/screenshotdialog.ui:6
+msgid "Screenshot"
+msgstr "צילום המסך"
+
+#: src/screenshotdialog.ui:28
+msgid "_Options…"
+msgstr "_אפשרויות…"
+
+#: src/screenshotdialog.ui:53
+msgid "Take _Screenshot"
+msgstr "_צילום המסך"
+
+#: src/screenshotdialog.ui:110
+msgid "Take Screenshot"
+msgstr "צילום המסך"
+
+#: src/screenshotdialog.ui:120
+msgid "Grab the whole sc_reen"
+msgstr "צילום המסך _כולו"
+
+#: src/screenshotdialog.ui:130
+msgid "Grab the current _window"
+msgstr "צילום המסך ה_נוכחי"
+
+#: src/screenshotdialog.ui:140
+msgid "Select _area to grab"
+msgstr "בחירת _אזור לצילום"
+
+#: src/screenshotdialog.ui:152
+msgid "Grab after a _delay of"
+msgstr "לצלם לאחר ה_שהיה של"
+
+#: src/screenshotdialog.ui:163
+msgid "seconds"
+msgstr "שניות"
+
+#: src/screenshotdialog.ui:172
+msgid "Effects"
+msgstr "אפקטים"
+
+#: src/screenshotdialog.ui:182
+msgid "Include _pointer"
+msgstr "_כולל הסמן"
+
+#: src/screenshotdialog.ui:190
+msgid "Include the window _border"
+msgstr "כולל _גבולות החלון"
+
+#: src/settings.c:217
+msgid "Requested setting not found"
+msgstr "ההגדרה המבוקשת לא נמצאה"
+
+#: src/wallpaperdialog.ui:8
+msgid "Set Background"
+msgstr "הגדרת רקע"
+
+#: src/wallpaperdialog.ui:20
+msgid "Set"
+msgstr "הגדרה"
+
+#: src/wallpaperdialog.ui:51
+msgid "Failed to load image file"
+msgstr "טעינת קובץ התמונה נכשלה"
+
+#: src/wallpaperpreview.ui:53
+msgid "Activities"
+msgstr "פעילויות"
+
+#~ msgid "Pointer"
+#~ msgstr "סמן"
+
+#~ msgid "Keyboard"
+#~ msgstr "מקלדת"
+
+#~ msgid "Touch screen"
+#~ msgstr "מסך מגע"
+
+#~ msgid "Select devices to share with %s"
+#~ msgstr "בחירת התקנים לשיתוף עם %s"
+
+#~ msgid "Select devices to share with the requesting application"
+#~ msgstr "בחירת התקנים לשיתוף עם היישום שביקש"
+
+#~ msgid "Select whether to create a virtual monitor for %s"
+#~ msgstr "לבחור האם ליצור צג וירטואלי עבור %s"
+
+#~ msgid ""
+#~ "Select whether to create a virtual monitor for the requesting application"
+#~ msgstr "נא לבחור האם ליצור צג וירטואלית עבור היישום שמבקש"
+
+#~ msgid ""
+#~ "\n"
+#~ "                              Create virtual monitor?\n"
+#~ "                            "
+#~ msgstr ""
+#~ "\n"
+#~ "‫                              ליצור צג וירטואלי?‬\n"
+#~ "‫                            "

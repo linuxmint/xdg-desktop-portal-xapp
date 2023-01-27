@@ -1,0 +1,86 @@
+xdg-desktop-portal-cinnamon (5.7.0) unstable; urgency=medium
+
+  * Initial commit
+
+ -- Michael Webster <miketwebster@gmail.com>  Fri, 20 Jan 2023 12:25:38 -0500
+
+xdg-desktop-portal-gnome (42.1-0ubuntu1) jammy; urgency=medium
+
+  * New upstream bugfix release (LP: #1970609)
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Thu, 12 May 2022 16:02:47 -0400
+
+xdg-desktop-portal-gnome (42.0.1-1ubuntu2) jammy; urgency=medium
+
+  * Use libadwaita again:
+    It's better not to diverge as much by reverting upstream changes, as it
+    would make quite hard to get point-release updates, leaving the LTS in a
+    complicated state. Since libadwita is handling the ubuntu color accents
+    properly, let's just use it, as it's already part of Shell and other main
+    components (See lp:1967777).
+    - Revert "debian/control.in: Drop libadwaita-1-dev from Build-Depends"
+    - Revert "Add patches to revert using libadwaita"
+
+ -- Marco Trevisan (Treviño) <marco@ubuntu.com>  Tue, 05 Apr 2022 20:24:04 +0200
+
+xdg-desktop-portal-gnome (42.0.1-1ubuntu1) jammy; urgency=medium
+
+  * debian/control.in: Drop libadwaita-1-dev from Build-Depends (LP: #1967777)
+  * Add patches to revert using libadwaita
+    - Also drops the Accounts portal so it automatically falls back to
+      using the xdg-desktop-portal-gtk version instead
+  * Update Vcs fields
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Mon, 04 Apr 2022 13:15:18 -0400
+
+xdg-desktop-portal-gnome (42.0.1-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Fri, 18 Mar 2022 14:34:07 -0400
+
+xdg-desktop-portal-gnome (42~rc-1) unstable; urgency=medium
+
+  * New upstream release
+  * Build-Depend on libadwaita-1-dev
+  * Build-Depend on libgnome-desktop-4-dev & libgnome-bg-4-dev
+  * debian/patches: Drop all patches: applied in new release
+
+ -- Jeremy Bicha <jeremy.bicha@canonical.com>  Tue, 08 Mar 2022 11:57:18 -0500
+
+xdg-desktop-portal-gnome (41.1-2) unstable; urgency=medium
+
+  [ Sebastien Bacher ]
+  * debian/control:
+    - use the correct case for Multi-Arch to silent a lintian warning
+  * Create a control.in and use dh-sequence-gnome.
+    This is standard for our GNOME packages and also will mean the
+    translations will be handled correctly in Ubuntu.
+
+  [ Simon McVittie ]
+  * d/patches: Update translations from upstream gnome-41 branch
+
+ -- Simon McVittie <smcv@debian.org>  Fri, 11 Feb 2022 10:54:57 +0000
+
+xdg-desktop-portal-gnome (41.1-1) unstable; urgency=medium
+
+  * New upstream release
+    - Force use of cairo GSK renderer to avoid a crash
+    - Translation updates
+  * Add missing runtime dependency on gsettings-desktop-schemas
+  * Drop unnecessary build-dependency on libgnome-desktop-3-dev.
+    The code formerly used from gnome-desktop3 has been copied into this
+    project.
+  * Add Recommends on gnome-shell | budgie-desktop.
+    Many of the portal implementations in this package need a mutter-based
+    window manager.
+  * Add Recommends on gnome-settings-daemon.
+    The settings portal uses this if available.
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 15 Nov 2021 20:45:27 +0000
+
+xdg-desktop-portal-gnome (41.0-1) unstable; urgency=medium
+
+  * Initial packaging (Closes: #994773)
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 21 Sep 2021 18:35:44 +0100

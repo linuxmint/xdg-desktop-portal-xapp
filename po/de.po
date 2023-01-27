@@ -1,0 +1,354 @@
+# German translation for xdg-desktop-portal-gnome.
+# Copyright (C) 2016 xdg-desktop-portal-gnome's COPYRIGHT HOLDER
+# This file is distributed under the same license as the xdg-desktop-portal-gnome package.
+#
+#
+# Christian Kirbach <Christian.Kirbach@gmail.com>, 2016, 2018.
+# Mario Blättermann <mario.blaettermann@gmail.com>, 2018.
+# Philipp Kiemle <philipp.kiemle@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xdg-desktop-portal-gnome master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/xdg-desktop-portal-"
+"gnome/issues\n"
+"POT-Creation-Date: 2022-04-06 11:29+0000\n"
+"PO-Revision-Date: 2022-04-18 09:33+0200\n"
+"Last-Translator: Philipp Kiemle <philipp.kiemle@gmail.com>\n"
+"Language-Team: German <gnome-de@gnome.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0\n"
+
+#: data/xdg-desktop-portal-gnome.desktop.in.in:4
+msgid "Portal"
+msgstr "Portal"
+
+#. TRANSLATORS: Don't translate this text (this is icon name)
+#: data/xdg-desktop-portal-gnome.desktop.in.in:6
+msgid "applications-system-symbolic"
+msgstr "applications-system-symbolic"
+
+#: src/accountdialog.c:152
+msgid "Select an Image"
+msgstr "Bild auswählen"
+
+#: src/accountdialog.c:155 src/wallpaperdialog.ui:14
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: src/accountdialog.c:156
+msgid "Select"
+msgstr "Auswählen"
+
+#: src/accountdialog.c:157
+msgid "Clear"
+msgstr "Löschen"
+
+#: src/accountdialog.c:164
+msgid "Images"
+msgstr "Bilder"
+
+#: src/accountdialog.c:225
+#, c-format
+msgid "Share your personal information with %1$s? %2$s"
+msgstr "Sollen Ihre privaten Informationen für %1$s freigegeben werden? %2$s"
+
+#: src/accountdialog.c:231
+#, c-format
+msgid "Share your personal information with the requesting application? %s"
+msgstr ""
+"Sollen Ihre privaten Informationen für die anfragende Anwendung freigegeben "
+"werden? %s"
+
+#: src/accountdialog.ui:4
+msgid "Share Details"
+msgstr "Details freigeben"
+
+#: src/accountdialog.ui:12 src/appchooserdialog.ui:12 src/filechooser.c:452
+#: src/remotedesktopdialog.ui:13 src/screencastdialog.ui:14
+#: src/screenshotdialog.ui:14
+msgid "_Cancel"
+msgstr "Abbre_chen"
+
+#: src/accountdialog.ui:19 src/remotedesktopdialog.ui:21
+#: src/screencastdialog.ui:22 src/screenshotdialog.ui:37
+msgid "_Share"
+msgstr "_Freigeben"
+
+#: src/accountdialog.ui:72
+msgid "Name"
+msgstr "Name"
+
+#: src/accountdialog.ui:84
+msgid "Username"
+msgstr "Benutzername"
+
+#: src/appchooserdialog.c:229
+msgid "Failed to start Software"
+msgstr "Starten von Software schlug fehl"
+
+#: src/appchooserdialog.c:393
+#, c-format
+msgid "Choose an application to open the file “%s”."
+msgstr "Wählen Sie eine Anwendung, um die Datei »%s« zu öffnen."
+
+#: src/appchooserdialog.c:398
+msgid "Choose an application."
+msgstr "Wählen Sie eine Anwendung."
+
+#: src/appchooserdialog.c:415
+#, c-format
+msgid ""
+"No apps installed that can open “%s”. You can find more applications in "
+"Software"
+msgstr ""
+"Es sind keine Apps zum öffnen von »%s« installiert. Suchen Sie weitere "
+"Anwendungen in Software"
+
+#: src/appchooserdialog.c:420
+msgid "No suitable app installed. You can find more applications in Software."
+msgstr ""
+"Es ist keine passende App installiert. Suchen Sie weitere Anwendungen in "
+"Software."
+
+#: src/appchooserdialog.ui:5
+msgid "Open With…"
+msgstr "Öffnen mit …"
+
+#: src/appchooserdialog.ui:20 src/filechooser.c:447
+msgid "_Open"
+msgstr "_Öffnen"
+
+#: src/appchooserdialog.ui:104
+msgid "No Apps available"
+msgstr "Keine Apps verfügbar"
+
+#: src/appchooserdialog.ui:144
+msgid "_Find More in Software"
+msgstr "Mehr in Software _finden"
+
+#: src/background.c:214 src/background.c:305
+#, c-format
+msgid "“%s” is running in the background"
+msgstr "»%s« läuft im Hintergrund"
+
+#: src/background.c:216
+msgid ""
+"This might be for a legitimate reason, but the application has not provided "
+"one.\n"
+"\n"
+"Note that forcing an application to quit might cause data loss."
+msgstr ""
+"Dies kann aus gutem Grund sein, aber die Anwendungen hat keinen geliefert.\n"
+"\n"
+"Bedenken Sie, dass erzwungenes Beenden einer Anwendung zu Datenverlust "
+"führen kann."
+
+#: src/background.c:219
+msgid "Force quit"
+msgstr "Beenden erzwingen"
+
+#: src/background.c:220
+msgid "Allow"
+msgstr "Erlauben"
+
+#: src/background.c:303
+msgid "Background activity"
+msgstr "Hintergrundaktivität"
+
+#: src/background.c:311
+msgid "Find out more"
+msgstr "Mehr herausfinden"
+
+#: src/filechooser.c:447
+msgid "_Select"
+msgstr "A_uswählen"
+
+#: src/filechooser.c:449
+msgid "_Save"
+msgstr "_Speichern"
+
+#: src/filechooser.c:615
+msgid "Open files read-only"
+msgstr "Dateien schreibgeschützt öffnen"
+
+#: src/remotedesktopdialog.ui:7
+msgid "Remote desktop"
+msgstr "Entfernter Bildschirm"
+
+#: src/remotedesktopdialog.ui:64
+msgid "Allow remote interaction"
+msgstr "Entfernte Bedienung erlauben"
+
+#: src/screencastdialog.ui:5
+msgid "Screen Share"
+msgstr "Bildschirmfreigabe"
+
+#: src/screencastwidget.c:159
+msgid "Virtual monitor"
+msgstr "Virtueller Bildschirm"
+
+#: src/screencastwidget.c:542
+#, c-format
+msgid "Select monitor to share with %s"
+msgstr "Bildschirm wählen, der mit %s geteilt werden soll"
+
+#: src/screencastwidget.c:544
+#, c-format
+msgid "Select window to share with %s"
+msgstr "Wählen Sie das Fenster, das mit %s geteilt werden soll"
+
+#: src/screencastwidget.c:549
+msgid "Select monitor to share with the requesting application"
+msgstr ""
+"Bildschirm wählen, der mit der anfragenden Anwendung geteilt werden soll"
+
+#: src/screencastwidget.c:550
+msgid "Select window to share with the requesting application"
+msgstr ""
+"Wählen Sie das Fenster, das mit der anfragenden Anwendung geteilt werden soll"
+
+#: src/screencastwidget.ui:16
+msgid "Single Window"
+msgstr "Einzelfenster"
+
+#: src/screencastwidget.ui:40 src/screencastwidget.ui:86
+msgid "Remember this selection"
+msgstr "Diese Auswahl merken"
+
+#: src/screencastwidget.ui:64
+msgid "Entire Screen"
+msgstr "Ganzer Bildschirm"
+
+#: src/screenshotdialog.c:420
+#, c-format
+msgid "Share this screenshot with %s?"
+msgstr "Soll dieses Bildschirmfoto mit %s geteilt werden?"
+
+#: src/screenshotdialog.c:424
+msgid "Share this screenshot with the requesting application?"
+msgstr ""
+"Soll dieses Bildschirmfoto mit der anfragenden Anwendung geteilt werden?"
+
+#: src/screenshotdialog.ui:8
+msgid "Screenshot"
+msgstr "Bildschirmfoto"
+
+#: src/screenshotdialog.ui:30
+msgid "_Options…"
+msgstr "_Einstellungen …"
+
+#: src/screenshotdialog.ui:55
+msgid "Take _Screenshot"
+msgstr "Bild_schirmfoto aufnehmen"
+
+#: src/screenshotdialog.ui:108
+msgid "Take Screenshot"
+msgstr "Bildschirmfoto aufnehmen"
+
+#: src/screenshotdialog.ui:118
+msgid "Grab the whole sc_reen"
+msgstr "Gesamten _Bildschirm aufnehmen"
+
+#: src/screenshotdialog.ui:128
+msgid "Grab the current _window"
+msgstr "Aktuelles _Fenster aufnehmen"
+
+#: src/screenshotdialog.ui:138
+msgid "Select _area to grab"
+msgstr "Aufnahmebereich _auswählen"
+
+#: src/screenshotdialog.ui:150
+msgid "Grab after a _delay of"
+msgstr "Bildschirmfoto _verzögert aufnehmen nach"
+
+#: src/screenshotdialog.ui:161
+msgid "seconds"
+msgstr "Sekunden"
+
+#: src/screenshotdialog.ui:170
+msgid "Effects"
+msgstr "Effekte"
+
+#: src/screenshotdialog.ui:180
+msgid "Include _pointer"
+msgstr "_Zeiger einbeziehen"
+
+#: src/screenshotdialog.ui:188
+msgid "Include the window _border"
+msgstr "Fenster_rahmen mit aufnehmen"
+
+#: src/settings.c:247
+msgid "Requested setting not found"
+msgstr "Angeforderte Einstellung wurde nicht gefunden"
+
+#: src/wallpaperdialog.ui:8
+msgid "Set Background"
+msgstr "Hintergrund festlegen"
+
+#: src/wallpaperdialog.ui:20
+msgid "Set"
+msgstr "Festlegen"
+
+#: src/wallpaperdialog.ui:51
+msgid "Failed to load image file"
+msgstr "Bilddatei konnte nicht geladen werden"
+
+#: src/wallpaperpreview.ui:50
+msgid "Activities"
+msgstr "Aktivitäten"
+
+#~ msgid "Pointer"
+#~ msgstr "Zeiger"
+
+#~ msgid "Keyboard"
+#~ msgstr "Tastatur"
+
+#~ msgid "Touch screen"
+#~ msgstr "Tastbildschirm"
+
+#~ msgid "Select devices to share with %s"
+#~ msgstr "Geräte wählen, die mit %s geteilt werden sollen"
+
+#~ msgid "Select devices to share with the requesting application"
+#~ msgstr ""
+#~ "Geräte wählen, die mit der anfragenden Anwendung geteilt werden sollen"
+
+#~ msgid "Deny Access"
+#~ msgstr "Zugriff verweigern"
+
+#~ msgid "Grant Access"
+#~ msgstr "Zugriff gewähren"
+
+#~ msgid "Make changes before sharing the information"
+#~ msgstr "Änderungen vor der Freigabe der Informationen durchführen"
+
+#~ msgid ""
+#~ "Select an application to open “%s”. More applications are available in <a "
+#~ "href='software'>Software.</a>"
+#~ msgstr ""
+#~ "Wählen Sie eine Anwendung zum Öffnen von »%s«. Weitere Anwendungen sind "
+#~ "in <a href='software'>Software</a> verfügbar."
+
+#~ msgid ""
+#~ "Select an application. More applications are available in <a "
+#~ "href='software'>Software.</a>"
+#~ msgstr ""
+#~ "Wählen Sie eine Anwendung. Weitere Anwendungen sind in <a "
+#~ "href='software'>Software</a> verfügbar."
+
+#~ msgid "Unable to find a suitable application."
+#~ msgstr "Es kann keine passende Anwendung gefunden werden."
+
+#~ msgid "No Applications Found"
+#~ msgstr "Keine Anwendungen gefunden"
+
+#~ msgid "Find Compatible Applications in Software"
+#~ msgstr "Kompatible Anwendungen in Software suchen"
+
+#~ msgid "Screen casting"
+#~ msgstr "Bildschirmaufzeichnung"

@@ -1,0 +1,9 @@
+option('dbus_service_dir',
+  type: 'string',
+  description: 'Directory for D-Bus service files'
+)
+
+option('systemduserunitdir',
+  type: 'string',
+  description: 'Directory for systemd user service files'
+)

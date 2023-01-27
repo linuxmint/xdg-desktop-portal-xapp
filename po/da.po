@@ -1,0 +1,344 @@
+# Danish translation for xdg-desktop-portal-gnome
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# scootergrisen, 2018-2019.
+# Ask Hjorth Larsen <asklarsen@gmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: xdg-desktop-portal-gnome\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/xdg-desktop-portal-gnome/issues\n"
+"POT-Creation-Date: 2021-12-18 12:27+0000\n"
+"PO-Revision-Date: 2022-03-06 22:42+0100\n"
+"Last-Translator: Ask Hjorth Larsen <asklarsen@gmail.com>\n"
+"Language-Team: Danish\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: data/xdg-desktop-portal-gnome.desktop.in.in:4
+msgid "Portal"
+msgstr "Portal"
+
+#. TRANSLATORS: Don't translate this text (this is icon name)
+#: data/xdg-desktop-portal-gnome.desktop.in.in:6
+msgid "applications-system-symbolic"
+msgstr "applications-system-symbolic"
+
+#: src/accountdialog.c:151
+msgid "Select an Image"
+msgstr "Vælg et billede"
+
+#: src/accountdialog.c:154 src/wallpaperdialog.ui:14
+msgid "Cancel"
+msgstr "Annuller"
+
+#: src/accountdialog.c:155
+msgid "Select"
+msgstr "Vælg"
+
+#: src/accountdialog.c:156
+msgid "Clear"
+msgstr "Ryd"
+
+#: src/accountdialog.c:163
+msgid "Images"
+msgstr "Billeder"
+
+#: src/accountdialog.c:224
+#, c-format
+msgid "Share your personal information with %1$s? %2$s"
+msgstr "Del dine personlige informationer med %1$s? %2$s"
+
+#: src/accountdialog.c:230
+#, c-format
+msgid "Share your personal information with the requesting application? %s"
+msgstr "Del dine personlige informationer med det anmodende program? %s"
+
+#: src/accountdialog.ui:4
+msgid "Share Details"
+msgstr "Delingsdetaljer"
+
+#: src/accountdialog.ui:12 src/appchooserdialog.ui:12 src/filechooser.c:451
+#: src/remotedesktopdialog.ui:13 src/screencastdialog.ui:14
+#: src/screenshotdialog.ui:12
+msgid "_Cancel"
+msgstr "_Annuller"
+
+#: src/accountdialog.ui:19 src/remotedesktopdialog.ui:21
+#: src/screencastdialog.ui:22 src/screenshotdialog.ui:35
+msgid "_Share"
+msgstr "_Del"
+
+#: src/accountdialog.ui:72
+msgid "Name"
+msgstr "Navn"
+
+#: src/accountdialog.ui:84
+msgid "Username"
+msgstr "Brugernavn"
+
+#: src/appchooserdialog.c:229
+msgid "Failed to start Software"
+msgstr "Kunne ikke starte Software"
+
+#: src/appchooserdialog.c:393
+#, c-format
+msgid "Choose an application to open the file “%s”."
+msgstr "Vælg et program for at åbne filen “%s”."
+
+#: src/appchooserdialog.c:398
+msgid "Choose an application."
+msgstr "Vælg et program."
+
+#: src/appchooserdialog.c:415
+#, c-format
+msgid ""
+"No apps installed that can open “%s”. You can find more applications in "
+"Software"
+msgstr "Der er ikke installeret nogen programmer, der kan åbne “%s”. Du kan finde flere programmer i Software"
+
+#: src/appchooserdialog.c:420
+msgid "No suitable app installed. You can find more applications in Software."
+msgstr "Der er ikke installeret et passende program. Du kan finde andre programmer i Software."
+
+#: src/appchooserdialog.ui:5
+msgid "Open With…"
+msgstr "Åbn med …"
+
+#: src/appchooserdialog.ui:20 src/filechooser.c:446
+msgid "_Open"
+msgstr "_Åbn"
+
+#: src/appchooserdialog.ui:104
+msgid "No Apps available"
+msgstr "Ingen tilgængelige programmer"
+
+#: src/appchooserdialog.ui:144
+msgid "_Find More in Software"
+msgstr "_Find flere i Software"
+
+#: src/background.c:214 src/background.c:305
+#, c-format
+msgid "“%s” is running in the background"
+msgstr "“%s” kører i baggrunden"
+
+#: src/background.c:216
+msgid ""
+"This might be for a legitimate reason, but the application has not provided "
+"one.\n"
+"\n"
+"Note that forcing an application to quit might cause data loss."
+msgstr ""
+"Dette kan ske af gode grunde, men programmet har ikke givet nogen grund.\n"
+"\n"
+"Bemærk, at hvis et program tvinges til at afslutte, kan det forårsage tab af data."
+
+#: src/background.c:219
+msgid "Force quit"
+msgstr "Tving til at afslutte"
+
+#: src/background.c:220
+msgid "Allow"
+msgstr "Tillad"
+
+#: src/background.c:303
+msgid "Background activity"
+msgstr "Baggrundsaktivitet"
+
+#: src/background.c:311
+msgid "Find out more"
+msgstr "Mere information"
+
+#: src/filechooser.c:446
+msgid "_Select"
+msgstr "_Vælg"
+
+#: src/filechooser.c:448
+msgid "_Save"
+msgstr "_Gem"
+
+#: src/filechooser.c:614
+msgid "Open files read-only"
+msgstr "Åbn filer som skrivebeskyttede"
+
+#: src/remotedesktopdialog.ui:7
+msgid "Remote desktop"
+msgstr "Fjernskrivebord"
+
+#: src/remotedesktopdialog.ui:64
+msgid "Allow remote interaction"
+msgstr "Tillad fjernadgang"
+
+#: src/screencastdialog.ui:5
+msgid "Screen Share"
+msgstr "Skærmdeling"
+
+#: src/screencastwidget.c:159
+msgid "Virtual monitor"
+msgstr "Virtuel skærm"
+
+#: src/screencastwidget.c:542
+#, c-format
+msgid "Select monitor to share with %s"
+msgstr "Vælg skærm som skal deles med %s"
+
+#: src/screencastwidget.c:544
+#, c-format
+msgid "Select window to share with %s"
+msgstr "Vælg vindue, som skal deles med %s"
+
+#: src/screencastwidget.c:549
+msgid "Select monitor to share with the requesting application"
+msgstr "Vælg skærm, som skal deles med det anmodende program"
+
+#: src/screencastwidget.c:550
+msgid "Select window to share with the requesting application"
+msgstr "Vælg vindue, som skal deles med det anmodende program"
+
+#: src/screencastwidget.ui:16
+msgid "Single Window"
+msgstr "Enkelt vindue"
+
+#: src/screencastwidget.ui:40 src/screencastwidget.ui:86
+msgid "Remember this selection"
+msgstr "Husk dette valg"
+
+#: src/screencastwidget.ui:64
+msgid "Entire Screen"
+msgstr "Hele skærmen"
+
+#: src/screenshotdialog.c:442
+#, c-format
+msgid "Share this screenshot with %s?"
+msgstr "Del skærmbilledet med %s?"
+
+#: src/screenshotdialog.c:446
+msgid "Share this screenshot with the requesting application?"
+msgstr "Del skærmbilledet med det anmodende program?"
+
+#: src/screenshotdialog.ui:6
+msgid "Screenshot"
+msgstr "Skærmbillede"
+
+#: src/screenshotdialog.ui:28
+msgid "_Options…"
+msgstr "_Valgmuligheder …"
+
+#: src/screenshotdialog.ui:53
+msgid "Take _Screenshot"
+msgstr "Tag _skærmbillede"
+
+#: src/screenshotdialog.ui:110
+msgid "Take Screenshot"
+msgstr "Tag skærmbillede"
+
+#: src/screenshotdialog.ui:120
+msgid "Grab the whole sc_reen"
+msgstr "Indfang _hele skærmen"
+
+#: src/screenshotdialog.ui:130
+msgid "Grab the current _window"
+msgstr "Indfang det nuværende _vindue"
+
+#: src/screenshotdialog.ui:140
+msgid "Select _area to grab"
+msgstr "Vælg _område som skal indfanges"
+
+#: src/screenshotdialog.ui:152
+msgid "Grab after a _delay of"
+msgstr "Indfang efter en _forsinkelse på"
+
+#: src/screenshotdialog.ui:163
+msgid "seconds"
+msgstr "sekunder"
+
+#: src/screenshotdialog.ui:172
+msgid "Effects"
+msgstr "Effekter"
+
+#: src/screenshotdialog.ui:182
+msgid "Include _pointer"
+msgstr "Medtag _markør"
+
+#: src/screenshotdialog.ui:190
+msgid "Include the window _border"
+msgstr "Medtag vinduets _kant"
+
+#: src/settings.c:217
+msgid "Requested setting not found"
+msgstr "Den forespurgte indstilling blev ikke fundet"
+
+#: src/wallpaperdialog.ui:8
+msgid "Set Background"
+msgstr "Angiv baggrund"
+
+#: src/wallpaperdialog.ui:20
+msgid "Set"
+msgstr "Vælg"
+
+#: src/wallpaperdialog.ui:51
+msgid "Failed to load image file"
+msgstr "Kunne ikke indlæse billedfil"
+
+#: src/wallpaperpreview.ui:53
+msgid "Activities"
+msgstr "Aktiviteter"
+
+#~ msgid "Pointer"
+#~ msgstr "Markør"
+
+#~ msgid "Keyboard"
+#~ msgstr "Tastatur"
+
+#~ msgid "Touch screen"
+#~ msgstr "Berøringsfølsom skærm"
+
+#~ msgid "Select devices to share with %s"
+#~ msgstr "Vælg enheder som skal deles med %s"
+
+#~ msgid "Deny Access"
+#~ msgstr "Nægt adgang"
+
+#~ msgid "Grant Access"
+#~ msgstr "Giv adgang"
+
+#~ msgid "Make changes before sharing the information"
+#~ msgstr "Foretag ændringer inden informationen deles"
+
+#~ msgid "%s is running in the background."
+#~ msgstr "%s kører i baggrunden."
+
+#~ msgid ""
+#~ "Select an application to open “%s”. More applications are available in <a "
+#~ "href='software'>Software.</a>"
+#~ msgstr ""
+#~ "Vælg et program til at åbne “%s”. Der findes flere programmer i <a "
+#~ "href='software'>Software</a>."
+
+#~ msgid ""
+#~ "Select an application. More applications are available in <a "
+#~ "href='software'>Software.</a>"
+#~ msgstr ""
+#~ "Vælg et program. Der findes flere programmer i <a "
+#~ "href='software'>Software</a>."
+
+#~ msgid "Unable to find a suitable application."
+#~ msgstr "Kan ikke finde et egnet program."
+
+#~ msgid "No Applications Found"
+#~ msgstr "Der blev ikke fundet nogen programmer"
+
+#~ msgid "Find Compatible Applications in Software"
+#~ msgstr "Find kompatible programmer i Software"
+
+#~ msgid "Forbid"
+#~ msgstr "Forbyd"
+
+#~ msgid "Ignore"
+#~ msgstr "Ignorer"
+
+#~ msgid "Screen casting"
+#~ msgstr "Skærmoptagelse"

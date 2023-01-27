@@ -1,0 +1,381 @@
+# Lithuanian translation for xdg-desktop-portal-gnome.
+# Copyright (C) 2018 xdg-desktop-portal-gnome's COPYRIGHT HOLDER
+# This file is distributed under the same license as the xdg-desktop-portal-gnome package.
+# Moo, 2018, 2019, 2020.
+# Aurimas Černius <aurisc4@gmail.com>, 2021-2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xdg-desktop-portal-gnome master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/xdg-desktop-portal-"
+"gnome/issues\n"
+"POT-Creation-Date: 2021-12-18 12:27+0000\n"
+"PO-Revision-Date: 2022-01-16 21:40+0200\n"
+"Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
+"Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
+"%100<10 || n%100>=20) ? 1 : 2)\n"
+"X-Generator: Gtranslator 40.0\n"
+
+#: data/xdg-desktop-portal-gnome.desktop.in.in:4
+msgid "Portal"
+msgstr "Portalas"
+
+#. TRANSLATORS: Don't translate this text (this is icon name)
+#: data/xdg-desktop-portal-gnome.desktop.in.in:6
+msgid "applications-system-symbolic"
+msgstr "applications-system-symbolic"
+
+#: src/accountdialog.c:151
+msgid "Select an Image"
+msgstr "Pasirinkti paveikslą"
+
+#: src/accountdialog.c:154 src/wallpaperdialog.ui:14
+msgid "Cancel"
+msgstr "Atsisakyti"
+
+#: src/accountdialog.c:155
+msgid "Select"
+msgstr "Pasirinkti"
+
+#: src/accountdialog.c:156
+msgid "Clear"
+msgstr "Išvalyti"
+
+#: src/accountdialog.c:163
+msgid "Images"
+msgstr "Paveikslai"
+
+#: src/accountdialog.c:224
+#, c-format
+#| msgid "Share your personal information with %s?"
+msgid "Share your personal information with %1$s? %2$s"
+msgstr "Dalintis jūsų asmenine informacija su %1$s? %2$s"
+
+#: src/accountdialog.c:230
+#, c-format
+#| msgid "Share your personal information with the requesting application?"
+msgid "Share your personal information with the requesting application? %s"
+msgstr "Dalintis jūsų asmenine informacija su prašančia programa? %s"
+
+#: src/accountdialog.ui:4
+msgid "Share Details"
+msgstr "Bendrinti išsamesnę informaciją"
+
+#: src/accountdialog.ui:12 src/appchooserdialog.ui:12 src/filechooser.c:451
+#: src/remotedesktopdialog.ui:13 src/screencastdialog.ui:14
+#: src/screenshotdialog.ui:12
+msgid "_Cancel"
+msgstr "_Atsisakyti"
+
+#: src/accountdialog.ui:19 src/remotedesktopdialog.ui:21
+#: src/screencastdialog.ui:22 src/screenshotdialog.ui:35
+msgid "_Share"
+msgstr "_Bendrinti"
+
+#: src/accountdialog.ui:72
+msgid "Name"
+msgstr "Vardas"
+
+#: src/accountdialog.ui:84
+msgid "Username"
+msgstr "Naudotojo vardas"
+
+#: src/appchooserdialog.c:229
+msgid "Failed to start Software"
+msgstr "Nepavyko paleisti Programinės įrangos"
+
+#: src/appchooserdialog.c:393
+#, c-format
+msgid "Choose an application to open the file “%s”."
+msgstr "Pasirinkite programą, skirtą atverti \"%s\"."
+
+#: src/appchooserdialog.c:398
+msgid "Choose an application."
+msgstr "Pasirinkite programą."
+
+#: src/appchooserdialog.c:415
+#, c-format
+msgid ""
+"No apps installed that can open “%s”. You can find more applications in "
+"Software"
+msgstr ""
+"Nėra programų, kurios galėtų atverti \"%s\". Daugiau programų galite rasti "
+"Programinėje įrangoje"
+
+#: src/appchooserdialog.c:420
+msgid "No suitable app installed. You can find more applications in Software."
+msgstr ""
+"Neįdiegta jokia tinkama programa. Daugiau programų galite rasti Programinėje "
+"įrangoje."
+
+#: src/appchooserdialog.ui:5
+msgid "Open With…"
+msgstr "Atverti naudojant…"
+
+#: src/appchooserdialog.ui:20 src/filechooser.c:446
+msgid "_Open"
+msgstr "_Atverti"
+
+#: src/appchooserdialog.ui:104
+msgid "No Apps available"
+msgstr "Nėra prieinamų programų"
+
+#: src/appchooserdialog.ui:144
+msgid "_Find More in Software"
+msgstr "_Rasti daugiau Programinėje įrangoje"
+
+#: src/background.c:214 src/background.c:305
+#, c-format
+msgid "“%s” is running in the background"
+msgstr "\"%s\" veikia fone"
+
+#: src/background.c:216
+msgid ""
+"This might be for a legitimate reason, but the application has not provided "
+"one.\n"
+"\n"
+"Note that forcing an application to quit might cause data loss."
+msgstr ""
+"Taip gali būti dėl pagrįstos priežasties, tačiau programa priežasties "
+"nenurodė.\n"
+"\n"
+"Turėkite omenyje, kad privertus programą užbaigti darbą, gali būti prarasti "
+"duomenys."
+
+#: src/background.c:219
+msgid "Force quit"
+msgstr "Priverstinai baigti darbą"
+
+#: src/background.c:220
+msgid "Allow"
+msgstr "Leisti"
+
+#: src/background.c:303
+msgid "Background activity"
+msgstr "Foninė veikla"
+
+#: src/background.c:311
+msgid "Find out more"
+msgstr "Sužinoti daugiau"
+
+#: src/filechooser.c:446
+msgid "_Select"
+msgstr "Pa_sirinkti"
+
+#: src/filechooser.c:448
+msgid "_Save"
+msgstr "Į_rašyti"
+
+#: src/filechooser.c:614
+msgid "Open files read-only"
+msgstr "Atverti failus tik skaitymui"
+
+#: src/remotedesktopdialog.ui:7
+msgid "Remote desktop"
+msgstr "Nuotolinis darbalaukis"
+
+#: src/remotedesktopdialog.ui:64
+msgid "Allow remote interaction"
+msgstr "Leisti nuotolinius veiksmus"
+
+#: src/screencastdialog.ui:5
+msgid "Screen Share"
+msgstr "Ekrano bendrinimas"
+
+#: src/screencastwidget.c:159
+msgid "Virtual monitor"
+msgstr "Virtualus monitorius"
+
+#: src/screencastwidget.c:542
+#, c-format
+msgid "Select monitor to share with %s"
+msgstr "Pasirinkti vaizduoklį, kurį bendrinti su %s"
+
+#: src/screencastwidget.c:544
+#, c-format
+msgid "Select window to share with %s"
+msgstr "Pasirinkti langą, kurį bendrinti su %s"
+
+#: src/screencastwidget.c:549
+msgid "Select monitor to share with the requesting application"
+msgstr "Pasirinkti vaizduoklį, kurį bendrinti su prašančia programa"
+
+#: src/screencastwidget.c:550
+msgid "Select window to share with the requesting application"
+msgstr "Pasirinkti langą, kurį bendrinti su prašančia programa"
+
+#: src/screencastwidget.ui:16
+msgid "Single Window"
+msgstr "Vienas langas"
+
+#: src/screencastwidget.ui:40 src/screencastwidget.ui:86
+msgid "Remember this selection"
+msgstr "Įsiminti šį žymėjimą"
+
+#: src/screencastwidget.ui:64
+msgid "Entire Screen"
+msgstr "Visas ekranas"
+
+#: src/screenshotdialog.c:442
+#, c-format
+msgid "Share this screenshot with %s?"
+msgstr "Bendrinti šią ekrano kopiją su %s?"
+
+#: src/screenshotdialog.c:446
+msgid "Share this screenshot with the requesting application?"
+msgstr "Bendrinti šią ekrano kopiją su prašančia programa?"
+
+#: src/screenshotdialog.ui:6
+msgid "Screenshot"
+msgstr "Ekrano kopija"
+
+#: src/screenshotdialog.ui:28
+msgid "_Options…"
+msgstr "_Parametrai…"
+
+#: src/screenshotdialog.ui:53
+msgid "Take _Screenshot"
+msgstr "Padaryti _ekrano kopiją"
+
+#: src/screenshotdialog.ui:110
+msgid "Take Screenshot"
+msgstr "Padaryti ekrano kopiją"
+
+#: src/screenshotdialog.ui:120
+msgid "Grab the whole sc_reen"
+msgstr "Fotografuoti visą ek_raną"
+
+#: src/screenshotdialog.ui:130
+msgid "Grab the current _window"
+msgstr "Fotografuoti esamą _langą"
+
+#: src/screenshotdialog.ui:140
+msgid "Select _area to grab"
+msgstr "Pasirinkti sr_itį, kurią fotografuoti"
+
+#: src/screenshotdialog.ui:152
+msgid "Grab after a _delay of"
+msgstr "_Delsti fotografuoti"
+
+#: src/screenshotdialog.ui:163
+msgid "seconds"
+msgstr "sekundes"
+
+#: src/screenshotdialog.ui:172
+msgid "Effects"
+msgstr "Efektai"
+
+#: src/screenshotdialog.ui:182
+msgid "Include _pointer"
+msgstr "Įtraukti _rodyklę"
+
+#: src/screenshotdialog.ui:190
+msgid "Include the window _border"
+msgstr "Įtraukti lango rė_melį"
+
+#: src/settings.c:217
+msgid "Requested setting not found"
+msgstr "Užklaustas nustatymas nerastas"
+
+#: src/wallpaperdialog.ui:8
+msgid "Set Background"
+msgstr "Nustatyti foną"
+
+#: src/wallpaperdialog.ui:20
+msgid "Set"
+msgstr "Nustatyti"
+
+#: src/wallpaperdialog.ui:51
+msgid "Failed to load image file"
+msgstr "Nepavyko įkelti paveikslo failo"
+
+#: src/wallpaperpreview.ui:53
+msgid "Activities"
+msgstr "Apžvalga"
+
+#~ msgid "Pointer"
+#~ msgstr "Rodyklė"
+
+#~ msgid "Keyboard"
+#~ msgstr "Klaviatūra"
+
+#~ msgid "Touch screen"
+#~ msgstr "Jutiklinis ekranas"
+
+#~ msgid "Select devices to share with %s"
+#~ msgstr "Pasirinkti įrenginius, kuriuos bendrinti su %s"
+
+#~ msgid "Select devices to share with the requesting application"
+#~ msgstr "Pasirinkti įrenginius, kuriuos bendrinti su prašančia programa"
+
+#~ msgid "Select whether to create a virtual monitor for %s"
+#~ msgstr "Pasirinkite, ar sukurti virtualų monitorių %s"
+
+#~| msgid "Select monitor to share with the requesting application"
+#~ msgid ""
+#~ "Select whether to create a virtual monitor for the requesting application"
+#~ msgstr "Pasirinkite, ar sukurti virtualų monitorių prašančiai programai"
+
+#~ msgid ""
+#~ "\n"
+#~ "                              Create virtual monitor?\n"
+#~ "                            "
+#~ msgstr ""
+#~ "\n"
+#~ "                              Sukurti virtualų monitorių?\n"
+#~ "                            "
+
+#~ msgid "Deny Access"
+#~ msgstr "Drausti prieigą"
+
+#~ msgid "Grant Access"
+#~ msgstr "Suteikti prieigą"
+
+#~ msgid "Make changes before sharing the information"
+#~ msgstr "Prieš bendrinant informaciją, atlikti pakeitimus"
+
+#~ msgid "%s is running in the background."
+#~ msgstr "%s yra vykdoma fone."
+
+#~ msgid "Set Lock Screen"
+#~ msgstr "Nustatyti užrakto ekraną"
+
+#~ msgid "Set Background & Lock Screen"
+#~ msgstr "Nustatyti foną ir užrakto ekraną"
+
+#~ msgid ""
+#~ "Select an application to open “%s”. More applications are available in <a "
+#~ "href='software'>Software.</a>"
+#~ msgstr ""
+#~ "Pasirinkite programą, skirtą atverti \"%s\". Daugiau programų yra "
+#~ "prieinama <a href='software'>Programinėje įrangoje.</a>"
+
+#~ msgid ""
+#~ "Select an application. More applications are available in <a "
+#~ "href='software'>Software.</a>"
+#~ msgstr ""
+#~ "Pasirinkite programą. Daugiau programų yra prieinama <a "
+#~ "href='software'>Programinėje įrangoje.</a>"
+
+#~ msgid "Unable to find a suitable application."
+#~ msgstr "Nepavyko rasti tinkamos programos."
+
+#~ msgid "No Applications Found"
+#~ msgstr "Nerasta jokių programų"
+
+#~ msgid "Find Compatible Applications in Software"
+#~ msgstr "Rasti suderinamas programas Programinėje įrangoje"
+
+#~ msgid "Forbid"
+#~ msgstr "Drausti"
+
+#~ msgid "Ignore"
+#~ msgstr "Nepaisyti"
+
+#~ msgid "Screen casting"
+#~ msgstr "Ekrano įrašymas"

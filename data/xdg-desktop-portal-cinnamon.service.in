@@ -1,0 +1,7 @@
+[Unit]
+Description=Portal service (Cinnamon implementation)
+
+[Service]
+Type=dbus
+BusName=org.freedesktop.impl.portal.desktop.cinnamon
+ExecStart=@libexecdir@/xdg-desktop-portal-cinnamon

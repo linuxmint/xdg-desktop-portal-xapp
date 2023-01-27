@@ -1,0 +1,306 @@
+# Persian translation for xdg-desktop-portal-gnome.
+# Copyright (C) 2021 xdg-desktop-portal-gnome's COPYRIGHT HOLDER
+# This file is distributed under the same license as the xdg-desktop-portal-gnome package.
+# Danial Behzadi <dani.behzi@ubuntu.com>, 2021-2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xdg-desktop-portal-gnome gnome-41\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/xdg-desktop-portal-gnome/"
+"issues\n"
+"POT-Creation-Date: 2021-12-18 12:27+0000\n"
+"PO-Revision-Date: 2022-01-10 15:02+0330\n"
+"Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
+"Language-Team: Persian <fa@li.org>\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+
+#: data/xdg-desktop-portal-gnome.desktop.in.in:4
+msgid "Portal"
+msgstr "درگاه"
+
+#. TRANSLATORS: Don't translate this text (this is icon name)
+#: data/xdg-desktop-portal-gnome.desktop.in.in:6
+msgid "applications-system-symbolic"
+msgstr "applications-system-symbolic"
+
+#: src/accountdialog.c:151
+msgid "Select an Image"
+msgstr "گزینش یک تصویر"
+
+#: src/accountdialog.c:154 src/wallpaperdialog.ui:14
+msgid "Cancel"
+msgstr "لغو"
+
+#: src/accountdialog.c:155
+msgid "Select"
+msgstr "گزینش"
+
+#: src/accountdialog.c:156
+msgid "Clear"
+msgstr "پاک‌سازی"
+
+#: src/accountdialog.c:163
+msgid "Images"
+msgstr "تصویرها"
+
+#: src/accountdialog.c:224
+#, c-format
+msgid "Share your personal information with %1$s? %2$s"
+msgstr "هم‌رسانی اطّلاعات شخصیتان با %1$s؟ %2$s"
+
+#: src/accountdialog.c:230
+#, c-format
+msgid "Share your personal information with the requesting application? %s"
+msgstr "هم‌رسانی اطّلاعات شخصیتان با برنامهٔ درخواستگر؟ %s"
+
+#: src/accountdialog.ui:4
+msgid "Share Details"
+msgstr "هم‌رسانی جزییات"
+
+#: src/accountdialog.ui:12 src/appchooserdialog.ui:12 src/filechooser.c:451
+#: src/remotedesktopdialog.ui:13 src/screencastdialog.ui:14
+#: src/screenshotdialog.ui:12
+msgid "_Cancel"
+msgstr "_لغو"
+
+#: src/accountdialog.ui:19 src/remotedesktopdialog.ui:21
+#: src/screencastdialog.ui:22 src/screenshotdialog.ui:35
+msgid "_Share"
+msgstr "_هم‌رسانی"
+
+#: src/accountdialog.ui:72
+msgid "Name"
+msgstr "نام"
+
+#: src/accountdialog.ui:84
+msgid "Username"
+msgstr "نام کاربری"
+
+#: src/appchooserdialog.c:229
+msgid "Failed to start Software"
+msgstr "شکست در اجرای نرم‌افزار"
+
+#: src/appchooserdialog.c:393
+#, c-format
+msgid "Choose an application to open the file “%s”."
+msgstr "گزینش برنامه‌ای برای گشودن پروندهٔ «%s»."
+
+#: src/appchooserdialog.c:398
+msgid "Choose an application."
+msgstr "گزینش یک برنامه."
+
+#: src/appchooserdialog.c:415
+#, c-format
+msgid ""
+"No apps installed that can open “%s”. You can find more applications in Software"
+msgstr ""
+"هیچ کاره‌ای که بتواند «%s» را بگشاید، نصب نشده. ممکن است بتوانید برنامه‌های "
+"بیش‌تری را در نرم‌افزارها بیابید"
+
+#: src/appchooserdialog.c:420
+msgid "No suitable app installed. You can find more applications in Software."
+msgstr ""
+"هیچ کارهٔ مناسبی نصب نشده. می‌توانید برنامه‌های بیش‌تری را در نرم‌افزارها بیابید."
+
+#: src/appchooserdialog.ui:5
+msgid "Open With…"
+msgstr "گشودن با…"
+
+#: src/appchooserdialog.ui:20 src/filechooser.c:446
+msgid "_Open"
+msgstr "_گشودن"
+
+#: src/appchooserdialog.ui:104
+msgid "No Apps available"
+msgstr "هیچ کاره‌ای موجود نیست"
+
+#: src/appchooserdialog.ui:144
+msgid "_Find More in Software"
+msgstr "_یافتن بیش‌تر در نرم‌افزارها"
+
+#: src/background.c:214 src/background.c:305
+#, c-format
+msgid "“%s” is running in the background"
+msgstr "«%s» در حال اجرا در پس‌زمینه است"
+
+#: src/background.c:216
+msgid ""
+"This might be for a legitimate reason, but the application has not provided "
+"one.\n"
+"\n"
+"Note that forcing an application to quit might cause data loss."
+msgstr ""
+"ممکن است برای دلیل معقولی باشد، ولی برنامه هیچ دلیلی نیاورده است.\n"
+"\n"
+"به خاطر داشته باشید که اجبار یک برنامه به خروج، ممکن است موجب از دست رفتن داده "
+"شود."
+
+#: src/background.c:219
+msgid "Force quit"
+msgstr "خروج اجباری"
+
+#: src/background.c:220
+msgid "Allow"
+msgstr "اجازه"
+
+#: src/background.c:303
+msgid "Background activity"
+msgstr "فعّالیت پس‌زمینه"
+
+#: src/background.c:311
+msgid "Find out more"
+msgstr "بیش‌تر بدانید"
+
+#: src/filechooser.c:446
+msgid "_Select"
+msgstr "_گزینش"
+
+#: src/filechooser.c:448
+msgid "_Save"
+msgstr "_ذخیره"
+
+#: src/filechooser.c:614
+msgid "Open files read-only"
+msgstr "گشودن فقط‌خواندنی پرونده‌ها"
+
+#: src/remotedesktopdialog.ui:7
+msgid "Remote desktop"
+msgstr "میزکار دوردست"
+
+#: src/remotedesktopdialog.ui:64
+msgid "Allow remote interaction"
+msgstr "اجازه به برهم‌کنش دوردست"
+
+#: src/screencastdialog.ui:5
+msgid "Screen Share"
+msgstr "هم‌رسانی صفحه"
+
+#: src/screencastwidget.c:159
+msgid "Virtual monitor"
+msgstr "نمایشگر مجازی"
+
+#: src/screencastwidget.c:542
+#, c-format
+msgid "Select monitor to share with %s"
+msgstr "نمایشگر را برای هم‌رسانی با %s برگزینید"
+
+#: src/screencastwidget.c:544
+#, c-format
+msgid "Select window to share with %s"
+msgstr "پنجره را برای هم‌رسانی با %s برگزینید"
+
+#: src/screencastwidget.c:549
+msgid "Select monitor to share with the requesting application"
+msgstr "نمایشگر را برای هم‌رسانی با برنامهٔ درخواستگر برگزینید"
+
+#: src/screencastwidget.c:550
+msgid "Select window to share with the requesting application"
+msgstr "پنجره را برای هم‌رسانی با برنامهٔ درخواستگر برگزینید"
+
+#: src/screencastwidget.ui:16
+msgid "Single Window"
+msgstr "تک پنجره"
+
+#: src/screencastwidget.ui:40 src/screencastwidget.ui:86
+msgid "Remember this selection"
+msgstr "به یاد سپاری این گزینش"
+
+#: src/screencastwidget.ui:64
+msgid "Entire Screen"
+msgstr "کل صفحه"
+
+#: src/screenshotdialog.c:442
+#, c-format
+msgid "Share this screenshot with %s?"
+msgstr "هم‌رسانی این نماگرفت با %s؟"
+
+#: src/screenshotdialog.c:446
+msgid "Share this screenshot with the requesting application?"
+msgstr "هم‌رسانی این نماگرفت با برنامهٔ درخواستگر؟"
+
+#: src/screenshotdialog.ui:6
+msgid "Screenshot"
+msgstr "نماگرفت"
+
+#: src/screenshotdialog.ui:28
+msgid "_Options…"
+msgstr "_گزینه‌ها…"
+
+#: src/screenshotdialog.ui:53
+msgid "Take _Screenshot"
+msgstr "_نماگرفت"
+
+#: src/screenshotdialog.ui:110
+msgid "Take Screenshot"
+msgstr "نماگرفت"
+
+#: src/screenshotdialog.ui:120
+msgid "Grab the whole sc_reen"
+msgstr "گرفتن کل _صفحه"
+
+#: src/screenshotdialog.ui:130
+msgid "Grab the current _window"
+msgstr "گرفتن _پنجرهٔ جاری"
+
+#: src/screenshotdialog.ui:140
+msgid "Select _area to grab"
+msgstr "گزینش _ناحیه برای گرفتن"
+
+#: src/screenshotdialog.ui:152
+msgid "Grab after a _delay of"
+msgstr "گرفتن پس از _وقفه‌ای به اندازهٔ"
+
+#: src/screenshotdialog.ui:163
+msgid "seconds"
+msgstr "ثانیه"
+
+#: src/screenshotdialog.ui:172
+msgid "Effects"
+msgstr "جلوه‌ها"
+
+#: src/screenshotdialog.ui:182
+msgid "Include _pointer"
+msgstr "شامل _اشاره‌گر"
+
+#: src/screenshotdialog.ui:190
+msgid "Include the window _border"
+msgstr "شامل _حاشیهٔ پنجره"
+
+#: src/settings.c:217
+msgid "Requested setting not found"
+msgstr "تنظیمات درخواستی پیدا نشد"
+
+#: src/wallpaperdialog.ui:8
+msgid "Set Background"
+msgstr "تنظیم پس‌زمینه"
+
+#: src/wallpaperdialog.ui:20
+msgid "Set"
+msgstr "تنظیم"
+
+#: src/wallpaperdialog.ui:51
+msgid "Failed to load image file"
+msgstr "شکست در بار کردن پروندهٔ تصویر"
+
+#: src/wallpaperpreview.ui:53
+msgid "Activities"
+msgstr "فعّالیت‌ها"
+
+#~ msgid "Pointer"
+#~ msgstr "اشاره‌گر"
+
+#~ msgid "Keyboard"
+#~ msgstr "صفحه‌کلید"
+
+#~ msgid "Touch screen"
+#~ msgstr "صفحهٔ لمسی"
+
+#~ msgid "Select devices to share with %s"
+#~ msgstr "افزاره‌ها را برای هم‌رسانی با %s برگزینید"
+
+#~ msgid "Select devices to share with the requesting application"
+#~ msgstr "افزاره‌ها را برای هم‌رسانی با برنامهٔ درخواستگر برگزینید"

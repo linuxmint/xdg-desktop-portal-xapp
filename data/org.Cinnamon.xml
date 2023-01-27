@@ -1,0 +1,11 @@
+<node name='/org/Cinnamon'>
+  <interface name='org.Cinnamon'>
+    <property name="AnimationsEnabled" type="b" access="read">
+      <doc:doc>
+        <doc:description>
+          <doc:para>Whether or not animations are enabled for the current cinnamon process. This is not just determined directly by the user, but can be affected by graphics driver capability and whether Cinnamon is in 2d mode.</doc:para>
+        </doc:description>
+      </doc:doc>
+    </property>
+  </interface>
+</node>

@@ -1,0 +1,312 @@
+# Japanese translation for xdg-desktop-portal-gnome.
+# Copyright (C) 2022 xdg-desktop-portal-gnome's COPYRIGHT HOLDER
+# This file is distributed under the same license as the xdg-desktop-portal-gnome package.
+# gnome-screenshot translators <https://l10n.gnome.org/vertimus/gnome-screenshot/master/po/ja/>, 2012.
+# sicklylife <translation@sicklylife.jp>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xdg-desktop-portal-gnome gnome-41\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/xdg-desktop-portal-"
+"gnome/issues\n"
+"POT-Creation-Date: 2021-11-28 13:56+0000\n"
+"PO-Revision-Date: 2022-03-11 22:30+0000\n"
+"Last-Translator: sicklylife <translation@sicklylife.jp>\n"
+"Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: src/accountdialog.c:151
+msgid "Select an Image"
+msgstr "画像を選択"
+
+#: src/accountdialog.c:155
+msgid "Select"
+msgstr "選択"
+
+#: src/accountdialog.c:156
+msgid "Clear"
+msgstr "クリア"
+
+#: src/accountdialog.c:163
+msgid "Images"
+msgstr "画像"
+
+# 最初の %s にはアプリケーション名が代入されると思われる
+#: src/accountdialog.c:224
+#, c-format
+msgid "Share your personal information with %1$s? %2$s"
+msgstr "あなたの個人情報を %1$s で共有しますか? %2$s"
+
+#: src/accountdialog.c:230
+#, c-format
+msgid "Share your personal information with the requesting application? %s"
+msgstr "あなたの個人情報を、要求しているアプリケーションで共有しますか? %s"
+
+#: src/accountdialog.ui:4
+msgid "Share Details"
+msgstr "共有の詳細"
+
+#: src/accountdialog.ui:72
+msgid "Name"
+msgstr "名前"
+
+#: src/accountdialog.ui:84
+msgid "Username"
+msgstr "ユーザー名"
+
+#: src/filechooser.c:446
+msgid "_Select"
+msgstr "選択(_S)"
+
+#: src/filechooser.c:448
+msgid "_Save"
+msgstr "保存(_S)"
+
+#: src/filechooser.c:614
+msgid "Open files read-only"
+msgstr "読み取り専用でファイルを開く"
+
+#: src/screencastwidget.c:159
+msgid "Virtual monitor"
+msgstr "仮想モニター"
+
+#: src/screencastwidget.ui:40 src/screencastwidget.ui:86
+msgid "Remember this selection"
+msgstr "この選択を記憶する"
+
+#: data/xdg-desktop-portal-gnome.desktop.in.in:4
+msgid "Portal"
+msgstr "ポータル"
+
+#. TRANSLATORS: Don't translate this text (this is icon name)
+#: data/xdg-desktop-portal-gnome.desktop.in.in:6
+msgid "applications-system-symbolic"
+msgstr "applications-system-symbolic"
+
+#: src/appchooserdialog.c:229
+msgid "Failed to start Software"
+msgstr "“ソフトウェア”の起動に失敗しました"
+
+#: src/appchooserdialog.c:393
+#, c-format
+msgid "Choose an application to open the file “%s”."
+msgstr "“%s”を開くアプリケーションを選択してください。"
+
+#: src/appchooserdialog.c:398
+msgid "Choose an application."
+msgstr "アプリケーションを選択してください。"
+
+#: src/appchooserdialog.c:415
+#, c-format
+msgid ""
+"No apps installed that can open “%s”. You can find more applications in "
+"Software"
+msgstr ""
+"“%s”を開くことができるアプリがインストールされていません。“ソフトウェア”"
+"でアプリを探してください。"
+
+#: src/appchooserdialog.c:420
+msgid "No suitable app installed. You can find more applications in Software."
+msgstr ""
+"適切なアプリがインストールされていません。“ソフトウェア”でアプリを探してく"
+"ださい。"
+
+#: src/appchooserdialog.ui:5
+msgid "Open With…"
+msgstr "次で開く…"
+
+#: src/appchooserdialog.ui:12 src/remotedesktopdialog.ui:13
+#: src/screencastdialog.ui:14 src/screenshotdialog.ui:12
+msgid "_Cancel"
+msgstr "キャンセル(_C)"
+
+#: src/appchooserdialog.ui:20
+msgid "_Open"
+msgstr "開く(_O)"
+
+#: src/appchooserdialog.ui:104
+msgid "No Apps available"
+msgstr "利用可能なアプリはありません"
+
+#: src/appchooserdialog.ui:144
+msgid "_Find More in Software"
+msgstr "“ソフトウェア”で探す(_F)"
+
+#: src/background.c:214 src/background.c:305
+#, c-format
+msgid "“%s” is running in the background"
+msgstr "“%s”はバックグラウンドで実行しています"
+
+#: src/background.c:216
+msgid ""
+"This might be for a legitimate reason, but the application has not provided "
+"one.\n"
+"\n"
+"Note that forcing an application to quit might cause data loss."
+msgstr ""
+
+#: src/background.c:219
+msgid "Force quit"
+msgstr "強制終了する"
+
+#: src/background.c:220
+msgid "Allow"
+msgstr "許可する"
+
+#: src/background.c:303
+msgid "Background activity"
+msgstr "バックグラウンドアクティビティ"
+
+# ボタンのラベル
+#: src/background.c:311
+msgid "Find out more"
+msgstr "詳細を確認"
+
+#: src/remotedesktopdialog.c:184
+msgid "Pointer"
+msgstr "ポインター"
+
+#: src/remotedesktopdialog.c:187
+msgid "Keyboard"
+msgstr "キーボード"
+
+#: src/remotedesktopdialog.c:190
+msgid "Touch screen"
+msgstr "タッチスクリーン"
+
+#: src/remotedesktopdialog.c:303
+#, c-format
+msgid "Select devices to share with %s"
+msgstr "%s で共有するデバイスを選択してください"
+
+#: src/remotedesktopdialog.c:308
+msgid "Select devices to share with the requesting application"
+msgstr ""
+"要求しているアプリケーションで共有するデバイスを選択してください"
+
+#: src/remotedesktopdialog.ui:7
+msgid "Remote desktop"
+msgstr "リモートデスクトップ"
+
+#: src/remotedesktopdialog.ui:21 src/screencastdialog.ui:22
+#: src/screenshotdialog.ui:35
+msgid "_Share"
+msgstr "共有(_S)"
+
+#: src/screencastdialog.ui:5
+msgid "Screen Share"
+msgstr "画面共有"
+
+#: src/screencastwidget.c:494
+#, c-format
+msgid "Select monitor to share with %s"
+msgstr "%s で共有するモニターを選択してください"
+
+#: src/screencastwidget.c:496
+#, c-format
+msgid "Select window to share with %s"
+msgstr "%s で共有するウィンドウを選択してください"
+
+#: src/screencastwidget.c:501
+msgid "Select monitor to share with the requesting application"
+msgstr ""
+"要求しているアプリケーションで共有するモニターを選択してください"
+
+#: src/screencastwidget.c:502
+msgid "Select window to share with the requesting application"
+msgstr ""
+"要求しているアプリケーションで共有するウィンドウを選択してください"
+
+#: src/screencastwidget.ui:25
+msgid "Single Window"
+msgstr "単一のウィンドウ"
+
+#: src/screencastwidget.ui:86
+msgid "Entire Screen"
+msgstr "画面全体"
+
+#: src/screenshotdialog.c:442
+#, c-format
+msgid "Share this screenshot with %s?"
+msgstr "このスクリーンショットを %s で共有しますか?"
+
+#: src/screenshotdialog.c:446
+msgid "Share this screenshot with the requesting application?"
+msgstr ""
+"このスクリーンショットを、要求しているアプリケーションで共有しますか?"
+
+#: src/screenshotdialog.ui:6
+msgid "Screenshot"
+msgstr "スクリーンショット"
+
+#: src/screenshotdialog.ui:28
+msgid "_Options…"
+msgstr "オプション(_O)…"
+
+#: src/screenshotdialog.ui:53
+msgid "Take _Screenshot"
+msgstr "スクリーンショットを撮る(_S)"
+
+#: src/screenshotdialog.ui:110
+msgid "Take Screenshot"
+msgstr "スクリーンショットの撮影"
+
+#: src/screenshotdialog.ui:120
+msgid "Grab the whole sc_reen"
+msgstr "画面全体(_R)"
+
+#: src/screenshotdialog.ui:130
+msgid "Grab the current _window"
+msgstr "現在のウィンドウ(_W)"
+
+#: src/screenshotdialog.ui:140
+msgid "Select _area to grab"
+msgstr "撮影する領域の選択(_A)"
+
+#: src/screenshotdialog.ui:152
+msgid "Grab after a _delay of"
+msgstr "撮影するまでの待ち時間(_D)"
+
+#: src/screenshotdialog.ui:163
+msgid "seconds"
+msgstr "秒"
+
+#: src/screenshotdialog.ui:172
+msgid "Effects"
+msgstr "エフェクト"
+
+#: src/screenshotdialog.ui:182
+msgid "Include _pointer"
+msgstr "ポインターを含める(_P)"
+
+#: src/screenshotdialog.ui:190
+msgid "Include the window _border"
+msgstr "ウィンドウの境界を含める(_B)"
+
+#: src/settings.c:186
+msgid "Requested setting not found"
+msgstr "要求された設定が見つかりませんでした"
+
+#: src/wallpaperdialog.ui:8
+msgid "Set Background"
+msgstr "背景を設定"
+
+#: src/wallpaperdialog.ui:14
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/wallpaperdialog.ui:20
+msgid "Set"
+msgstr "設定"
+
+#: src/wallpaperdialog.ui:51
+msgid "Failed to load image file"
+msgstr "画像ファイルの読み込みに失敗しました"
+
+#: src/wallpaperpreview.ui:53
+msgid "Activities"
+msgstr "アクティビティ"

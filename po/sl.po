@@ -1,0 +1,313 @@
+# Slovenian translation for xdg-desktop-portal-gnome.
+# Copyright (C) 2021 xdg-desktop-portal-gnome's COPYRIGHT HOLDER
+# This file is distributed under the same license as the xdg-desktop-portal-gnome package.
+#
+# Matej Urbančič <mateju@src.gnome.org>, 2021–.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xdg-desktop-portal-gnome main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/xdg-desktop-portal-"
+"gnome/issues\n"
+"POT-Creation-Date: 2022-02-07 11:10+0000\n"
+"PO-Revision-Date: 2022-02-13 19:58+0100\n"
+"Last-Translator: Matej Urbančič <mateju@src.gnome.org>\n"
+"Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
+"Language: sl_SI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 3.0\n"
+
+#: data/xdg-desktop-portal-gnome.desktop.in.in:4
+msgid "Portal"
+msgstr "Portal"
+
+#. TRANSLATORS: Don't translate this text (this is icon name)
+#: data/xdg-desktop-portal-gnome.desktop.in.in:6
+msgid "applications-system-symbolic"
+msgstr "applications-system-symbolic"
+
+#: src/accountdialog.c:151
+msgid "Select an Image"
+msgstr "Izbor slike"
+
+#: src/accountdialog.c:154 src/wallpaperdialog.ui:14
+msgid "Cancel"
+msgstr "Prekliči"
+
+#: src/accountdialog.c:155
+msgid "Select"
+msgstr "Izbor"
+
+#: src/accountdialog.c:156
+msgid "Clear"
+msgstr "Počisti"
+
+#: src/accountdialog.c:163
+msgid "Images"
+msgstr "Slike"
+
+#: src/accountdialog.c:224
+#, c-format
+msgid "Share your personal information with %1$s? %2$s"
+msgstr "Ali želite objaviti osebne podatke za %1$s? %2$s"
+
+#: src/accountdialog.c:230
+#, c-format
+#| msgid "Share this screenshot with the requesting application?"
+msgid "Share your personal information with the requesting application? %s"
+msgstr "Ali želite objaviti osebne podatke s programom? %s"
+
+#: src/accountdialog.ui:4
+msgid "Share Details"
+msgstr "Objavi podrobnosti"
+
+#: src/accountdialog.ui:12 src/appchooserdialog.ui:12 src/filechooser.c:451
+#: src/remotedesktopdialog.ui:13 src/screencastdialog.ui:14
+#: src/screenshotdialog.ui:14
+msgid "_Cancel"
+msgstr "_Prekliči"
+
+#: src/accountdialog.ui:19 src/remotedesktopdialog.ui:21
+#: src/screencastdialog.ui:22 src/screenshotdialog.ui:37
+msgid "_Share"
+msgstr "_Objavi"
+
+#: src/accountdialog.ui:72
+msgid "Name"
+msgstr "Ime"
+
+#: src/accountdialog.ui:84
+msgid "Username"
+msgstr "Uporabniško ime"
+
+#: src/appchooserdialog.c:229
+msgid "Failed to start Software"
+msgstr "Zagon programske opreme GNOME spodletelo"
+
+#: src/appchooserdialog.c:393
+#, c-format
+msgid "Choose an application to open the file “%s”."
+msgstr "Izbor programa za odpiranje datoteke »%s«."
+
+#: src/appchooserdialog.c:398
+msgid "Choose an application."
+msgstr "Izbor programa."
+
+#: src/appchooserdialog.c:415
+#, c-format
+msgid ""
+"No apps installed that can open “%s”. You can find more applications in "
+"Software"
+msgstr ""
+"Ni nameščenega programa, ki odpira predmete »%s«. Program lahko poiščete "
+"tudi v brskalniku programske opreme."
+
+#: src/appchooserdialog.c:420
+msgid "No suitable app installed. You can find more applications in Software."
+msgstr ""
+"Ni nameščenega ustreznega programa. UStreznega lahko poiščete tudi v "
+"brskalniku programske opreme."
+
+#: src/appchooserdialog.ui:5
+msgid "Open With…"
+msgstr "Odpri s programom …"
+
+#: src/appchooserdialog.ui:20 src/filechooser.c:446
+msgid "_Open"
+msgstr "_Odpri"
+
+#: src/appchooserdialog.ui:104
+msgid "No Apps available"
+msgstr "Ni razpoložljivih programov"
+
+#: src/appchooserdialog.ui:144
+msgid "_Find More in Software"
+msgstr "_Najdi več programov"
+
+#: src/background.c:214 src/background.c:305
+#, c-format
+msgid "“%s” is running in the background"
+msgstr "Program »%s« je zagnan v ozadju."
+
+#: src/background.c:216
+msgid ""
+"This might be for a legitimate reason, but the application has not provided "
+"one.\n"
+"\n"
+"Note that forcing an application to quit might cause data loss."
+msgstr ""
+"Morda je razlog upravičen, vendar ni naveden.\n"
+"\n"
+"Upoštevajte, da lahko vsiljena prekinitev programa povzroči izgubo podatkov."
+
+#: src/background.c:219
+msgid "Force quit"
+msgstr "Vsili končanje"
+
+#: src/background.c:220
+msgid "Allow"
+msgstr "Dovoli"
+
+#: src/background.c:303
+msgid "Background activity"
+msgstr "Ozadnja dejavnost"
+
+#: src/background.c:311
+msgid "Find out more"
+msgstr "Več o tem"
+
+#: src/filechooser.c:446
+msgid "_Select"
+msgstr "_Izbor"
+
+#: src/filechooser.c:448
+msgid "_Save"
+msgstr "_Shrani"
+
+#: src/filechooser.c:614
+msgid "Open files read-only"
+msgstr "Odpri datoteke le za branje"
+
+#: src/remotedesktopdialog.ui:7
+msgid "Remote desktop"
+msgstr "Oddaljeno namizje"
+
+#: src/remotedesktopdialog.ui:64
+msgid "Allow remote interaction"
+msgstr "Dovoli upravljanje na daljavo"
+
+#: src/screencastdialog.ui:5
+msgid "Screen Share"
+msgstr "Souporaba zaslona"
+
+#: src/screencastwidget.c:159
+msgid "Virtual monitor"
+msgstr "Navidezni monitor"
+
+#: src/screencastwidget.c:542
+#, c-format
+msgid "Select monitor to share with %s"
+msgstr "Izbor zaslona za souporabo z %s"
+
+#: src/screencastwidget.c:544
+#, c-format
+msgid "Select window to share with %s"
+msgstr "Izbor okna za souporabo z %s"
+
+#: src/screencastwidget.c:549
+msgid "Select monitor to share with the requesting application"
+msgstr "Izberite zaslon za souporabo z zahtevanim programom"
+
+#: src/screencastwidget.c:550
+msgid "Select window to share with the requesting application"
+msgstr "Izberite okno za souporabo z zahtevanim programom"
+
+#: src/screencastwidget.ui:16
+msgid "Single Window"
+msgstr "Eno okno"
+
+#: src/screencastwidget.ui:40 src/screencastwidget.ui:86
+msgid "Remember this selection"
+msgstr "Zapomni si izbiro"
+
+#: src/screencastwidget.ui:64
+msgid "Entire Screen"
+msgstr "Celoten zaslon"
+
+#: src/screenshotdialog.c:420
+#, c-format
+msgid "Share this screenshot with %s?"
+msgstr "Ali želite omogočiti pogled zaslonske slike z %s?"
+
+#: src/screenshotdialog.c:424
+msgid "Share this screenshot with the requesting application?"
+msgstr "Ali želite uporabiti zaslonsko sliko z zahtevanim programom?"
+
+#: src/screenshotdialog.ui:8
+msgid "Screenshot"
+msgstr "Zaslonska slika"
+
+#: src/screenshotdialog.ui:30
+msgid "_Options…"
+msgstr "_Možnosti …"
+
+#: src/screenshotdialog.ui:55
+msgid "Take _Screenshot"
+msgstr "Zajemi zaslonsko _sliko"
+
+#: src/screenshotdialog.ui:108
+msgid "Take Screenshot"
+msgstr "Zajemi zaslonsko sliko"
+
+#: src/screenshotdialog.ui:118
+msgid "Grab the whole sc_reen"
+msgstr "Zajemi celoten _zaslon"
+
+#: src/screenshotdialog.ui:128
+msgid "Grab the current _window"
+msgstr "Zajemi trenutno _okno"
+
+#: src/screenshotdialog.ui:138
+msgid "Select _area to grab"
+msgstr "Zajemi izbrano _območje"
+
+#: src/screenshotdialog.ui:150
+msgid "Grab after a _delay of"
+msgstr "Zajemi _po zamiku"
+
+#: src/screenshotdialog.ui:161
+msgid "seconds"
+msgstr "sekunde"
+
+#: src/screenshotdialog.ui:170
+msgid "Effects"
+msgstr "Učinki"
+
+#: src/screenshotdialog.ui:180
+msgid "Include _pointer"
+msgstr "Vključi _kazalko"
+
+#: src/screenshotdialog.ui:188
+msgid "Include the window _border"
+msgstr "Vključi tudi _robove okna"
+
+#: src/settings.c:247
+msgid "Requested setting not found"
+msgstr "Zahtevane nastavitve ni mogoče najti"
+
+#: src/wallpaperdialog.ui:8
+msgid "Set Background"
+msgstr "Nastavi ozadje"
+
+#: src/wallpaperdialog.ui:20
+msgid "Set"
+msgstr "Nastavi"
+
+#: src/wallpaperdialog.ui:51
+msgid "Failed to load image file"
+msgstr "Nalaganje datoteke odtisa je spodletelo"
+
+#: src/wallpaperpreview.ui:50
+msgid "Activities"
+msgstr "Dejavnosti"
+
+#~ msgid "Pointer"
+#~ msgstr "Kazalec"
+
+#~ msgid "Keyboard"
+#~ msgstr "Tipkovnica"
+
+#~ msgid "Touch screen"
+#~ msgstr "Večdotični zaslon"
+
+#, c-format
+#~ msgid "Select devices to share with %s"
+#~ msgstr "Izbor naprave za souporabo z %s"
+
+#~ msgid "Select devices to share with the requesting application"
+#~ msgstr "Izberite naprave za souporabo z zahtevanim programom"

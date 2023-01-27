@@ -1,0 +1,45 @@
+Source: xdg-desktop-portal-cinnamon
+Section: gnome
+Priority: optional
+Maintainer: Linux Mint <root@linuxmint.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ libglib2.0-dev (>= 2.44),
+ libcinnamon-desktop-dev (>= 5.7),
+ meson (>= 0.53.0),
+ xdg-desktop-portal-dev (>= 1.7.1),
+Standards-Version: 4.6.0
+Homepage: https://github.com/linuxmint/xdg-desktop-portal-cinnamon
+
+Package: xdg-desktop-portal-cinnamon
+Architecture: linux-any
+Multi-Arch: foreign
+Depends:
+ dbus-user-session | dbus-x11,
+ cinnamon-desktop-data (>= 5.7.0),
+ xdg-desktop-portal (>= 1.7.1),
+ xdg-desktop-portal-gtk,
+ ${misc:Depends},
+ ${shlibs:Depends},
+Provides:
+ xdg-desktop-portal-backend (= 1.7.1),
+Description: Cinnamon portal backend for xdg-desktop-portal
+ xdg-desktop-portal-cinnamon provides a Cinnamon implementation for the
+ xdg-desktop-portal service. This allows sandboxed applications to
+ request services and information from outside the sandbox in the Cinnamon
+ environment.
+
+Package: xdg-desktop-portal-cinnamon-dbg
+Section: debug
+Priority: extra
+Architecture: any
+Depends:
+ xdg-desktop-portal-cinnamon (= ${binary:Version}),
+ ${misc:Depends},
+Description: Cinnamon portal backend for xdg-desktop-portal
+ xdg-desktop-portal-cinnamon provides a Cinnamon implementation for the
+ xdg-desktop-portal service. This allows sandboxed applications to
+ request services and information from outside the sandbox in the Cinnamon
+ environment.
+ .
+ This package contains the debugging symbols.

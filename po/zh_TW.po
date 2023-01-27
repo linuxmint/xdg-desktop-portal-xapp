@@ -1,0 +1,309 @@
+# Chinese (Taiwan) translation for xdg-desktop-portal-gnome.
+# Copyright (C) 2018 xdg-desktop-portal-gnome's COPYRIGHT HOLDER
+# This file is distributed under the same license as the xdg-desktop-portal-gnome package.
+# Cheng-Chia Tseng <pswo10680@gmail.com>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xdg-desktop-portal-gnome master\n"
+"Report-Msgid-Bugs-To: https://github.com/flatpak/xdg-desktop-portal-gnome/"
+"issues\n"
+"POT-Creation-Date: 2021-06-05 10:00-0300\n"
+"PO-Revision-Date: 2018-10-10 12:22+0800\n"
+"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
+"Language-Team: Chinese (Taiwan) <chinese-l10n@googlegroups.com>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+
+#: data/xdg-desktop-portal-gnome.desktop.in.in:4
+msgid "Portal"
+msgstr "入口"
+
+#: src/appchooserdialog.c:229
+msgid "Failed to start Software"
+msgstr "無法啟動《軟體》"
+
+#: src/appchooserdialog.c:385
+#, fuzzy, c-format
+msgid "Choose an application to open the file “%s”."
+msgstr "找不到可開啟「%s」的應用程式。"
+
+#: src/appchooserdialog.c:390
+msgid "Choose an application."
+msgstr ""
+
+#: src/appchooserdialog.c:407
+#, c-format
+msgid ""
+"No apps installed that can open “%s”. You can find more applications in "
+"Software"
+msgstr ""
+
+#: src/appchooserdialog.c:412
+msgid "No suitable app installed. You can find more applications in Software."
+msgstr ""
+
+#: src/appchooserdialog.ui:10
+#, fuzzy
+msgid "Open With…"
+msgstr "開啟方式"
+
+#: src/appchooserdialog.ui:14 src/remotedesktopdialog.ui:16
+#: src/screencastdialog.ui:16 src/screenshotdialog.ui:14
+msgid "_Cancel"
+msgstr "取消(_C)"
+
+#: src/appchooserdialog.ui:23
+msgid "_Open"
+msgstr "開啟(_O)"
+
+#: src/appchooserdialog.ui:115
+msgid "No Apps available"
+msgstr ""
+
+#: src/appchooserdialog.ui:159
+#, fuzzy
+msgid "_Find More in Software"
+msgstr "無法啟動《軟體》"
+
+#: src/background.c:215 src/background.c:308
+#, c-format
+msgid "“%s” is running in the background"
+msgstr ""
+
+#: src/background.c:217
+msgid ""
+"This might be for a legitimate reason, but the application has not provided "
+"one.\n"
+"\n"
+"Note that forcing an application to quit might cause data loss."
+msgstr ""
+
+#: src/background.c:220
+msgid "Force quit"
+msgstr ""
+
+#: src/background.c:221
+msgid "Allow"
+msgstr ""
+
+#: src/background.c:306
+msgid "Background activity"
+msgstr ""
+
+#: src/background.c:314
+msgid "Find out more"
+msgstr ""
+
+#: src/remotedesktopdialog.c:188
+msgid "Pointer"
+msgstr "指標"
+
+#: src/remotedesktopdialog.c:191
+msgid "Keyboard"
+msgstr "鍵盤"
+
+#: src/remotedesktopdialog.c:194
+msgid "Touch screen"
+msgstr "觸控螢幕"
+
+#: src/remotedesktopdialog.c:307
+#, c-format
+msgid "Select devices to share with %s"
+msgstr "選取要和 %s 分享的裝置"
+
+#: src/remotedesktopdialog.c:312
+msgid "Select devices to share with the requesting application"
+msgstr "選取您想和請求程式分享的裝置"
+
+#: src/remotedesktopdialog.ui:12
+msgid "Remote desktop"
+msgstr "遠端桌面"
+
+#: src/remotedesktopdialog.ui:28 src/screencastdialog.ui:28
+#: src/screenshotdialog.ui:38
+msgid "_Share"
+msgstr "分享(_S)"
+
+#: src/screencastdialog.ui:12
+#, fuzzy
+msgid "Screen Share"
+msgstr "畫面快照"
+
+#: src/screencastwidget.c:483
+#, c-format
+msgid "Select monitor to share with %s"
+msgstr "選取您想要和 %s 分享的螢幕"
+
+#: src/screencastwidget.c:485
+#, fuzzy, c-format
+msgid "Select window to share with %s"
+msgstr "選取您想和 %s 分享的項目"
+
+#: src/screencastwidget.c:490
+msgid "Select monitor to share with the requesting application"
+msgstr "選取您想和請求程式分享的螢幕"
+
+#: src/screencastwidget.c:491
+#, fuzzy
+msgid "Select window to share with the requesting application"
+msgstr "選取您想和請求程式分享的項目"
+
+#: src/screencastwidget.ui:100
+msgid "Single Window"
+msgstr ""
+
+#: src/screencastwidget.ui:176
+msgid "Entire Screen"
+msgstr ""
+
+#: src/screenshotdialog.c:442
+#, c-format
+msgid "Share this screenshot with %s?"
+msgstr "是否要和 %s 分享此畫面快照？"
+
+#: src/screenshotdialog.c:446
+msgid "Share this screenshot with the requesting application?"
+msgstr "是否要和請求程式分享此畫面快照？"
+
+#: src/screenshotdialog.ui:10
+msgid "Screenshot"
+msgstr "畫面快照"
+
+#: src/screenshotdialog.ui:30
+msgid "_Options…"
+msgstr "選項(_O)…"
+
+#: src/screenshotdialog.ui:55
+msgid "Take _Screenshot"
+msgstr "拍攝畫面快照(_S)"
+
+#: src/screenshotdialog.ui:111
+msgid "Take Screenshot"
+msgstr "拍攝畫面快照"
+
+#: src/screenshotdialog.ui:122
+msgid "Grab the whole sc_reen"
+msgstr "擷取整個螢幕(_R)"
+
+#: src/screenshotdialog.ui:133
+msgid "Grab the current _window"
+msgstr "擷取目前視窗(_W)"
+
+#: src/screenshotdialog.ui:144
+msgid "Select _area to grab"
+msgstr "選取擷取區域(_A)"
+
+#: src/screenshotdialog.ui:158
+msgid "Grab after a _delay of"
+msgstr "擷取倒數時間為(_D)"
+
+#: src/screenshotdialog.ui:171
+msgid "seconds"
+msgstr "秒"
+
+#: src/screenshotdialog.ui:181
+msgid "Effects"
+msgstr "效果"
+
+#: src/screenshotdialog.ui:192
+msgid "Include _pointer"
+msgstr "包含指標(_P)"
+
+#: src/screenshotdialog.ui:201
+msgid "Include the window _border"
+msgstr "包含視窗邊框(_B)"
+
+#: src/settings.c:186
+msgid "Requested setting not found"
+msgstr ""
+
+#: src/wallpaperdialog.ui:13
+msgid "Set Background"
+msgstr ""
+
+#: src/wallpaperdialog.ui:18
+msgid "Cancel"
+msgstr "取消"
+
+#: src/wallpaperdialog.ui:26
+#, fuzzy
+msgid "Set"
+msgstr "選取"
+
+#: src/wallpaperdialog.ui:57
+msgid "Failed to load image file"
+msgstr ""
+
+#: src/wallpaperpreview.ui:57
+msgid "Activities"
+msgstr ""
+
+#~ msgid "Deny Access"
+#~ msgstr "拒絕存取"
+
+#~ msgid "Grant Access"
+#~ msgstr "允許存取"
+
+#~ msgid "Select an Image"
+#~ msgstr "選取影像"
+
+#~ msgid "Select"
+#~ msgstr "選取"
+
+#~ msgid "Clear"
+#~ msgstr "清除"
+
+#~ msgid "Images"
+#~ msgstr "影像"
+
+#, c-format
+#~ msgid "Share your personal information with %s?"
+#~ msgstr "是否要和 %s 分享您的個人資訊？"
+
+#~ msgid "Share your personal information with the requesting application?"
+#~ msgstr "是否要和請求程式分享您的個人資訊？"
+
+#~ msgid "Share Details"
+#~ msgstr "分享細節"
+
+#~ msgid "Make changes before sharing the information"
+#~ msgstr "在分享資訊前做出修改"
+
+#, fuzzy
+#~ msgid "_Select"
+#~ msgstr "選取"
+
+#~ msgid "_Save"
+#~ msgstr "儲存(_S)"
+
+#~ msgid "applications-system-symbolic"
+#~ msgstr "applications-system-symbolic"
+
+#, c-format
+#~ msgid ""
+#~ "Select an application to open “%s”. More applications are available in <a "
+#~ "href='software'>Software.</a>"
+#~ msgstr ""
+#~ "選取開啟「%s」的應用程式。《<a href='software'>軟體</a>》中有更多應用程式"
+#~ "可用。"
+
+#~ msgid ""
+#~ "Select an application. More applications are available in <a "
+#~ "href='software'>Software.</a>"
+#~ msgstr "選取應用程式。《<a href='software'>軟體</a>》中有更多應用程式可用。"
+
+#~ msgid "Unable to find a suitable application."
+#~ msgstr "找不到適合的應用程式。"
+
+#~ msgid "No Applications Found"
+#~ msgstr "找不到應用程式"
+
+#~ msgid "Find Compatible Applications in Software"
+#~ msgstr "在《軟體》中尋找相容的應用程式"
+
+#~ msgid "Screen casting"
+#~ msgstr "螢幕投放"

@@ -1,0 +1,285 @@
+# Kazakh translation for xdg-desktop-portal-gnome.
+# Copyright (C) 2022 xdg-desktop-portal-gnome's COPYRIGHT HOLDER
+# This file is distributed under the same license as the xdg-desktop-portal-gnome package.
+# Baurzhan Muftakhidinov <baurthefirst@gmail.com>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: xdg-desktop-portal-gnome main\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/xdg-desktop-portal-"
+"gnome/issues\n"
+"POT-Creation-Date: 2022-03-12 06:48+0000\n"
+"PO-Revision-Date: 2022-03-13 11:42+0500\n"
+"Last-Translator: \n"
+"Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
+"Language: kk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: data/xdg-desktop-portal-gnome.desktop.in.in:4
+msgid "Portal"
+msgstr "Портал"
+
+#. TRANSLATORS: Don't translate this text (this is icon name)
+#: data/xdg-desktop-portal-gnome.desktop.in.in:6
+msgid "applications-system-symbolic"
+msgstr "applications-system-symbolic"
+
+#: src/accountdialog.c:151
+msgid "Select an Image"
+msgstr "Суретті таңдау"
+
+#: src/accountdialog.c:154 src/wallpaperdialog.ui:14
+msgid "Cancel"
+msgstr "Бас тарту"
+
+#: src/accountdialog.c:155
+msgid "Select"
+msgstr "Таңдау"
+
+#: src/accountdialog.c:156
+msgid "Clear"
+msgstr "Тазарту"
+
+#: src/accountdialog.c:163
+msgid "Images"
+msgstr "Суреттер"
+
+#: src/accountdialog.c:224
+#, c-format
+msgid "Share your personal information with %1$s? %2$s"
+msgstr ""
+
+#: src/accountdialog.c:230
+#, c-format
+msgid "Share your personal information with the requesting application? %s"
+msgstr ""
+
+#: src/accountdialog.ui:4
+msgid "Share Details"
+msgstr ""
+
+#: src/accountdialog.ui:12 src/appchooserdialog.ui:12 src/filechooser.c:451
+#: src/remotedesktopdialog.ui:13 src/screencastdialog.ui:14
+#: src/screenshotdialog.ui:14
+msgid "_Cancel"
+msgstr "Ба_с тарту"
+
+#: src/accountdialog.ui:19 src/remotedesktopdialog.ui:21
+#: src/screencastdialog.ui:22 src/screenshotdialog.ui:37
+msgid "_Share"
+msgstr "Бөлі_су"
+
+#: src/accountdialog.ui:72
+msgid "Name"
+msgstr "Аты"
+
+#: src/accountdialog.ui:84
+msgid "Username"
+msgstr "Пайдаланушы аты"
+
+#: src/appchooserdialog.c:229
+msgid "Failed to start Software"
+msgstr ""
+
+#: src/appchooserdialog.c:393
+#, c-format
+msgid "Choose an application to open the file “%s”."
+msgstr ""
+
+#: src/appchooserdialog.c:398
+msgid "Choose an application."
+msgstr "Қолданбаны таңдау."
+
+#: src/appchooserdialog.c:415
+#, c-format
+msgid ""
+"No apps installed that can open “%s”. You can find more applications in "
+"Software"
+msgstr ""
+
+#: src/appchooserdialog.c:420
+msgid "No suitable app installed. You can find more applications in Software."
+msgstr ""
+
+#: src/appchooserdialog.ui:5
+msgid "Open With…"
+msgstr "Көмегімен ашу…"
+
+#: src/appchooserdialog.ui:20 src/filechooser.c:446
+msgid "_Open"
+msgstr "_Ашу"
+
+#: src/appchooserdialog.ui:104
+msgid "No Apps available"
+msgstr "Қолжетімді қолданбалар жоқ"
+
+#: src/appchooserdialog.ui:144
+msgid "_Find More in Software"
+msgstr ""
+
+#: src/background.c:214 src/background.c:305
+#, c-format
+msgid "“%s” is running in the background"
+msgstr ""
+
+#: src/background.c:216
+msgid ""
+"This might be for a legitimate reason, but the application has not provided "
+"one.\n"
+"\n"
+"Note that forcing an application to quit might cause data loss."
+msgstr ""
+
+#: src/background.c:219
+msgid "Force quit"
+msgstr "Мәжбүрлі шығу"
+
+#: src/background.c:220
+msgid "Allow"
+msgstr "Рұқсат ету"
+
+#: src/background.c:303
+msgid "Background activity"
+msgstr "Фондық әрекет"
+
+#: src/background.c:311
+msgid "Find out more"
+msgstr "Көбірек табу"
+
+#: src/filechooser.c:446
+msgid "_Select"
+msgstr "_Таңдау"
+
+#: src/filechooser.c:448
+msgid "_Save"
+msgstr "_сақтау"
+
+#: src/filechooser.c:614
+msgid "Open files read-only"
+msgstr "Файлдарды тек оқу үшін ашу"
+
+#: src/remotedesktopdialog.ui:7
+msgid "Remote desktop"
+msgstr "Қашықтағы жұмыс үстелі"
+
+#: src/remotedesktopdialog.ui:64
+msgid "Allow remote interaction"
+msgstr "Қашықтан әрекеттесуге рұқсат беру"
+
+#: src/screencastdialog.ui:5
+msgid "Screen Share"
+msgstr "Экранмен бөлісу"
+
+#: src/screencastwidget.c:159
+msgid "Virtual monitor"
+msgstr "Виртуалды монитор"
+
+#: src/screencastwidget.c:542
+#, c-format
+msgid "Select monitor to share with %s"
+msgstr ""
+
+#: src/screencastwidget.c:544
+#, c-format
+msgid "Select window to share with %s"
+msgstr ""
+
+#: src/screencastwidget.c:549
+msgid "Select monitor to share with the requesting application"
+msgstr ""
+
+#: src/screencastwidget.c:550
+msgid "Select window to share with the requesting application"
+msgstr ""
+
+#: src/screencastwidget.ui:16
+msgid "Single Window"
+msgstr "Дара терезе"
+
+#: src/screencastwidget.ui:40 src/screencastwidget.ui:86
+msgid "Remember this selection"
+msgstr "Бұл таңдауды есте сақтау"
+
+#: src/screencastwidget.ui:64
+msgid "Entire Screen"
+msgstr "Бүкіл экран"
+
+#: src/screenshotdialog.c:420
+#, c-format
+msgid "Share this screenshot with %s?"
+msgstr ""
+
+#: src/screenshotdialog.c:424
+msgid "Share this screenshot with the requesting application?"
+msgstr ""
+
+#: src/screenshotdialog.ui:8
+msgid "Screenshot"
+msgstr "Скриншот"
+
+#: src/screenshotdialog.ui:30
+msgid "_Options…"
+msgstr "_Опциялар…"
+
+#: src/screenshotdialog.ui:55
+msgid "Take _Screenshot"
+msgstr "_Скриншотты түсіру"
+
+#: src/screenshotdialog.ui:108
+msgid "Take Screenshot"
+msgstr "Скриншотты түсіру"
+
+#: src/screenshotdialog.ui:118
+msgid "Grab the whole sc_reen"
+msgstr ""
+
+#: src/screenshotdialog.ui:128
+msgid "Grab the current _window"
+msgstr ""
+
+#: src/screenshotdialog.ui:138
+msgid "Select _area to grab"
+msgstr ""
+
+#: src/screenshotdialog.ui:150
+msgid "Grab after a _delay of"
+msgstr ""
+
+#: src/screenshotdialog.ui:161
+msgid "seconds"
+msgstr "секунд"
+
+#: src/screenshotdialog.ui:170
+msgid "Effects"
+msgstr "Эффектілер"
+
+#: src/screenshotdialog.ui:180
+msgid "Include _pointer"
+msgstr ""
+
+#: src/screenshotdialog.ui:188
+msgid "Include the window _border"
+msgstr ""
+
+#: src/settings.c:247
+msgid "Requested setting not found"
+msgstr ""
+
+#: src/wallpaperdialog.ui:8
+msgid "Set Background"
+msgstr "Фонды орнату"
+
+#: src/wallpaperdialog.ui:20
+msgid "Set"
+msgstr "Орнату"
+
+#: src/wallpaperdialog.ui:51
+msgid "Failed to load image file"
+msgstr ""
+
+#: src/wallpaperpreview.ui:50
+msgid "Activities"
+msgstr "Белсенділіктер"
