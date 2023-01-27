@@ -15,3 +15,6 @@ Implements:
 - org.freedesktop.impl.portal.Settings
 - org.freedesktop.impl.portal.Wallpaper
 
+Todo:
+- org.freedesktop.impl.portal.Background
+- ?
