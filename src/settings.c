@@ -18,7 +18,7 @@
  *       Patrick Griffis <pgriffis@igalia.com>
  */
 
-#include "config.h"
+#include CONFIG_H
 
 #include <time.h>
 #include <string.h>
@@ -85,7 +85,7 @@ namespace_matches (const char         *namespace,
 static GVariant *
 get_color_scheme (void)
 {
-  SettingsBundle *bundle = g_hash_table_lookup (settings, "org.cinnamon.desktop.interface");
+  SettingsBundle *bundle = g_hash_table_lookup (settings, DESKTOP_INTERFACE_SCHEMA);
   int color_scheme;
 
   if (!g_settings_schema_has_key (bundle->schema, "color-scheme"))
@@ -179,7 +179,8 @@ on_settings_changed (GSettings             *settings,
 
   g_debug ("Emitting changed for %s %s", user_data->namespace, key);
 
-  if (strcmp (user_data->namespace, "org.cinnamon.desktop.interface") == 0 &&
+  // MATE doesn't have color-scheme currently
+  if (strcmp (user_data->namespace, DESKTOP_INTERFACE_SCHEMA) == 0 &&
       strcmp (key, "color-scheme") == 0)
     xdp_impl_settings_emit_setting_changed (user_data->self,
                                             "org.freedesktop.appearance", key,
@@ -191,7 +192,7 @@ init_settings_table (XdpImplSettings *settings,
                      GHashTable      *table)
 {
   static const char * const schemas[] = {
-    "org.cinnamon.desktop.interface",
+    DESKTOP_INTERFACE_SCHEMA,
   };
 
   size_t i;

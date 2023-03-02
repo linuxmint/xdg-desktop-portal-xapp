@@ -22,7 +22,7 @@
 
 #define _GNU_SOURCE 1
 
-#include "config.h"
+#include CONFIG_H
 
 #include <errno.h>
 #include <locale.h>
@@ -176,7 +176,7 @@ main (int argc, char *argv[])
       "Documentation for the available D-Bus interfaces can be found at\n"
       "https://flatpak.github.io/xdg-desktop-portal/portal-docs.html\n"
       "\n"
-      "Please report issues at https://gitlab.gnome.org/GNOME/xdg-desktop-portal-gnome/issues");
+      "Please report issues at https://github.com/linuxmint/xdg-desktop-portal-xapp/issues");
   g_option_context_add_main_entries (context, entries, NULL);
   if (!g_option_context_parse (context, &argc, &argv, &error))
     {

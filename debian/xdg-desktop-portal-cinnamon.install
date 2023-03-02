@@ -1,6 +1,0 @@
-usr/lib/systemd/user
-usr/libexec/xdg-desktop-portal-cinnamon
-usr/share/applications/xdg-desktop-portal-cinnamon.desktop
-usr/share/dbus-1/services
-usr/share/locale/*/*/xdg-desktop-portal-cinnamon.mo
-usr/share/xdg-desktop-portal/portals/cinnamon.portal

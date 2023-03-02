@@ -1,11 +1,18 @@
 gnome = import('gnome')
 pkg = import('pkgconfig')
 
-xdg_desktop_portal_dep = dependency('xdg-desktop-portal', version: '>= 1.5')
+top_srcdir = meson.source_root()
+
+# **************************
+# ****** Common stuff ******
+# **************************
 
 # Desktop Portal D-Bus interfaces
+
+xdg_desktop_portal_dep = dependency('xdg-desktop-portal', version: '>= 1.5')
 desktop_portal_interfaces_dir = xdg_desktop_portal_dep.get_pkgconfig_variable('interfaces_dir')
-desktop_portal_dbus_interfaces = [
+
+common_desktop_portal_dbus_interfaces = [
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Inhibit.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Lockdown.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Request.xml',
@@ -15,46 +22,25 @@ desktop_portal_dbus_interfaces = [
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Wallpaper.xml',
 ]
 
-built_sources = gnome.gdbus_codegen(
+common_built_sources = gnome.gdbus_codegen(
   'xdg-desktop-portal-dbus',
-  sources: desktop_portal_dbus_interfaces,
+  sources: common_desktop_portal_dbus_interfaces,
   interface_prefix: 'org.freedesktop.impl.portal.',
   namespace: 'XdpImpl',
 )
 
-# Cinnamon Screensaver/Session/Shot D-Bus interfaces
-top_srcdir = meson.source_root()
-misc_dbus_interfaces = files(
+common_dbus_interfaces = files(
   top_srcdir / 'data' / 'org.freedesktop.ScreenSaver.xml',
   top_srcdir / 'data' / 'org.gnome.SessionManager.xml',
-  top_srcdir / 'data' / 'org.Cinnamon.xml',
-  top_srcdir / 'data' / 'org.cinnamon.ScreenSaver.xml',
   top_srcdir / 'data' / 'org.cinnamon.Screenshot.xml',
 )
 
-built_sources += gnome.gdbus_codegen(
-  'cinnamon-dbus',
-  sources: misc_dbus_interfaces,
-  interface_prefix: 'org.freedesktop.impl.portal.',
+common_built_sources += gnome.gdbus_codegen(
+  'common-dbus',
+  sources: common_dbus_interfaces
 )
 
-# GResources
-built_sources += gnome.compile_resources(
-  'xdg-desktop-portal-cinnamon-resources',
-  'xdg-desktop-portal-cinnamon.gresource.xml',
-  c_name: '_xdg_desktop',
-)
-
-# config.h
-config_h = configuration_data()
-config_h.set_quoted('GETTEXT_PACKAGE', meson.project_name())
-config_h.set_quoted('LOCALEDIR', prefix / get_option('localedir'))
-config_h.set_quoted('PACKAGE_NAME', meson.project_name())
-config_h.set_quoted('PACKAGE_STRING', '@0@ @1@'.format(meson.project_name(), meson.project_version()))
-built_sources += configure_file(output: 'config.h', configuration: config_h)
-
-deps = [
-  declare_dependency(sources: built_sources),
+common_deps = [
   meson.get_compiler('c').find_library('m'),
   dependency('glib-2.0', version: '>= 2.44'),
   dependency('gio-unix-2.0'),
@@ -63,7 +49,42 @@ deps = [
   xdg_desktop_portal_dep,
 ]
 
-sources = built_sources + files(
+common_config = {
+    'GETTEXT_PACKAGE' : '"@0@"'.format(meson.project_name()),
+    'LOCALEDIR': '"@0@"'.format(prefix / get_option('localedir'))
+}
+
+# **************************
+# ****** Cinnamon **********
+# **************************
+
+# Cinnamon Screensaver/Session/Shot D-Bus interfaces
+
+cinnamon_built_sources = common_built_sources + gnome.gdbus_codegen(
+  'cinnamon-screensaver-dbus',
+  sources: files(top_srcdir / 'data' / 'org.cinnamon.ScreenSaver.xml'),
+  interface_prefix: 'org.cinnamon.',
+  namespace: 'Desktop'
+)
+
+cinnamon_config = configuration_data(common_config)
+
+cinnamon_config.set10('CINNAMON_PORTAL', 1)
+cinnamon_config.set_quoted('PACKAGE_STRING', 'xdg-desktop-portal-xapp-cinnamon @0@'.format(meson.project_version()))
+cinnamon_config.set_quoted('SCREENSAVER_H', 'cinnamon-screensaver-dbus.h')
+cinnamon_config.set_quoted('DESKTOP_INTERFACE_SCHEMA', 'org.cinnamon.desktop.interface')
+cinnamon_config.set_quoted('LOCKDOWN_SCHEMA', 'org.cinnamon.desktop.lockdown')
+cinnamon_config.set_quoted('PRIVACY_SCHEMA', 'org.cinnamon.desktop.privacy')
+cinnamon_config.set_quoted('BACKGROUND_SCHEMA', 'org.cinnamon.desktop.background')
+
+cinnamon_built_sources += configure_file(output: 'config-cinnamon.h', configuration: cinnamon_config)
+
+cinnamon_deps = [
+  declare_dependency(sources: cinnamon_built_sources),
+  dependency('cinnamon-desktop', version: '>= 5.3')
+] + common_deps
+
+cinnamon_sources = cinnamon_built_sources + files(
   'inhibit.c',
   'lockdown.c',
   'request.c',
@@ -72,13 +93,68 @@ sources = built_sources + files(
   'settings.c',
   'utils.c',
   'wallpaper.c',
-  'xdg-desktop-portal-cinnamon.c',
+  'xdg-desktop-portal-xapp-cinnamon.c',
 )
 
 executable(
-  'xdg-desktop-portal-cinnamon',
-  sources,
-  dependencies: deps,
+  'xdg-desktop-portal-xapp-cinnamon',
+  cinnamon_sources,
+  dependencies: cinnamon_deps,
   install: true,
   install_dir: libexecdir,
+  c_args: [
+    '-DCONFIG_H="config-cinnamon.h"'
+  ],
 )
+
+# **************************
+# ****** MATE **********
+# **************************
+
+# MATE Screensaver/Session D-Bus interfaces
+
+mate_built_sources = common_built_sources + gnome.gdbus_codegen(
+  'mate-screensaver-dbus',
+  sources: files(top_srcdir / 'data' / 'org.mate.ScreenSaver.xml'),
+  interface_prefix: 'org.mate.',
+  namespace: 'Desktop'
+)
+
+mate_config = configuration_data(common_config)
+mate_config.set10('MATE_PORTAL', 1)
+mate_config.set_quoted('PACKAGE_STRING', 'xdg-desktop-portal-xapp-mate @0@'.format(meson.project_version()))
+mate_config.set_quoted('SCREENSAVER_H', 'mate-screensaver-dbus.h')
+mate_config.set_quoted('DESKTOP_INTERFACE_SCHEMA', 'org.mate.desktop.interface')
+mate_config.set_quoted('LOCKDOWN_SCHEMA', 'org.mate.desktop.lockdown')
+mate_config.set_quoted('PRIVACY_SCHEMA', 'org.mate.desktop.privacy')
+mate_config.set_quoted('BACKGROUND_SCHEMA', 'org.mate.desktop.background')
+mate_built_sources += configure_file(output: 'config-mate.h', configuration: mate_config)
+
+mate_deps = [
+  declare_dependency(sources: mate_built_sources),
+  dependency('mate-desktop-2.0', version: '>= 1.26')
+] + common_deps
+
+mate_sources = mate_built_sources + files(
+  'inhibit.c',
+  'lockdown.c',
+  'request.c',
+  'session.c',
+  'settings.c',
+  'utils.c',
+  'wallpaper.c',
+  'xdg-desktop-portal-xapp-mate.c',
+)
+
+executable(
+  'xdg-desktop-portal-xapp-mate',
+  mate_sources,
+  dependencies: mate_deps,
+  install: true,
+  install_dir: libexecdir,
+  c_args: [
+    '-DCONFIG_H="config-mate.h"'
+  ],
+)
+
+

@@ -3,38 +3,46 @@ i18n = import('i18n')
 libexecdir_conf = configuration_data()
 libexecdir_conf.set('libexecdir', prefix / libexecdir)
 
-# Portal
+# Portals
 portal_dir = datadir / 'xdg-desktop-portal' / 'portals'
-install_data('cinnamon.portal', install_dir: portal_dir)
+install_data(
+  [
+    'xapp-cinnamon.portal',
+    'xapp-mate.portal'
+  ],
+  install_dir: portal_dir)
 
-# Service
-configure_file(
-  input: 'org.freedesktop.impl.portal.desktop.cinnamon.service.in',
-  output: 'org.freedesktop.impl.portal.desktop.cinnamon.service',
-  configuration: libexecdir_conf,
-  install_dir: dbus_service_dir,
-)
+foreach service_name : [
+                         'org.freedesktop.impl.portal.desktop.xapp-cinnamon',
+                         'org.freedesktop.impl.portal.desktop.xapp-mate'
+                       ]
+  # dbus service
+  configure_file(
+    input: service_name + '.service.in',
+    output: service_name + '.service',
+    configuration: libexecdir_conf,
+    install_dir: dbus_service_dir,
+  )
+endforeach
 
-# systemd unit
-configure_file(
-  input: 'xdg-desktop-portal-cinnamon.service.in',
-  output: 'xdg-desktop-portal-cinnamon.service',
-  configuration: libexecdir_conf,
-  install_dir: systemduserunitdir,
-)
+foreach filename : [
+                     'xdg-desktop-portal-xapp-cinnamon',
+                     'xdg-desktop-portal-xapp-mate'
+                   ]
+  # systemd unit
+  configure_file(
+    input: filename + '.service.in',
+    output: filename + '.service',
+    configuration: libexecdir_conf,
+    install_dir: systemduserunitdir,
+  )
 
-# Desktop file
-desktop_in = configure_file(
-  input: 'xdg-desktop-portal-cinnamon.desktop.in.in',
-  output: 'xdg-desktop-portal-cinnamon.desktop.in',
-  configuration: libexecdir_conf,
-)
-
-i18n.merge_file(
-  type: 'desktop',
-  input: desktop_in,
-  output: 'xdg-desktop-portal-cinnamon.desktop',
-  po_dir: meson.source_root() / 'po',
-  install: true,
-  install_dir: datadir / 'applications',
-)
+  # Desktop file
+  configure_file(
+    input: filename + '.desktop.in',
+    output: filename + '.desktop',
+    configuration: libexecdir_conf,
+    install: true,
+    install_dir: datadir / 'applications',
+  )
+endforeach

@@ -1,6 +1,6 @@
 #define _GNU_SOURCE 1
 
-#include "config.h"
+#include CONFIG_H
 
 #include <errno.h>
 #include <locale.h>
@@ -15,7 +15,7 @@
 #include <gio/gdesktopappinfo.h>
 #include <gio/gunixfdlist.h>
 
-#include "cinnamon-dbus.h"
+#include "common-dbus.h"
 
 #include "screenshot.h"
 #include "request.h"

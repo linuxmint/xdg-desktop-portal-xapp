@@ -1,6 +1,6 @@
 #define _GNU_SOURCE 1
 
-#include "config.h"
+#include CONFIG_H
 
 #include <errno.h>
 #include <glib/gstdio.h>
@@ -13,16 +13,19 @@
 #include <gtk/gtk.h>
 
 #include <glib/gi18n.h>
-#include <gio/gdesktopappinfo.h>
+
+#if defined (CINNAMON_PORTAL)
 #include <libcinnamon-desktop/cdesktop-enums.h>
+#elif defined (MATE_PORTAL)
+#define MATE_DESKTOP_USE_UNSTABLE_API
+#include <libmate-desktop/mate-bg.h>
+#endif
 
 #include "xdg-desktop-portal-dbus.h"
 
 #include "wallpaper.h"
 #include "request.h"
 #include "utils.h"
-
-#define BACKGROUND_SCHEMA "org.cinnamon.desktop.background"
 
 typedef struct {
   XdpImplWallpaper *impl;
@@ -64,8 +67,14 @@ set_gsettings (gchar *schema,
 
   settings = g_settings_new (schema);
 
+#if defined (CINNAMON_PORTAL)
   return (g_settings_set_string (settings, "picture-uri", uri) &&
           g_settings_set_enum (settings, "picture-options", C_DESKTOP_BACKGROUND_STYLE_ZOOM));
+#elif defined (MATE_PORTAL)
+  g_autoptr(GFile) file = g_file_new_for_uri (uri);
+  return (g_settings_set_string (settings, "picture-filename", g_file_peek_path (file)) &&
+          g_settings_set_enum (settings, "picture-options", MATE_BG_PLACEMENT_ZOOMED));
+#endif
 }
 
 static void

@@ -1,7 +1,7 @@
 project(
-  'xdg-desktop-portal-cinnamon',
+  'xdg-desktop-portal-xapp',
   'c',
-  version: '5.7',
+  version: '0.1',
   meson_version: '>= 0.53.0',
   license: 'LGPLv2.1+'
 )
@@ -26,7 +26,7 @@ if dbus_service_dir == ''
 endif
 
 subdir('data')
-subdir('po')
+# subdir('po')
 subdir('src')
 
 summary({

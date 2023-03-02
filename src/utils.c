@@ -17,8 +17,7 @@
  * Authors:
  *       Matthias Clasen <mclasen@redhat.com>
  */
-
-#include "config.h"
+#include CONFIG_H
 
 #include <gio/gio.h>
 

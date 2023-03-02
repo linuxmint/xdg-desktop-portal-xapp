@@ -1,18 +1,27 @@
 #define _GNU_SOURCE 1
 
-#include "config.h"
+#include CONFIG_H
+#include SCREENSAVER_H
 
 #include <gtk/gtk.h>
 
 #include <gio/gio.h>
 
 #include "xdg-desktop-portal-dbus.h"
-#include "cinnamon-dbus.h"
+#include "common-dbus.h"
 #include "session.h"
 #include "utils.h"
 
 #include "inhibit.h"
 #include "request.h"
+
+#if defined (CINNAMON_PORTAL)
+#define SCREENSAVER_DBUS_IFACE "org.cinnamon.ScreenSaver"
+#define SCREENSAVER_DBUS_PATH "/org/cinnamon/ScreenSaver"
+#elif defined (MATE_PORTAL)
+#define SCREENSAVER_DBUS_IFACE "org.mate.ScreenSaver"
+#define SCREENSAVER_DBUS_PATH "/org/mate/ScreenSaver"
+#endif
 
 enum {
   INHIBIT_LOGOUT  = 1,
@@ -23,7 +32,7 @@ enum {
 
 static GDBusInterfaceSkeleton *inhibit;
 static OrgGnomeSessionManager *sessionmanager;
-static OrgCinnamonScreenSaver *screensaver;
+static DesktopScreenSaver *screensaver;
 static GDBusProxy *client;
 
 typedef enum {
@@ -574,12 +583,12 @@ inhibit_init (GDBusConnection *bus,
 
   if (owner)
     {
-      screensaver = org_cinnamon_screen_saver_proxy_new_sync (bus,
-                                                           G_DBUS_PROXY_FLAGS_NONE,
-                                                           "org.cinnamon.ScreenSaver",
-                                                           "/org/cinnamon/ScreenSaver",
-                                                           NULL,
-                                                           NULL);
+      screensaver = desktop_screen_saver_proxy_new_sync (bus,
+                                                         G_DBUS_PROXY_FLAGS_NONE,
+                                                         SCREENSAVER_DBUS_IFACE,
+                                                         SCREENSAVER_DBUS_PATH,
+                                                         NULL,
+                                                         NULL);
       owner2 = g_dbus_proxy_get_name_owner (G_DBUS_PROXY (screensaver));
 
       if (owner2)
@@ -592,7 +601,7 @@ inhibit_init (GDBusConnection *bus,
           g_signal_connect (inhibit, "handle-query-end-response", G_CALLBACK (handle_query_end_response), NULL);
 
           g_signal_connect (screensaver, "active-changed", G_CALLBACK (global_active_changed_cb), NULL);
-          org_cinnamon_screen_saver_call_get_active_sync (screensaver, &active, NULL, NULL);
+          desktop_screen_saver_call_get_active_sync (screensaver, &active, NULL, NULL);
           g_object_set_data (G_OBJECT (screensaver), "active", GINT_TO_POINTER (active));
 
           g_debug ("Using org.gnome.SessionManager for inhibit");

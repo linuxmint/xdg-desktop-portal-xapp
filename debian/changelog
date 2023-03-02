@@ -1,8 +1,8 @@
-xdg-desktop-portal-cinnamon (5.7.0) unstable; urgency=medium
+xdg-desktop-portal-xapp (0.1) unstable; urgency=medium
 
   * Initial commit
 
- -- Michael Webster <miketwebster@gmail.com>  Fri, 20 Jan 2023 12:25:38 -0500
+ -- Michael Webster <miketwebster@gmail.com>  Fri, 02 Mar 2023 12:25:38 -0500
 
 xdg-desktop-portal-gnome (42.1-0ubuntu1) jammy; urgency=medium
 
