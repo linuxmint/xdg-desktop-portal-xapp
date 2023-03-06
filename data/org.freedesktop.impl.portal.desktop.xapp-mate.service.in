@@ -1,4 +1,4 @@
 [D-BUS Service]
-Name=org.freedesktop.impl.portal.desktop.xapp-mate
+Name=org.freedesktop.impl.portal.desktop.mate
 Exec=@libexecdir@/xdg-desktop-portal-xapp-mate
 SystemdService=xdg-desktop-portal-xapp-mate.service

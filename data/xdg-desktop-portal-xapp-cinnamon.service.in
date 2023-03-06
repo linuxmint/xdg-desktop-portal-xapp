@@ -3,5 +3,5 @@ Description=Portal service (XApp Cinnamon implementation)
 
 [Service]
 Type=dbus
-BusName=org.freedesktop.impl.portal.desktop.xapp-cinnamon
+BusName=org.freedesktop.impl.portal.desktop.cinnamon
 ExecStart=@libexecdir@/xdg-desktop-portal-xapp-cinnamon

@@ -3,5 +3,5 @@ Description=Portal service (XApp Mate implementation)
 
 [Service]
 Type=dbus
-BusName=org.freedesktop.impl.portal.desktop.xapp-mate
+BusName=org.freedesktop.impl.portal.desktop.mate
 ExecStart=@libexecdir@/xdg-desktop-portal-xapp-mate
