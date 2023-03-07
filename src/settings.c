@@ -96,6 +96,20 @@ get_color_scheme (void)
   return g_variant_new_uint32 (color_scheme);
 }
 
+static GVariant *
+get_high_contrast (void)
+{
+  SettingsBundle *bundle = g_hash_table_lookup (settings, DESKTOP_INTERFACE_SCHEMA);
+  gboolean high_contrast;
+
+  if (!g_settings_schema_has_key (bundle->schema, "high-contrast"))
+    return g_variant_new_boolean (FALSE);
+
+  high_contrast = g_settings_get_boolean (bundle->settings, "high-contrast");
+
+  return g_variant_new_boolean (high_contrast);
+}
+
 static gboolean
 settings_handle_read_all (XdpImplSettings       *object,
                           GDBusMethodInvocation *invocation,
@@ -114,6 +128,16 @@ settings_handle_read_all (XdpImplSettings       *object,
       g_variant_dict_insert_value (&dict, "color-scheme", get_color_scheme ());
 
       g_variant_builder_add (builder, "{s@a{sv}}", "org.freedesktop.appearance", g_variant_dict_end (&dict));
+    }
+
+  if (namespace_matches ("org.gnome.desktop.a11y.interface", arg_namespaces))
+    {
+      GVariantDict dict;
+
+      g_variant_dict_init (&dict, NULL);
+      g_variant_dict_insert_value (&dict, "high-contrast", get_high_contrast ());
+
+      g_variant_builder_add (builder, "{s@a{sv}}", "org.gnome.desktop.a11y.interface", g_variant_dict_end (&dict));
     }
 
   g_variant_builder_close (builder);
@@ -139,7 +163,15 @@ settings_handle_read (XdpImplSettings       *object,
                                              g_variant_new ("(v)", get_color_scheme ()));
       return TRUE;
     }
-  
+  else
+  if (strcmp (arg_namespace, "org.gnome.desktop.a11y.interface") == 0 &&
+           strcmp (arg_key, "high-contrast") == 0)
+    {
+      g_dbus_method_invocation_return_value (invocation,
+                                             g_variant_new ("(v)", get_high_contrast ()));
+      return TRUE;
+    }
+
   g_debug ("Attempted to read unknown namespace/key pair: %s %s", arg_namespace, arg_key);
   g_dbus_method_invocation_return_error_literal (invocation, XDG_DESKTOP_PORTAL_ERROR,
                                                  XDG_DESKTOP_PORTAL_ERROR_NOT_FOUND,
