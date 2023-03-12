@@ -6,7 +6,7 @@ Build-Depends:
  debhelper-compat (= 13),
  libglib2.0-dev (>= 2.44),
  libcinnamon-desktop-dev (>= 5.7),
- libmate-desktop-dev (>= 1.26),
+ libmate-desktop-dev (>= 1.24),
  meson (>= 0.53.0),
  xdg-desktop-portal-dev (>= 1.7.1),
 Standards-Version: 4.6.0
@@ -35,7 +35,7 @@ Architecture: linux-any
 Multi-Arch: foreign
 Depends:
  dbus-user-session | dbus-x11,
- mate-desktop-common (>= 1.26),
+ mate-desktop-common (>= 1.24),
  xdg-desktop-portal (>= 1.7.1),
  xdg-desktop-portal-gtk,
  ${misc:Depends},
