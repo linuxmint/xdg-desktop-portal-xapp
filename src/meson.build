@@ -132,7 +132,7 @@ mate_built_sources += configure_file(output: 'config-mate.h', configuration: mat
 
 mate_deps = [
   declare_dependency(sources: mate_built_sources),
-  dependency('mate-desktop-2.0', version: '>= 1.26')
+  dependency('mate-desktop-2.0', version: '>= 1.24')
 ] + common_deps
 
 mate_sources = mate_built_sources + files(
