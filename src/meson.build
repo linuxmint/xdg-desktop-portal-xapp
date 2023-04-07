@@ -16,10 +16,15 @@ common_desktop_portal_dbus_interfaces = [
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Inhibit.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Lockdown.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Request.xml',
-  desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Screenshot.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Session.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Settings.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Wallpaper.xml',
+]
+
+# This is a newer screenshot interface that has a version property
+# ref https://github.com/flatpak/xdg-desktop-portal-gtk/commit/30ef5f8ed500c2a7f850ed2164d7ee201860a700
+common_desktop_portal_dbus_interfaces += [
+  top_srcdir / 'data' / 'org.freedesktop.impl.portal.Screenshot.xml',
 ]
 
 common_built_sources = gnome.gdbus_codegen(

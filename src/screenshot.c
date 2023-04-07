@@ -155,6 +155,8 @@ screenshot_init (GDBusConnection *bus,
 
   helper = G_DBUS_INTERFACE_SKELETON (xdp_impl_screenshot_skeleton_new ());
 
+  g_object_set (helper, "version", 1, NULL);
+
   // TODO: Need to implement dialog (or maybe interact with screenshot app).
   g_signal_connect (helper, "handle-screenshot", G_CALLBACK (handle_screenshot), NULL);
 
