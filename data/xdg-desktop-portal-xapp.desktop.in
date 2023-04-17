@@ -2,5 +2,5 @@
 Type=Application
 Name=Portal
 Icon=applications-system-symbolic
-Exec=@libexecdir@/xdg-desktop-portal-xapp-cinnamon
+Exec=@libexecdir@/xdg-desktop-portal-xapp
 NoDisplay=true

@@ -1,15 +1,9 @@
 #!/usr/bin/make -f
 
-# export DEB_BUILD_MAINT_OPTIONS = hardening=+all
-
-# configure_options = \
-# 	$(NULL)
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 %:
 	dh $@
-
-override_dh_auto_install:
-	dh_auto_install --destdir=debian/tmp
 
 override_dh_strip:
 	dh_strip --dbg-package=xdg-desktop-portal-xapp-dbg

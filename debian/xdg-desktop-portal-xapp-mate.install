@@ -1,5 +1,0 @@
-usr/lib/systemd/user/xdg-desktop-portal-xapp-mate.service
-usr/libexec/xdg-desktop-portal-xapp-mate
-usr/share/applications/xdg-desktop-portal-xapp-mate.desktop
-usr/share/dbus-1/services/org.freedesktop.impl.portal.desktop.xapp-mate.service
-usr/share/xdg-desktop-portal/portals/xapp-mate.portal

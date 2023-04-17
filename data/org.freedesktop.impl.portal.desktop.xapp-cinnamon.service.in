@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name=org.freedesktop.impl.portal.desktop.cinnamon
-Exec=@libexecdir@/xdg-desktop-portal-xapp-cinnamon
-SystemdService=xdg-desktop-portal-xapp-cinnamon.service

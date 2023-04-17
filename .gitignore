@@ -2,8 +2,7 @@ debian/.debhelper
 debian/*.log
 debian/debhelper-build-stamp
 debian/tmp
-debian/xdg-desktop-portal-xapp-cinnamon
-debian/xdg-desktop-portal-xapp-mate
+debian/xdg-desktop-portal-xapp
 debian/xdg-desktop-portal-xapp-dbg
 debian/*.substvars
 debian/files

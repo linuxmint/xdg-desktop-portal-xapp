@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.freedesktop.impl.portal.desktop.xapp
+Exec=@libexecdir@/xdg-desktop-portal-xapp
+SystemdService=xdg-desktop-portal-xapp.service

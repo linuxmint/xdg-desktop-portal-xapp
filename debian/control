@@ -5,60 +5,35 @@ Maintainer: Linux Mint <root@linuxmint.com>
 Build-Depends:
  debhelper-compat (= 13),
  libglib2.0-dev (>= 2.44),
- libcinnamon-desktop-dev (>= 5.7),
- libmate-desktop-dev (>= 1.24),
  meson (>= 0.53.0),
  xdg-desktop-portal-dev (>= 1.7.1),
 Standards-Version: 4.6.0
 Homepage: https://github.com/linuxmint/xdg-desktop-portal-xapp
 
-Package: xdg-desktop-portal-xapp-cinnamon
+Package: xdg-desktop-portal-xapp
 Architecture: linux-any
 Multi-Arch: foreign
 Depends:
  dbus-user-session | dbus-x11,
- cinnamon-desktop-data (>= 5.7.0),
  xdg-desktop-portal (>= 1.7.1),
  xdg-desktop-portal-gtk,
  ${misc:Depends},
  ${shlibs:Depends},
 Provides:
  xdg-desktop-portal-backend (= 1.7.1),
-Description: XApp's Cinnamon portal backend for xdg-desktop-portal
- xdg-desktop-portal-cinnamon provides a Cinnamon implementation for the
- xdg-desktop-portal service. This allows sandboxed applications to
- request services and information from outside the sandbox in the Cinnamon
- environment.
-
-Package: xdg-desktop-portal-xapp-mate
-Architecture: linux-any
-Multi-Arch: foreign
-Depends:
- dbus-user-session | dbus-x11,
- mate-desktop-common (>= 1.24),
- xdg-desktop-portal (>= 1.7.1),
- xdg-desktop-portal-gtk,
- ${misc:Depends},
- ${shlibs:Depends},
-Provides:
- xdg-desktop-portal-backend (= 1.7.1),
-Description: XApp's MATE portal backend for xdg-desktop-portal
- xdg-desktop-portal-xapp-mate provides a MATE implementation for the
- xdg-desktop-portal service. This allows sandboxed applications to
- request services and information from outside the sandbox in the MATE
- environment.
+Description: Xapp's Cinnamon, MATE and XFCE backends for xdg-desktop-portal.
+ This allows sandboxed applications to request services and information from
+ outside the sandbox in the MATE, XFCE and Cinnamon environments.
 
 Package: xdg-desktop-portal-xapp-dbg
 Section: debug
 Priority: extra
 Architecture: any
 Depends:
- xdg-desktop-portal-xapp-cinnamon (= ${binary:Version}) | xdg-desktop-portal-xapp-mate (= ${binary:Version}),
+ xdg-desktop-portal-xapp (= ${binary:Version})
  ${misc:Depends},
-Description: Xapp's Cinnamon and MATE backends for xdg-desktop-portal
- xdg-desktop-portal-xapp-* provide Cinnamon and MATE implementations for the
- xdg-desktop-portal service. This allows sandboxed applications to
- request services and information from outside the sandbox in the MATE and 
- Cinnamon environment.
+Description: Xapp's Cinnamon, MATE and XFCE backends for xdg-desktop-portal.
+ This allows sandboxed applications to request services and information from
+ outside the sandbox in the MATE, XFCE and Cinnamon environments.
  .
  This package contains the debugging symbols for all backends.

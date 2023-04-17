@@ -18,7 +18,7 @@
  *       Patrick Griffis <pgriffis@igalia.com>
  */
 
-#include CONFIG_H
+#include <config.h>
 
 #include <time.h>
 #include <string.h>
@@ -30,7 +30,11 @@
 
 #include "xdg-desktop-portal-dbus.h"
 
+#define MATE_XFCE_INTERFACE_SCHEMA "org.x.apps.portal"
+#define CINNAMON_INTERFACE_SCHEMA "org.cinnamon.desktop.interface"
+
 static GHashTable *settings;
+static const gchar *used_interface_schema = NULL;
 
 typedef struct {
   GSettingsSchema *schema;
@@ -85,7 +89,7 @@ namespace_matches (const char         *namespace,
 static GVariant *
 get_color_scheme (void)
 {
-  SettingsBundle *bundle = g_hash_table_lookup (settings, DESKTOP_INTERFACE_SCHEMA);
+  SettingsBundle *bundle = g_hash_table_lookup (settings, used_interface_schema);
   int color_scheme;
 
   if (!g_settings_schema_has_key (bundle->schema, "color-scheme"))
@@ -96,19 +100,19 @@ get_color_scheme (void)
   return g_variant_new_uint32 (color_scheme);
 }
 
-static GVariant *
-get_high_contrast (void)
-{
-  SettingsBundle *bundle = g_hash_table_lookup (settings, DESKTOP_INTERFACE_SCHEMA);
-  gboolean high_contrast;
+// static GVariant *
+// get_high_contrast (void)
+// {
+//   SettingsBundle *bundle = g_hash_table_lookup (settings, used_interface_schema);
+//   gboolean high_contrast;
 
-  if (!g_settings_schema_has_key (bundle->schema, "high-contrast"))
-    return g_variant_new_boolean (FALSE);
+//   if (!g_settings_schema_has_key (bundle->schema, "high-contrast"))
+//     return g_variant_new_boolean (FALSE);
 
-  high_contrast = g_settings_get_boolean (bundle->settings, "high-contrast");
+//   high_contrast = g_settings_get_boolean (bundle->settings, "high-contrast");
 
-  return g_variant_new_boolean (high_contrast);
-}
+//   return g_variant_new_boolean (high_contrast);
+// }
 
 static gboolean
 settings_handle_read_all (XdpImplSettings       *object,
@@ -130,15 +134,15 @@ settings_handle_read_all (XdpImplSettings       *object,
       g_variant_builder_add (builder, "{s@a{sv}}", "org.freedesktop.appearance", g_variant_dict_end (&dict));
     }
 
-  if (namespace_matches ("org.gnome.desktop.a11y.interface", arg_namespaces))
-    {
-      GVariantDict dict;
+  // if (namespace_matches ("org.gnome.desktop.a11y.interface", arg_namespaces))
+  //   {
+  //     GVariantDict dict;
 
-      g_variant_dict_init (&dict, NULL);
-      g_variant_dict_insert_value (&dict, "high-contrast", get_high_contrast ());
+  //     g_variant_dict_init (&dict, NULL);
+  //     g_variant_dict_insert_value (&dict, "high-contrast", get_high_contrast ());
 
-      g_variant_builder_add (builder, "{s@a{sv}}", "org.gnome.desktop.a11y.interface", g_variant_dict_end (&dict));
-    }
+  //     g_variant_builder_add (builder, "{s@a{sv}}", "org.gnome.desktop.a11y.interface", g_variant_dict_end (&dict));
+  //   }
 
   g_variant_builder_close (builder);
 
@@ -163,14 +167,14 @@ settings_handle_read (XdpImplSettings       *object,
                                              g_variant_new ("(v)", get_color_scheme ()));
       return TRUE;
     }
-  else
-  if (strcmp (arg_namespace, "org.gnome.desktop.a11y.interface") == 0 &&
-           strcmp (arg_key, "high-contrast") == 0)
-    {
-      g_dbus_method_invocation_return_value (invocation,
-                                             g_variant_new ("(v)", get_high_contrast ()));
-      return TRUE;
-    }
+  // else
+  // if (strcmp (arg_namespace, "org.gnome.desktop.a11y.interface") == 0 &&
+  //          strcmp (arg_key, "high-contrast") == 0)
+  //   {
+  //     g_dbus_method_invocation_return_value (invocation,
+  //                                            g_variant_new ("(v)", get_high_contrast ()));
+  //     return TRUE;
+  //   }
 
   g_debug ("Attempted to read unknown namespace/key pair: %s %s", arg_namespace, arg_key);
   g_dbus_method_invocation_return_error_literal (invocation, XDG_DESKTOP_PORTAL_ERROR,
@@ -211,45 +215,57 @@ on_settings_changed (GSettings             *settings,
 
   g_debug ("Emitting changed for %s %s", user_data->namespace, key);
 
-  // MATE doesn't have color-scheme currently
-  if (strcmp (user_data->namespace, DESKTOP_INTERFACE_SCHEMA) == 0 &&
+  if (strcmp (user_data->namespace, used_interface_schema) == 0 &&
       strcmp (key, "color-scheme") == 0)
+  {
     xdp_impl_settings_emit_setting_changed (user_data->self,
                                             "org.freedesktop.appearance", key,
                                             g_variant_new ("v", get_color_scheme ()));
+  }
+
 }
 
 static void
 init_settings_table (XdpImplSettings *settings,
                      GHashTable      *table)
 {
-  static const char * const schemas[] = {
-    DESKTOP_INTERFACE_SCHEMA,
-  };
+    const gchar *schemas[1] = { 0 };
 
-  size_t i;
-  GSettingsSchemaSource *source = g_settings_schema_source_get_default ();
-
-  for (i = 0; i < G_N_ELEMENTS(schemas); ++i)
+    if (CINNAMON_MODE)
     {
-      GSettings *setting;
-      GSettingsSchema *schema;
-      SettingsBundle *bundle;
-      const char *schema_name = schemas[i];
+        schemas[0] = CINNAMON_INTERFACE_SCHEMA;
+        used_interface_schema = CINNAMON_INTERFACE_SCHEMA;
+    }
+    else
+    if (MATE_MODE || XFCE_MODE)
+    {
+        schemas[0] = MATE_XFCE_INTERFACE_SCHEMA;
+        used_interface_schema = MATE_XFCE_INTERFACE_SCHEMA;
+    }
 
-      schema = g_settings_schema_source_lookup (source, schema_name, TRUE);
-      if (!schema)
+    size_t i;
+    GSettingsSchemaSource *source = g_settings_schema_source_get_default ();
+
+    for (i = 0; i < G_N_ELEMENTS (schemas); ++i)
+    {
+        GSettings *setting;
+        GSettingsSchema *schema;
+        SettingsBundle *bundle;
+        const char *schema_name = schemas[i];
+
+        schema = g_settings_schema_source_lookup (source, schema_name, TRUE);
+        if (!schema)
         {
-          g_debug ("%s schema not found", schema_name);
-          continue;
+            g_debug ("%s schema not found", schema_name);
+            continue;
         }
 
-      setting = g_settings_new (schema_name);
-      bundle = settings_bundle_new (schema, setting);
-      g_signal_connect_data (setting, "changed", G_CALLBACK(on_settings_changed),
-                             changed_signal_user_data_new (settings, schema_name),
-                             changed_signal_user_data_destroy, 0);
-      g_hash_table_insert (table, (char*)schema_name, bundle);
+        setting = g_settings_new (schema_name);
+        bundle = settings_bundle_new (schema, setting);
+        g_signal_connect_data (setting, "changed", G_CALLBACK(on_settings_changed),
+                               changed_signal_user_data_new (settings, schema_name),
+                               changed_signal_user_data_destroy, 0);
+        g_hash_table_insert (table, (gchar *) schema_name, bundle);
     }
 }
 
@@ -264,7 +280,7 @@ settings_init (GDBusConnection  *bus,
   g_signal_connect (helper, "handle-read", G_CALLBACK (settings_handle_read), NULL);
   g_signal_connect (helper, "handle-read-all", G_CALLBACK (settings_handle_read_all), NULL);
 
-  settings = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify)settings_bundle_free);
+  settings = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) settings_bundle_free);
 
   init_settings_table (XDP_IMPL_SETTINGS (helper), settings);
 

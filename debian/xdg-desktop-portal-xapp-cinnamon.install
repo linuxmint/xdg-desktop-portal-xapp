@@ -1,5 +1,0 @@
-usr/lib/systemd/user/xdg-desktop-portal-xapp-cinnamon.service
-usr/libexec/xdg-desktop-portal-xapp-cinnamon
-usr/share/applications/xdg-desktop-portal-xapp-cinnamon.desktop
-usr/share/dbus-1/services/org.freedesktop.impl.portal.desktop.xapp-cinnamon.service
-usr/share/xdg-desktop-portal/portals/xapp-cinnamon.portal

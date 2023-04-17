@@ -22,4 +22,11 @@
 
 #include <gio/gio.h>
 
+typedef enum
+{
+  COLOR_SCHEME_DEFAULT,
+  COLOR_SCHEME_PREFER_DARK,
+  COLOR_SCHEME_PREFER_LIGHT,
+} ColorScheme;
+
 gboolean settings_init (GDBusConnection *bus, GError **error);

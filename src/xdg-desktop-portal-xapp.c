@@ -22,7 +22,7 @@
 
 #define _GNU_SOURCE 1
 
-#include CONFIG_H
+#include <config.h>
 
 #include <errno.h>
 #include <locale.h>
@@ -42,6 +42,7 @@
 
 #include "xdg-desktop-portal-dbus.h"
 
+#include "utils.h"
 #include "inhibit.h"
 #include "lockdown.h"
 #include "request.h"
@@ -55,11 +56,15 @@ static GHashTable *outstanding_handles = NULL;
 static gboolean opt_verbose;
 static gboolean opt_replace;
 static gboolean show_version;
+const gchar *mode = NULL;
+gchar *desktop_arg;
+
+const gchar *desktops[] = { "cinnamon", "mate", "xfce", NULL };
 
 static GOptionEntry entries[] = {
+  { "desktop", 'd', 0, G_OPTION_ARG_STRING, &desktop_arg, "Specify desktop to represent (cinnamon | mate | xfce), if unspecified, XDG_CURRENT_DESKTOP is used", NULL },
   { "verbose", 'v', 0, G_OPTION_ARG_NONE, &opt_verbose, "Print debug information during command processing", NULL },
   { "replace", 'r', 0, G_OPTION_ARG_NONE, &opt_replace, "Replace a running instance", NULL },
-
   { "version", 0, 0, G_OPTION_ARG_NONE, &show_version, "Show program version.", NULL},
   { NULL }
 };
@@ -116,13 +121,13 @@ on_bus_acquired (GDBusConnection *connection,
       g_clear_error (&error);
     }
 
-  if (!lockdown_init (connection, &error))
+  if ((CINNAMON_MODE || MATE_MODE) && !lockdown_init (connection, &error))
     {
       g_warning ("error: %s\n", error->message);
       g_clear_error (&error);
     }
 
-  if (!wallpaper_init (connection, &error))
+  if ((CINNAMON_MODE || MATE_MODE) && !wallpaper_init (connection, &error))
     {
       g_warning ("error: %s\n", error->message);
       g_clear_error (&error);
@@ -134,7 +139,7 @@ on_name_acquired (GDBusConnection *connection,
                   const gchar     *name,
                   gpointer         user_data)
 {
-  g_debug ("org.freedesktop.impl.portal.desktop.cinnamon acquired");
+  g_debug ("org.freedesktop.impl.portal.desktop.xapp acquired");
 }
 
 static void
@@ -161,8 +166,8 @@ main (int argc, char *argv[])
 
   /* Avoid pointless and confusing recursion */
   g_unsetenv ("GTK_USE_PORTAL");
-  // g_setenv ("ADW_DISABLE_PORTAL", "1", TRUE);
-  // g_setenv ("GSK_RENDERER", "cairo", TRUE);
+  g_setenv ("ADW_DISABLE_PORTAL", "1", TRUE);
+  g_setenv ("GSK_RENDERER", "cairo", TRUE);
 
   gtk_init (&argc, &argv);
 
@@ -170,8 +175,8 @@ main (int argc, char *argv[])
   g_option_context_set_summary (context,
       "A backend implementation for xdg-desktop-portal.");
   g_option_context_set_description (context,
-      "xdg-desktop-portal-cinnamon provides D-Bus interfaces that\n"
-      "are used by xdg-desktop-portal to implement portals\n"
+      "xdg-desktop-portal-xapp provides D-Bus interfaces that\n"
+      "are used by xdg-desktop-portal to implement portals in Cinnamon, MATE or Xfce\n"
       "\n"
       "Documentation for the available D-Bus interfaces can be found at\n"
       "https://flatpak.github.io/xdg-desktop-portal/portal-docs.html\n"
@@ -194,12 +199,40 @@ main (int argc, char *argv[])
       return 0;
     }
 
+  if (desktop_arg)
+  {
+    if (!g_strv_contains (desktops, desktop_arg))
+    {
+        g_printerr ("Desktop argument must be cinnamon, mate or xfce\n");
+        return 1;
+    }
+
+    mode = desktop_arg;
+  }
+  else
+  {
+      const gchar *xdg_desktop = g_getenv ("XDG_CURRENT_DESKTOP");
+
+      if (g_strcmp0 (xdg_desktop, "X-Cinnamon") == 0)
+          mode = "cinnamon";
+      else if (g_strcmp0 (xdg_desktop, "MATE") == 0)
+          mode = "mate";
+      else if (g_strcmp0 (xdg_desktop, "XFCE") == 0)
+          mode = "xfce";
+      else
+      {
+          g_printerr ("Current desktop (XDG_CURRENT_DESKTOP) is unsupported: %s\n", xdg_desktop);
+          return 1;
+      }
+  }
+
+
   g_set_printerr_handler (printerr_handler);
 
   if (opt_verbose)
     g_log_set_handler (NULL, G_LOG_LEVEL_DEBUG, message_handler, NULL);
 
-  g_set_prgname ("xdg-desktop-portal-cinnamon");
+  g_set_prgname ("xdg-desktop-portal-xapp");
 
   loop = g_main_loop_new (NULL, FALSE);
 
@@ -213,7 +246,7 @@ main (int argc, char *argv[])
     }
 
   owner_id = g_bus_own_name (G_BUS_TYPE_SESSION,
-                             "org.freedesktop.impl.portal.desktop.cinnamon",
+                             "org.freedesktop.impl.portal.desktop.xapp",
                              G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT | (opt_replace ? G_BUS_NAME_OWNER_FLAGS_REPLACE : 0),
                              on_bus_acquired,
                              on_name_acquired,

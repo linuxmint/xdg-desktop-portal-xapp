@@ -2,7 +2,7 @@ project(
   'xdg-desktop-portal-xapp',
   'c',
   version: '0.1',
-  meson_version: '>= 0.53.0',
+  meson_version: '>= 0.56.0',
   license: 'LGPLv2.1+'
 )
 
@@ -14,9 +14,9 @@ libexecdir = get_option('libexecdir')
 systemduserunitdir = get_option('systemduserunitdir')
 if systemduserunitdir == ''
   systemd = dependency('systemd', version: '>= 242')
-  systemduserunitdir = systemd.get_pkgconfig_variable(
-    'systemduserunitdir',
-    define_variable: ['prefix', get_option('prefix')]
+  systemduserunitdir = systemd.get_variable(
+    pkgconfig: 'systemduserunitdir',
+    pkgconfig_define: ['prefix', get_option('prefix')]
   )
 endif
 

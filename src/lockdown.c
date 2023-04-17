@@ -20,7 +20,7 @@
 
 #define _GNU_SOURCE 1
 
-#include CONFIG_H
+#include <config.h>
 
 #include <string.h>
 
@@ -39,44 +39,65 @@ gboolean
 lockdown_init (GDBusConnection *bus,
                GError **error)
 {
-  GDBusInterfaceSkeleton *helper;
-  GSettingsSchemaSource *source;
-  GSettingsSchema *schema;
+    GDBusInterfaceSkeleton *helper;
+    GSettingsSchemaSource *source;
+    GSettingsSchema *schema;
 
-  helper = G_DBUS_INTERFACE_SKELETON (xdp_impl_lockdown_skeleton_new ());
+    helper = G_DBUS_INTERFACE_SKELETON (xdp_impl_lockdown_skeleton_new ());
 
-  lockdown = g_settings_new (LOCKDOWN_SCHEMA);
-  g_settings_bind (lockdown, "disable-printing", helper, "disable-printing", G_SETTINGS_BIND_DEFAULT);
-  g_settings_bind (lockdown, "disable-save-to-disk", helper, "disable-save-to-disk", G_SETTINGS_BIND_DEFAULT);
-  g_settings_bind (lockdown, "disable-application-handlers", helper, "disable-application-handlers", G_SETTINGS_BIND_DEFAULT);
+    const gchar *lockdown_schema = NULL;
+    const gchar *privacy_schema = NULL;
 
-  location = g_settings_new ("org.gnome.system.location");
-  g_settings_bind (location, "enabled", helper, "disable-location", G_SETTINGS_BIND_INVERT_BOOLEAN);
+    if (CINNAMON_MODE)
+    {
+        lockdown_schema = "org.cinnamon.desktop.lockdown";
+        privacy_schema = "org.cinnamon.desktop.privacy";
+    }
+    else
+    if (MATE_MODE)
+    {
+        lockdown_schema = "org.mate.lockdown";
+        privacy_schema = "org.mate.privacy";  // this schema doesn't exist (yet)
+    }
+    else
+    if (XFCE_MODE)
+    {
+        // TODO
+        return TRUE;
+    }
 
-  source = g_settings_schema_source_get_default ();
-  schema = g_settings_schema_source_lookup (source, PRIVACY_SCHEMA, TRUE);
+    lockdown = g_settings_new (lockdown_schema);
+    g_settings_bind (lockdown, "disable-printing", helper, "disable-printing", G_SETTINGS_BIND_DEFAULT);
+    g_settings_bind (lockdown, "disable-save-to-disk", helper, "disable-save-to-disk", G_SETTINGS_BIND_DEFAULT);
+    g_settings_bind (lockdown, "disable-application-handlers", helper, "disable-application-handlers", G_SETTINGS_BIND_DEFAULT);
 
-  if (schema != NULL) // MATE doesn't have privacy yet
-  {
-      privacy = g_settings_new (PRIVACY_SCHEMA);
-      if (g_settings_schema_has_key (schema, "disable-camera"))
-        g_settings_bind (privacy, "disable-camera", helper, "disable-camera", G_SETTINGS_BIND_DEFAULT);
-      if (g_settings_schema_has_key (schema, "disable-microphone"))
-        g_settings_bind (privacy, "disable-microphone", helper, "disable-microphone", G_SETTINGS_BIND_DEFAULT);
-      if (g_settings_schema_has_key (schema, "disable-sound-output"))
-        g_settings_bind (privacy, "disable-sound-output", helper, "disable-sound-output", G_SETTINGS_BIND_DEFAULT);
+    location = g_settings_new ("org.gnome.system.location");
+    g_settings_bind (location, "enabled", helper, "disable-location", G_SETTINGS_BIND_INVERT_BOOLEAN);
 
-      g_settings_schema_unref (schema);
-  }
-  
-  if (!g_dbus_interface_skeleton_export (helper,
-                                         bus,
-                                         DESKTOP_PORTAL_OBJECT_PATH,
-                                         error))
-    return FALSE;
+    source = g_settings_schema_source_get_default ();
+    schema = g_settings_schema_source_lookup (source, privacy_schema, TRUE);
 
-  g_debug ("providing %s", g_dbus_interface_skeleton_get_info (helper)->name);
+    if (schema != NULL) // MATE doesn't have privacy yet
+    {
+        privacy = g_settings_new (privacy_schema);
+        if (g_settings_schema_has_key (schema, "disable-camera"))
+            g_settings_bind (privacy, "disable-camera", helper, "disable-camera", G_SETTINGS_BIND_DEFAULT);
+        if (g_settings_schema_has_key (schema, "disable-microphone"))
+            g_settings_bind (privacy, "disable-microphone", helper, "disable-microphone", G_SETTINGS_BIND_DEFAULT);
+        if (g_settings_schema_has_key (schema, "disable-sound-output"))
+            g_settings_bind (privacy, "disable-sound-output", helper, "disable-sound-output", G_SETTINGS_BIND_DEFAULT);
 
-  return TRUE;
+        g_settings_schema_unref (schema);
+    }
+
+    if (!g_dbus_interface_skeleton_export (helper,
+                                           bus,
+                                           DESKTOP_PORTAL_OBJECT_PATH,
+                                           error))
+        return FALSE;
+
+    g_debug ("providing %s", g_dbus_interface_skeleton_get_info (helper)->name);
+
+    return TRUE;
 }
 

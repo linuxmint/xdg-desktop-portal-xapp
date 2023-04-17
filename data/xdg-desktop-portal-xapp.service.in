@@ -1,0 +1,7 @@
+[Unit]
+Description=Portal service (XApp implementation)
+
+[Service]
+Type=dbus
+BusName=org.freedesktop.impl.portal.desktop.xapp
+ExecStart=@libexecdir@/xdg-desktop-portal-xapp

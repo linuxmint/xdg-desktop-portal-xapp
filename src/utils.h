@@ -24,6 +24,11 @@
 
 #define DESKTOP_PORTAL_OBJECT_PATH "/org/freedesktop/portal/desktop"
 
+extern const gchar *mode;
+#define CINNAMON_MODE ( g_strcmp0 (mode, "cinnamon") == 0 )
+#define MATE_MODE ( g_strcmp0 (mode, "mate") == 0 )
+#define XFCE_MODE ( g_strcmp0 (mode, "xfce") == 0 )
+
 typedef enum {
   XDG_DESKTOP_PORTAL_ERROR_FAILED     = 0,
   XDG_DESKTOP_PORTAL_ERROR_INVALID_ARGUMENT,

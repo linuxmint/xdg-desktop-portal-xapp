@@ -1,0 +1,6 @@
+usr/lib/systemd/user/xdg-desktop-portal-xapp.service
+usr/libexec/xdg-desktop-portal-xapp
+usr/share/applications/xdg-desktop-portal-xapp.desktop
+usr/share/dbus-1/services/org.freedesktop.impl.portal.desktop.xapp.service
+usr/share/xdg-desktop-portal/portals/xapp.portal
+usr/share/glib-2.0/schemas
