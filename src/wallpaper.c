@@ -59,6 +59,14 @@ static gboolean
 set_gsettings (const gchar *uri)
 {
     g_autoptr(GSettings) settings = NULL;
+    g_autoptr(GFile) file = NULL;
+
+    file = g_file_new_for_uri (uri);
+    if (!g_file_is_native (file))
+    {
+        g_warning ("Only native files can be used for wallpaper.");
+        return FALSE;
+    }
 
     if (CINNAMON_MODE)
     {
@@ -72,9 +80,29 @@ set_gsettings (const gchar *uri)
     {
         settings = g_settings_new ("org.mate.background");
 
-        g_autoptr(GFile) file = g_file_new_for_uri (uri);
         return (g_settings_set_string (settings, "picture-filename", g_file_peek_path (file)) &&
                 g_settings_set_enum (settings, "picture-options", MATE_ZOOMED_WALLPAPER_ENUM));
+    }
+    else
+    if (XFCE_MODE)
+    {
+        const gchar * const args[] = {
+            "xfce4-set-wallpaper",
+            g_file_peek_path (file),
+            NULL
+        };
+
+        GError *error = NULL;
+
+        if (!g_spawn_async (NULL, (gchar **) args, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error))
+        {
+            g_warning ("Can't set XFCE4 wallpaper: %s", error ? error->message : "reason unknown");
+            g_clear_error (&error);
+
+            return FALSE;
+        }
+
+        return TRUE;
     }
 
     return FALSE;

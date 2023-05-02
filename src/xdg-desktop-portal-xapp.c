@@ -103,7 +103,7 @@ on_bus_acquired (GDBusConnection *connection,
 {
   GError *error = NULL;
 
-  if (!screenshot_init (connection, &error))
+  if ((CINNAMON_MODE || XFCE_MODE) && !screenshot_init (connection, &error))
     {
       g_warning ("error: %s\n", error->message);
       g_clear_error (&error);
@@ -127,7 +127,7 @@ on_bus_acquired (GDBusConnection *connection,
       g_clear_error (&error);
     }
 
-  if ((CINNAMON_MODE || MATE_MODE) && !wallpaper_init (connection, &error))
+  if (!wallpaper_init (connection, &error))
     {
       g_warning ("error: %s\n", error->message);
       g_clear_error (&error);
