@@ -30,8 +30,7 @@
 
 #include "xdg-desktop-portal-dbus.h"
 
-#define MATE_XFCE_INTERFACE_SCHEMA "org.x.apps.portal"
-#define CINNAMON_INTERFACE_SCHEMA "org.cinnamon.desktop.interface"
+#define XAPP_PORTAL_INTERFACE_SCHEMA "org.x.apps.portal"
 
 static GHashTable *settings;
 static const gchar *used_interface_schema = NULL;
@@ -231,17 +230,8 @@ init_settings_table (XdpImplSettings *settings,
 {
     const gchar *schemas[1] = { 0 };
 
-    if (CINNAMON_MODE)
-    {
-        schemas[0] = CINNAMON_INTERFACE_SCHEMA;
-        used_interface_schema = CINNAMON_INTERFACE_SCHEMA;
-    }
-    else
-    if (MATE_MODE || XFCE_MODE)
-    {
-        schemas[0] = MATE_XFCE_INTERFACE_SCHEMA;
-        used_interface_schema = MATE_XFCE_INTERFACE_SCHEMA;
-    }
+    schemas[0] = XAPP_PORTAL_INTERFACE_SCHEMA;
+    used_interface_schema = XAPP_PORTAL_INTERFACE_SCHEMA;
 
     size_t i;
     GSettingsSchemaSource *source = g_settings_schema_source_get_default ();
