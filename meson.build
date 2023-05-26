@@ -26,7 +26,7 @@ if dbus_service_dir == ''
 endif
 
 subdir('data')
-# subdir('po')
+subdir('po')
 subdir('src')
 
 summary({
