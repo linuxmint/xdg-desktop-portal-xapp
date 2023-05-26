@@ -1,3 +1,23 @@
+xdg-desktop-portal-xapp (1.0.0) victoria; urgency=medium
+
+  [ Michael Webster ]
+  * Add cinnamon-desktop to gh workflow
+  * Fix mate-desktop schema ids.
+  * Fix service names.
+  * Handle high-contrast setting
+  * Fix mate dep version.
+  * Fix dep version in meson file also.
+  * screenshot: Set the interface to version 1 to prevent the assumption that a color picker is supported.
+  * Use a single binary with runtime desktop check.
+  * Simplify README.
+  * xfce: add wallpaper support, fix screenshot.
+  * settings: Use the same key for all three desktops.
+
+  [ Clement Lefebvre ]
+  * Remove debian/patches
+
+ -- Clement Lefebvre <root@linuxmint.com>  Fri, 26 May 2023 13:19:15 +0100
+
 xdg-desktop-portal-xapp (0.1) unstable; urgency=medium
 
   * Initial commit

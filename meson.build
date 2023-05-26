@@ -1,7 +1,7 @@
 project(
   'xdg-desktop-portal-xapp',
   'c',
-  version: '0.1',
+  version: '1.0.0',
   meson_version: '>= 0.56.0',
   license: 'LGPLv2.1+'
 )
