@@ -58,7 +58,6 @@ deps = [
   dependency('glib-2.0', version: '>= 2.44'),
   dependency('gio-unix-2.0'),
   dependency('gtk+-3.0', version: '>= 3.24.0'),
-  dependency('cinnamon-desktop', version: '>= 5.3'),
   xdg_desktop_portal_dep,
 ]
 
