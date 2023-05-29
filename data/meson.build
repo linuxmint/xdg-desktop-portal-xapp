@@ -1,13 +1,6 @@
 libexecdir_conf = configuration_data()
 libexecdir_conf.set('libexecdir', prefix / libexecdir)
 
-meson.add_install_script('meson_install_schemas.py')
-
-install_data(
-  [ 'org.x.apps.portal.gschema.xml' ],
-  install_dir: datadir / 'glib-2.0' / 'schemas'
-)
-
 # Portal
 install_data(
   [ 'xapp.portal' ],
