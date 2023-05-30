@@ -15,6 +15,7 @@ Architecture: linux-any
 Multi-Arch: foreign
 Depends:
  dbus-user-session | dbus-x11,
+ xapps-common (>= 2.5.0),
  xdg-desktop-portal (>= 1.7.1),
  xdg-desktop-portal-gtk,
  ${misc:Depends},
