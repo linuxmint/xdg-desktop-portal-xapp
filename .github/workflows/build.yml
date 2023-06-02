@@ -15,5 +15,5 @@ jobs:
     with:
       commit_id: master
       ############################## Comma separated list - like 'linuxmint/xapp, linuxmint/cinnamon-desktop'
-      dependencies:
+      dependencies: linuxmint/xapp
       ##############################
