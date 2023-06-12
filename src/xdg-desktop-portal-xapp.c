@@ -103,13 +103,19 @@ on_bus_acquired (GDBusConnection *connection,
 {
   GError *error = NULL;
 
-  if ((CINNAMON_MODE || XFCE_MODE) && !screenshot_init (connection, &error))
+  // For fallback we can handle settings, it's pretty universal, the restm, no.
+  if (!settings_init (connection, &error))
     {
       g_warning ("error: %s\n", error->message);
       g_clear_error (&error);
     }
 
-  if (!settings_init (connection, &error))
+  if (UNKNOWN_MODE)
+  {
+    return;
+  }
+
+  if ((CINNAMON_MODE || XFCE_MODE) && !screenshot_init (connection, &error))
     {
       g_warning ("error: %s\n", error->message);
       g_clear_error (&error);
@@ -221,8 +227,8 @@ main (int argc, char *argv[])
           mode = "xfce";
       else
       {
+          mode = "unknown";
           g_printerr ("Current desktop (XDG_CURRENT_DESKTOP) is unsupported: %s\n", xdg_desktop);
-          return 1;
       }
   }
 
