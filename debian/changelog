@@ -1,3 +1,16 @@
+xdg-desktop-portal-xapp (1.0.2) victoria; urgency=medium
+
+  [ Rick Calixte ]
+  * build.yml: Add xapp dependency
+
+  [ Ben McCann ]
+  * fix typo in readme (#6)
+
+  [ Michael Webster ]
+  * Don't exit when we don't support the current desktop, we're expected to finish registering and provide fallback support.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Mon, 26 Jun 2023 10:37:47 +0200
+
 xdg-desktop-portal-xapp (1.0.1) victoria; urgency=medium
 
   [ Michael Webster ]
