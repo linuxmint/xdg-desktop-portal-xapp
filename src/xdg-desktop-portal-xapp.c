@@ -36,7 +36,6 @@
 #include <gio/gdesktopappinfo.h>
 #include <gio/gunixfdlist.h>
 
-#include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <locale.h>
 
@@ -174,8 +173,6 @@ main (int argc, char *argv[])
   g_unsetenv ("GTK_USE_PORTAL");
   g_setenv ("ADW_DISABLE_PORTAL", "1", TRUE);
   g_setenv ("GSK_RENDERER", "cairo", TRUE);
-
-  gtk_init (&argc, &argv);
 
   context = g_option_context_new ("- portal backends");
   g_option_context_set_summary (context,

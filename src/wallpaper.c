@@ -10,8 +10,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include <gtk/gtk.h>
-
 #include <glib/gi18n.h>
 
 #include "xdg-desktop-portal-dbus.h"

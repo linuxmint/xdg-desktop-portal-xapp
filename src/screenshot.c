@@ -9,8 +9,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include <gtk/gtk.h>
-
 #include <gio/gio.h>
 #include <gio/gdesktopappinfo.h>
 #include <gio/gunixfdlist.h>

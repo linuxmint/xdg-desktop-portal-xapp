@@ -57,7 +57,6 @@ deps = [
   meson.get_compiler('c').find_library('m'),
   dependency('glib-2.0', version: '>= 2.44'),
   dependency('gio-unix-2.0'),
-  dependency('gtk+-3.0', version: '>= 3.24.0'),
   xdg_desktop_portal_dep,
 ]
 

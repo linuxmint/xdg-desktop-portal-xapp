@@ -2,7 +2,6 @@
 
 #include "config.h"
 
-#include <gtk/gtk.h>
 #include <gio/gio.h>
 
 #include "xdg-desktop-portal-dbus.h"

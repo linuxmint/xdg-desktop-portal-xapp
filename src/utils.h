@@ -20,8 +20,6 @@
 
 #pragma once
 
-#include <gdk/gdk.h>
-
 #define DESKTOP_PORTAL_OBJECT_PATH "/org/freedesktop/portal/desktop"
 
 extern const gchar *mode;
