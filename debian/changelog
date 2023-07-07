@@ -1,3 +1,11 @@
+xdg-desktop-portal-xapp (1.0.3) victoria; urgency=medium
+
+  [ Michael Webster ]
+  * Fully remove gtk as a dependency.
+  * Add systemd build dependency, avoid double-install.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Fri, 07 Jul 2023 15:03:14 +0200
+
 xdg-desktop-portal-xapp (1.0.2) victoria; urgency=medium
 
   [ Rick Calixte ]
