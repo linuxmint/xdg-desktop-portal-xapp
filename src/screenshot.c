@@ -156,11 +156,40 @@ construct_filename (void)
     return filename;
 }
 
+
 static gboolean
-handle_pick_color ()
+handle_pick_color (XdpImplScreenshot *object,
+                   GDBusMethodInvocation *invocation,
+                   const char *arg_handle,
+                   const char *arg_app_id,
+                   const char *arg_parent_window,
+                   GVariant *arg_options)
 {
-    return TRUE;
+  g_autoptr(Request) request = NULL;
+  const char *sender;
+  ScreenshotDialogHandle *handle;
+
+  sender = g_dbus_method_invocation_get_sender (invocation);
+  request = request_new (sender, arg_app_id, arg_handle);
+
+  handle = g_new0 (ScreenshotDialogHandle, 1);
+  handle->impl = object;
+  handle->invocation = invocation;
+  handle->request = g_object_ref (request);
+  handle->dialog = NULL;
+  handle->external_parent = NULL;
+  handle->retval = "color";
+  handle->response = 2;
+
+  g_signal_connect (request, "handle-close", G_CALLBACK (handle_close), handle);
+
+  request_export (request, g_dbus_method_invocation_get_connection (invocation));
+
+  // do the thing
+
+  return TRUE;
 }
+
 
 static gboolean
 handle_screenshot (XdpImplScreenshot *object,
