@@ -157,6 +157,12 @@ construct_filename (void)
 }
 
 static gboolean
+handle_pick_color ()
+{
+    return TRUE;
+}
+
+static gboolean
 handle_screenshot (XdpImplScreenshot *object,
                    GDBusMethodInvocation *invocation,
                    const char *arg_handle,
@@ -243,9 +249,7 @@ screenshot_init (GDBusConnection *bus,
 
     // TODO: Need to implement dialog (or maybe interact with screenshot app).
     g_signal_connect (helper, "handle-screenshot", G_CALLBACK (handle_screenshot), NULL);
-
-    // TODO: Need to implement in Cinnamon
-    // g_signal_connect (helper, "handle-pick-color", G_CALLBACK (handle_pick_color), NULL);
+    g_signal_connect (helper, "handle-pick-color", G_CALLBACK (handle_pick_color), NULL);
 
     if (!g_dbus_interface_skeleton_export (helper,
                                            bus,
