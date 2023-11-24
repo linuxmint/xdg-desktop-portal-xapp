@@ -90,7 +90,7 @@ picker_finished (GSubprocess  *proc,
     ScreenshotHandle *handle = user_data;
     gchar *output;
     g_subprocess_communicate_utf8(proc, NULL, NULL, &output, NULL, NULL);
-    g_variant_lookup (g_variant_parse("(ddd)", output, NULL, NULL, NULL),
+    g_variant_lookup (g_variant_parse(g_variant_type_new("(ddd)"), output, NULL, NULL, NULL),
                       "color",
                       "(ddd)",
                       &handle->red,
