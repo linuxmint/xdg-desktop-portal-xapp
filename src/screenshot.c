@@ -1,6 +1,5 @@
 #define _GNU_SOURCE 1
 
-#include <stdlib.h>
 #include <config.h>
 
 #include <errno.h>
@@ -89,16 +88,6 @@ picker_finished (GSubprocess  *proc,
                  gpointer      user_data)
 {
     ScreenshotHandle *handle = user_data;
-    gchar *output;
-    g_subprocess_communicate_utf8 (proc, NULL, NULL, &output, NULL, NULL);
-    char *pt;
-    pt = strtok (output, ",");
-    handle->red = atoi(pt);
-    pt = strtok (NULL, ",");
-    handle->green = atoi(pt);
-    pt = strtok (NULL, ",");
-    handle->blue = atoi(pt);
-    pt = strtok (NULL, ",");
 
     send_response (handle);
 }
