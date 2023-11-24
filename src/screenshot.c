@@ -190,12 +190,12 @@ handle_pick_color (XdpImplScreenshot *object,
 {
     g_autoptr(Request) request = NULL;
     const char *sender;
-    ScreenshotDialogHandle *handle;
+    ScreenshotHandle *handle;
     
     sender = g_dbus_method_invocation_get_sender (invocation);
     request = request_new (sender, arg_app_id, arg_handle);
     
-    handle = g_new0 (ScreenshotDialogHandle, 1);
+    handle = g_new0 (ScreenshotHandle, 1);
     handle->impl = object;
     handle->invocation = invocation;
     handle->request = g_object_ref (request);
