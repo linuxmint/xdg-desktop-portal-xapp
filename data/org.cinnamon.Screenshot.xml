@@ -123,9 +123,9 @@
       <arg type="i" direction="out" name="width"/>
       <arg type="i" direction="out" name="height"/>
     </method>
-<!-- 
+
     <method name="PickColor">
       <arg type="a{sv}" direction="out" name="result"/>
-    </method> -->
+    </method>
   </interface>
 </node>
