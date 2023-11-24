@@ -88,20 +88,10 @@ picker_finished (GSubprocess  *proc,
                  gpointer      user_data)
 {
     ScreenshotHandle *handle = user_data;
-    GError *error = NULL;
-
-    if (!g_subprocess_wait_finish (proc, res, &error))
-    {
-        if (error != NULL)
-        {
-            g_warning ("Something went wrong with the color picker: (%d) %s", error->code, error->message);
-            handle->response = 1;
-            g_clear_error (&error);
-        }
-    }
-
-    handle->response = 0;
-
+    g_variant_lookup (result, "color", "(ddd)",
+                      &handle->red,
+                      &handle->green,
+                      &handle->blue))
     send_response (handle);
 }
 
