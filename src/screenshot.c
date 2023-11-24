@@ -83,9 +83,9 @@ send_response (ScreenshotHandle *handle)
 }
 
 static void
-gpick_finished (GSubprocess  *proc,
-                GAsyncResult *res,
-                gpointer      user_data)
+picker_finished (GSubprocess  *proc,
+                 GAsyncResult *res,
+                 gpointer      user_data)
 {
     ScreenshotHandle *handle = user_data;
     GError *error = NULL;
@@ -94,7 +94,7 @@ gpick_finished (GSubprocess  *proc,
     {
         if (error != NULL)
         {
-            g_warning ("Something went wrong with gpick: (%d) %s", error->code, error->message);
+            g_warning ("Something went wrong with the color picker: (%d) %s", error->code, error->message);
             handle->response = 1;
             g_clear_error (&error);
         }
@@ -226,10 +226,7 @@ handle_pick_color (XdpImplScreenshot *object,
     GError *error = NULL;
     
     const gchar *argv[] = {
-        "gpick",
-        "-s",
-        "-o",
-        "--no-newline",
+        "mint-color-picker",
         NULL
     };
     
@@ -237,7 +234,7 @@ handle_pick_color (XdpImplScreenshot *object,
     
     if (error)
     {
-        g_warning ("Could not pick color, call to gpick failed: %s", error->message);
+        g_warning ("Could not pick color, call to picker failed: %s", error->message);
         g_clear_error (&error);
         handle->response = 2;
         send_response (handle);
