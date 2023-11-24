@@ -199,8 +199,6 @@ handle_pick_color (XdpImplScreenshot *object,
     handle->impl = object;
     handle->invocation = invocation;
     handle->request = g_object_ref (request);
-    handle->dialog = NULL;
-    handle->external_parent = NULL;
     handle->retval = "color";
     handle->response = 2;
     
