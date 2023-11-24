@@ -67,6 +67,29 @@ send_response (ScreenshotHandle *handle)
 }
 
 static void
+gpick_finished (GSubprocess  *proc,
+                GAsyncResult *res,
+                gpointer      user_data)
+{
+    ScreenshotHandle *handle = user_data;
+    GError *error = NULL;
+
+    if (!g_subprocess_wait_finish (proc, res, &error))
+    {
+        if (error != NULL)
+        {
+            g_warning ("Something went wrong with gpick: (%d) %s", error->code, error->message);
+            handle->response = 1;
+            g_clear_error (&error);
+        }
+    }
+
+    handle->response = 0;
+
+    send_response (handle);
+}
+
+static void
 xfce4_screenshooter_finished (GSubprocess  *proc,
                               GAsyncResult *res,
                               gpointer      user_data)
@@ -165,29 +188,50 @@ handle_pick_color (XdpImplScreenshot *object,
                    const char *arg_parent_window,
                    GVariant *arg_options)
 {
-  g_autoptr(Request) request = NULL;
-  const char *sender;
-  ScreenshotDialogHandle *handle;
+    g_autoptr(Request) request = NULL;
+    const char *sender;
+    ScreenshotDialogHandle *handle;
+    
+    sender = g_dbus_method_invocation_get_sender (invocation);
+    request = request_new (sender, arg_app_id, arg_handle);
+    
+    handle = g_new0 (ScreenshotDialogHandle, 1);
+    handle->impl = object;
+    handle->invocation = invocation;
+    handle->request = g_object_ref (request);
+    handle->dialog = NULL;
+    handle->external_parent = NULL;
+    handle->retval = "color";
+    handle->response = 2;
+    
+    g_signal_connect (request, "handle-close", G_CALLBACK (handle_close), handle);
+    
+    request_export (request, g_dbus_method_invocation_get_connection (invocation));
 
-  sender = g_dbus_method_invocation_get_sender (invocation);
-  request = request_new (sender, arg_app_id, arg_handle);
+    GSubprocess *proc;
+    GError *error = NULL;
+    
+    const gchar *argv[] = {
+        "gpick",
+        "-s",
+        "-o",
+        "--no-newline",
+        NULL
+    };
+    
+    proc = g_subprocess_newv (argv, G_SUBPROCESS_FLAGS_NONE, &error);
+    
+    if (error)
+    {
+        g_warning ("Could not pick color, call to gpick failed: %s", error->message);
+        g_clear_error (&error);
+        handle->response = 2;
+        send_response (handle);
+    }
 
-  handle = g_new0 (ScreenshotDialogHandle, 1);
-  handle->impl = object;
-  handle->invocation = invocation;
-  handle->request = g_object_ref (request);
-  handle->dialog = NULL;
-  handle->external_parent = NULL;
-  handle->retval = "color";
-  handle->response = 2;
+    g_subprocess_wait_async (proc, NULL, (GAsyncReadyCallback) gpick_finished, handle);
 
-  g_signal_connect (request, "handle-close", G_CALLBACK (handle_close), handle);
-
-  request_export (request, g_dbus_method_invocation_get_connection (invocation));
-
-  // do the thing
-
-  return TRUE;
+    return TRUE;
 }
 
 
