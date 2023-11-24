@@ -91,7 +91,7 @@ picker_finished (GSubprocess  *proc,
     g_variant_lookup (result, "color", "(ddd)",
                       &handle->red,
                       &handle->green,
-                      &handle->blue))
+                      &handle->blue);
     send_response (handle);
 }
 
