@@ -240,7 +240,7 @@ handle_pick_color (XdpImplScreenshot *object,
         send_response (handle);
     }
 
-    g_subprocess_wait_async (proc, NULL, (GAsyncReadyCallback) gpick_finished, handle);
+    g_subprocess_wait_async (proc, NULL, (GAsyncReadyCallback) picker_finished, handle);
 
     return TRUE;
 }
