@@ -62,6 +62,21 @@ send_response (ScreenshotHandle *handle)
                                                  handle->response,
                                                  g_variant_builder_end (&opt_builder));
     }
+    else
+    {
+        GVariantBuilder opt_builder;
+        
+        g_variant_builder_init (&opt_builder, G_VARIANT_TYPE_VARDICT);
+        g_variant_builder_add (&opt_builder, "{sv}", "color", g_variant_new ("(ddd)",
+                                                                           handle->red,
+                                                                           handle->green,
+                                                                           handle->blue));
+
+        xdp_impl_screenshot_complete_pick_color (handle->impl,
+                                                 handle->invocation,
+                                                 handle->response,
+                                                 g_variant_builder_end (&opt_builder));
+    }
 
     screenshot_handle_free (handle);
 }
