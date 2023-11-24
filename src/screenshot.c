@@ -88,7 +88,9 @@ picker_finished (GSubprocess  *proc,
                  gpointer      user_data)
 {
     ScreenshotHandle *handle = user_data;
-    g_variant_lookup (result, "color", "(ddd)",
+    gchar *output;
+    g_subprocess_communicate_utf8(proc, NULL, NULL, &output, NULL, NULL);
+    g_variant_lookup (output, "color", "(ddd)",
                       &handle->red,
                       &handle->green,
                       &handle->blue);
