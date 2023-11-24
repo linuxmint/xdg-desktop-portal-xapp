@@ -88,7 +88,10 @@ picker_finished (GSubprocess  *proc,
                  gpointer      user_data)
 {
     ScreenshotHandle *handle = user_data;
-
+    handle->response = 0;
+    handle->red = 0;
+    handle->green = 0;
+    handle->blue = 0;
     send_response (handle);
 }
 
