@@ -93,11 +93,11 @@ picker_finished (GSubprocess  *proc,
     g_subprocess_communicate_utf8 (proc, NULL, NULL, &output, NULL, NULL);
     char *pt;
     pt = strtok (output, ",");
-    &handle->red = atoi(pt);
+    handle->red = atoi(pt);
     pt = strtok (NULL, ",");
-    &handle->green = atoi(pt);
+    handle->green = atoi(pt);
     pt = strtok (NULL, ",");
-    &handle->blue = atoi(pt);
+    handle->blue = atoi(pt);
     pt = strtok (NULL, ",");
 
     send_response (handle);
