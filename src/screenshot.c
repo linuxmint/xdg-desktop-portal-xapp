@@ -202,31 +202,31 @@ handle_pick_color (XdpImplScreenshot *object,
     g_autoptr(Request) request = NULL;
     const char *sender;
     ScreenshotHandle *handle;
-    
+
     sender = g_dbus_method_invocation_get_sender (invocation);
     request = request_new (sender, arg_app_id, arg_handle);
-    
+
     handle = g_new0 (ScreenshotHandle, 1);
     handle->impl = object;
     handle->invocation = invocation;
     handle->request = g_object_ref (request);
     handle->retval = "color";
     handle->response = 2;
-    
+
     g_signal_connect (request, "handle-close", G_CALLBACK (handle_close), handle);
-    
+
     request_export (request, g_dbus_method_invocation_get_connection (invocation));
 
     GSubprocess *proc;
     GError *error = NULL;
-    
+
     const gchar *argv[] = {
         "mint-color-picker",
         NULL
     };
-    
+
     proc = g_subprocess_newv (argv, G_SUBPROCESS_FLAGS_STDOUT_PIPE, &error);
-    
+
     if (error)
     {
         g_warning ("Could not pick color, call to picker failed: %s", error->message);
