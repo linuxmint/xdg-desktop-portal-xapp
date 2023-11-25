@@ -68,7 +68,7 @@ send_response (ScreenshotHandle *handle)
         GVariantBuilder opt_builder;
         
         g_variant_builder_init (&opt_builder, G_VARIANT_TYPE_VARDICT);
-        g_variant_builder_add (&opt_builder, "a{sv}", "result", g_variant_new ("(ddd)",
+        g_variant_builder_add (&opt_builder, "{sv}", "color", g_variant_new ("(ddd)",
                                                                            handle->red,
                                                                            handle->green,
                                                                            handle->blue));
@@ -89,7 +89,7 @@ picker_finished (GSubprocess  *proc,
 {
     ScreenshotHandle *handle = user_data;
     gchar *output;
-    g_subprocess_communicate_utf8(proc, NULL, NULL, &output, NULL, NULL);
+    g_subprocess_communicate_utf8_finish(proc, res, &output, NULL, NULL);
     GVariant *colors = g_variant_parse(g_variant_type_new("ai"), output, NULL, NULL, NULL);
 
     handle->red = g_variant_get_int32(g_variant_get_child_value(colors, 0)) / 255.0;
@@ -225,7 +225,7 @@ handle_pick_color (XdpImplScreenshot *object,
         NULL
     };
     
-    proc = g_subprocess_newv (argv, G_SUBPROCESS_FLAGS_NONE, &error);
+    proc = g_subprocess_newv (argv, G_SUBPROCESS_FLAGS_STDOUT_PIPE, &error);
     
     if (error)
     {
@@ -235,7 +235,7 @@ handle_pick_color (XdpImplScreenshot *object,
         send_response (handle);
     }
 
-    g_subprocess_wait_async (proc, NULL, (GAsyncReadyCallback) picker_finished, handle);
+    g_subprocess_communicate_utf8_async (proc, NULL, NULL, (GAsyncReadyCallback) picker_finished, handle);
 
     return TRUE;
 }
