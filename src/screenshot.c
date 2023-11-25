@@ -68,7 +68,7 @@ send_response (ScreenshotHandle *handle)
         GVariantBuilder opt_builder;
         
         g_variant_builder_init (&opt_builder, G_VARIANT_TYPE_VARDICT);
-        g_variant_builder_add (&opt_builder, "{sv}", "color", g_variant_new ("(ddd)",
+        g_variant_builder_add (&opt_builder, "a{sv}", "result", g_variant_new ("(ddd)",
                                                                            handle->red,
                                                                            handle->green,
                                                                            handle->blue));
