@@ -88,10 +88,15 @@ picker_finished (GSubprocess  *proc,
                  gpointer      user_data)
 {
     ScreenshotHandle *handle = user_data;
+    gchar *output;
+    g_subprocess_communicate_utf8(proc, NULL, NULL, &output, NULL, NULL);
+    GVariant *colors = g_variant_parse(g_variant_type_new("ai"), output, NULL, NULL, NULL);
+
+    handle->red = g_variant_get_int32(g_variant_get_child_value(colors, 0));
+    handle->green = g_variant_get_int32(g_variant_get_child_value(colors, 1));
+    handle->blue = g_variant_get_int32(g_variant_get_child_value(colors, 2));
     handle->response = 0;
-    handle->red = 0;
-    handle->green = 0;
-    handle->blue = 0;
+
     send_response (handle);
 }
 
