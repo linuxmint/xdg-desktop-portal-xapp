@@ -28,7 +28,7 @@ typedef struct {
 
     int response;
     char *uri;
-    int red, green, blue;
+    double red, green, blue;
     const char *retval;
     char *save_path;
 } ScreenshotHandle;
@@ -92,9 +92,9 @@ picker_finished (GSubprocess  *proc,
     g_subprocess_communicate_utf8(proc, NULL, NULL, &output, NULL, NULL);
     GVariant *colors = g_variant_parse(g_variant_type_new("ai"), output, NULL, NULL, NULL);
 
-    handle->red = g_variant_get_int32(g_variant_get_child_value(colors, 0));
-    handle->green = g_variant_get_int32(g_variant_get_child_value(colors, 1));
-    handle->blue = g_variant_get_int32(g_variant_get_child_value(colors, 2));
+    handle->red = g_variant_get_int32(g_variant_get_child_value(colors, 0)) / 255.0;
+    handle->green = g_variant_get_int32(g_variant_get_child_value(colors, 1)) / 255.0;
+    handle->blue = g_variant_get_int32(g_variant_get_child_value(colors, 2)) / 255.0;
     handle->response = 0;
 
     send_response (handle);
