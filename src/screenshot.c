@@ -28,7 +28,7 @@ typedef struct {
 
     int response;
     char *uri;
-    double red, green, blue;
+    int red, green, blue;
     const char *retval;
     char *save_path;
 } ScreenshotHandle;
