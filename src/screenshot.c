@@ -210,6 +210,7 @@ handle_pick_color (XdpImplScreenshot *object,
     g_signal_connect (request, "handle-close", G_CALLBACK (handle_close), handle);
     request_export (request, g_dbus_method_invocation_get_connection (invocation));
     org_cinnamon_screenshot_call_pick_color (cinnamon,
+                                             NULL,
                                              cinnamon_color_pick_done,
                                              handle);
 
