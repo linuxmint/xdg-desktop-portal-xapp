@@ -106,7 +106,7 @@ xfce4_screenshooter_finished (GSubprocess  *proc,
 }
 
 static void
-cinnamon_color_pick_done (GSubprocess  *proc,
+cinnamon_color_pick_done (GObject *source,
                           GAsyncResult *result,
                           gpointer      data)
 {
