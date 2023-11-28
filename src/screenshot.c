@@ -83,24 +83,6 @@ send_response (ScreenshotHandle *handle)
 }
 
 static void
-picker_finished (GSubprocess  *proc,
-                 GAsyncResult *res,
-                 gpointer      user_data)
-{
-    ScreenshotHandle *handle = user_data;
-    gchar *output;
-    g_subprocess_communicate_utf8_finish(proc, res, &output, NULL, NULL);
-    GVariant *colors = g_variant_parse(g_variant_type_new("ai"), output, NULL, NULL, NULL);
-
-    handle->red = g_variant_get_int32(g_variant_get_child_value(colors, 0)) / 255.0;
-    handle->green = g_variant_get_int32(g_variant_get_child_value(colors, 1)) / 255.0;
-    handle->blue = g_variant_get_int32(g_variant_get_child_value(colors, 2)) / 255.0;
-    handle->response = 0;
-
-    send_response (handle);
-}
-
-static void
 xfce4_screenshooter_finished (GSubprocess  *proc,
                               GAsyncResult *res,
                               gpointer      user_data)
@@ -120,6 +102,18 @@ xfce4_screenshooter_finished (GSubprocess  *proc,
 
     handle->response = 0;
 
+    send_response (handle);
+}
+
+static void
+cinnamon_color_pick_done (GSubprocess  *proc,
+                          GAsyncResult *result,
+                          gpointer      data)
+{
+    ScreenshotHandle *handle = data;
+    
+    handle->response = 0;
+    
     send_response (handle);
 }
 
@@ -214,28 +208,10 @@ handle_pick_color (XdpImplScreenshot *object,
     handle->response = 2;
 
     g_signal_connect (request, "handle-close", G_CALLBACK (handle_close), handle);
-
     request_export (request, g_dbus_method_invocation_get_connection (invocation));
-
-    GSubprocess *proc;
-    GError *error = NULL;
-
-    const gchar *argv[] = {
-        "mint-color-picker",
-        NULL
-    };
-
-    proc = g_subprocess_newv (argv, G_SUBPROCESS_FLAGS_STDOUT_PIPE, &error);
-
-    if (error)
-    {
-        g_warning ("Could not pick color, call to picker failed: %s", error->message);
-        g_clear_error (&error);
-        handle->response = 2;
-        send_response (handle);
-    }
-
-    g_subprocess_communicate_utf8_async (proc, NULL, NULL, (GAsyncReadyCallback) picker_finished, handle);
+    org_cinnamon_screenshot_call_pick_color (cinnamon,
+                                             cinnamon_color_pick_done,
+                                             handle);
 
     return TRUE;
 }
