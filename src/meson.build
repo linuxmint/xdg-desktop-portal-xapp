@@ -34,7 +34,7 @@ built_sources = gnome.gdbus_codegen(
 desktop_dbus_interfaces = files(
   top_srcdir / 'data' / 'org.freedesktop.ScreenSaver.xml',
   top_srcdir / 'data' / 'org.gnome.SessionManager.xml',
-  top_srcdir / 'data' / 'org.cinnamon.Screenshot.xml',
+  top_srcdir / 'data' / 'org.gnome.Shell.Screenshot.xml',
   top_srcdir / 'data' / 'org.cinnamon.ScreenSaver.xml',
   top_srcdir / 'data' / 'org.gnome.ScreenSaver.xml',
   top_srcdir / 'data' / 'org.mate.ScreenSaver.xml'
