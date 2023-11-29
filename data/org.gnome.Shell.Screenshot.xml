@@ -9,7 +9,7 @@
 
       The interface used to capture pictures of the screen contents.
   -->
-  <interface name="org.cinnamon.Screenshot">
+  <interface name="org.gnome.Shell.Screenshot">
 
     <!--
         Screenshot:

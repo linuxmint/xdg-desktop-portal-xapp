@@ -19,7 +19,7 @@
 #include "request.h"
 #include "utils.h"
 
-static OrgCinnamonScreenshot *cinnamon;
+static OrgGnomeShellScreenshot *cinnamon;
 
 typedef struct {
     XdpImplScreenshot *impl;
@@ -111,7 +111,31 @@ cinnamon_color_pick_done (GObject *source,
                           gpointer      data)
 {
     ScreenshotHandle *handle = data;
-    
+    GError *error;
+    GVariant *ret;
+
+    error = NULL;
+
+    if (!org_gnome_shell_screenshot_call_pick_color_finish (cinnamon,
+                                                         &ret,
+                                                         result,
+                                                         &error))
+    {
+        g_print ("Failed to pick color: %s\n", error->message);
+        g_clear_error (&error);
+        handle->response = 1;
+        return;
+    }
+    else
+    if (!g_variant_lookup (ret, "color", "(ddd)",
+                           &handle->red,
+                           &handle->green,
+                           &handle->blue))
+    {
+      g_warning ("PickColor didn't return a color");
+      handle->response = 2;
+    }
+
     handle->response = 0;
     
     send_response (handle);
@@ -127,7 +151,7 @@ cinnamon_screenshot_done (GObject *source,
     g_autofree char *filename = NULL;
     g_autoptr(GError) error = NULL;
 
-    if (!org_cinnamon_screenshot_call_screenshot_finish (cinnamon,
+    if (!org_gnome_shell_screenshot_call_screenshot_finish (cinnamon,
                                                          &success,
                                                          &filename,
                                                          result,
@@ -209,7 +233,7 @@ handle_pick_color (XdpImplScreenshot *object,
 
     g_signal_connect (request, "handle-close", G_CALLBACK (handle_close), handle);
     request_export (request, g_dbus_method_invocation_get_connection (invocation));
-    org_cinnamon_screenshot_call_pick_color (cinnamon,
+    org_gnome_shell_screenshot_call_pick_color (cinnamon,
                                              NULL,
                                              cinnamon_color_pick_done,
                                              handle);
@@ -275,7 +299,7 @@ handle_screenshot (XdpImplScreenshot *object,
     else
     if (CINNAMON_MODE)
     {
-        org_cinnamon_screenshot_call_screenshot (cinnamon,
+        org_gnome_shell_screenshot_call_screenshot (cinnamon,
                                                  FALSE,
                                                  TRUE,
                                                  "Screenshot",
@@ -301,7 +325,7 @@ screenshot_init (GDBusConnection *bus,
 
     helper = G_DBUS_INTERFACE_SKELETON (xdp_impl_screenshot_skeleton_new ());
 
-    g_object_set (helper, "version", 1, NULL);
+    g_object_set (helper, "version", 2, NULL);
 
     // TODO: Need to implement dialog (or maybe interact with screenshot app).
     g_signal_connect (helper, "handle-screenshot", G_CALLBACK (handle_screenshot), NULL);
@@ -313,10 +337,10 @@ screenshot_init (GDBusConnection *bus,
                                            error))
         return FALSE;
 
-    cinnamon = org_cinnamon_screenshot_proxy_new_sync (bus,
+    cinnamon = org_gnome_shell_screenshot_proxy_new_sync (bus,
                                                        G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START,
-                                                       "org.cinnamon.Screenshot",
-                                                       "/org/cinnamon/Screenshot",
+                                                       "org.Cinnamon",
+                                                       "/org/gnome/Shell/Screenshot",
                                                        NULL,
                                                        error);
     if (cinnamon == NULL)
