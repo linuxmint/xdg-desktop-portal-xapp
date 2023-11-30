@@ -1,3 +1,10 @@
+xdg-desktop-portal-xapp (1.0.4) virginia; urgency=medium
+
+  [ zehkira ]
+  * Implement color picking (#12)
+
+ -- Clement Lefebvre <root@linuxmint.com>  Thu, 30 Nov 2023 16:45:05 +0000
+
 xdg-desktop-portal-xapp (1.0.3) victoria; urgency=medium
 
   [ Michael Webster ]
