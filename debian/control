@@ -5,6 +5,7 @@ Maintainer: Linux Mint <root@linuxmint.com>
 Build-Depends:
  debhelper-compat (= 13),
  libglib2.0-dev (>= 2.44),
+ libgtk-3-dev (>= 3.0),
  meson (>= 0.53.0),
  systemd (>= 242),
  xdg-desktop-portal-dev (>= 1.7.1),
