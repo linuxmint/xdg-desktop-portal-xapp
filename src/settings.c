@@ -24,16 +24,15 @@
 #include <string.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
+#include <gdk/gdk.h>
+#include <gtk/gtk.h>
 
 #include "settings.h"
 #include "utils.h"
 
 #include "xdg-desktop-portal-dbus.h"
 
-#define XAPP_PORTAL_INTERFACE_SCHEMA "org.x.apps.portal"
-
-static GHashTable *settings;
-static const gchar *used_interface_schema = NULL;
+static GHashTable *settings_table;
 
 typedef struct {
   GSettingsSchema *schema;
@@ -57,6 +56,96 @@ settings_bundle_free (SettingsBundle *bundle)
   g_object_unref (bundle->settings);
   g_free (bundle);
 }
+
+// static GVariant *get_gtk_theme (gpointer data);
+static GVariant *get_accent_color (gpointer data);
+static GVariant *get_color_scheme (gpointer data);
+static GVariant *get_high_contrast (gpointer data);
+
+#define XAPP_PORTAL_INTERFACE_SCHEMA "org.x.apps.portal"
+#define CINNAMON_DESKTOP_INTERFACE_SCHEMA "org.cinnamon.desktop.interface"
+
+typedef GVariant* (* LookupFunc) (gpointer data);
+
+const gchar *COLOR_SCHEME_NAMES[] = {
+    "default",
+    "prefer-dark",
+    "prefer-light",
+    NULL
+};
+
+typedef struct
+{
+  const gchar *portal_ns;
+  const gchar *portal_key;
+  const gchar *gs_schema_id;
+  const gchar *gs_key;
+  LookupFunc lookup_func;
+} SettingDefinition;
+
+// ******** KEEP THE NAMESPACES GROUPED TOGETHER. See settings_handle_read_all () *******
+static const SettingDefinition setting_defs[] = {
+    { "org.freedesktop.appearance",       "contrast",             XAPP_PORTAL_INTERFACE_SCHEMA,               "high-contrast",        get_high_contrast },
+    { "org.freedesktop.appearance",       "color-scheme",         XAPP_PORTAL_INTERFACE_SCHEMA,               "color-scheme",         get_color_scheme },
+    { "org.freedesktop.appearance",       "accent-color",         XAPP_PORTAL_INTERFACE_SCHEMA,               "accent-rgb",           get_accent_color },
+    // { "org.gnome.desktop.interface",      "gtk-theme",            CINNAMON_DESKTOP_INTERFACE_SCHEMA,          "gtk-theme",            get_gtk_theme }
+};
+
+typedef struct
+{
+    const gchar *theme_name;
+    const gchar *accent_color;
+} ColorMatch;
+
+// Instead (or as another fallback) we could get GtkStyleContext and
+// Run gtk_style_context_lookup_color() with a reliable color name.
+static const ColorMatch colors[] = {
+    { "Mint-X",             "#9ab87x"},
+    { "Mint-X-Aqua",        "#6cabcd"},
+    { "Mint-X-Blue",        "#5b73c4"},
+    { "Mint-X-Brown",       "#aa876a"},
+    { "Mint-X-Grey",        "#9d9d9d"},
+    { "Mint-X-Orange",      "#db9d61"},
+    { "Mint-X-Pink",        "#c76199"},
+    { "Mint-X-Purple",      "#8c6ec9"},
+    { "Mint-X-Red",         "#c15b58"},
+    { "Mint-X-Sand",        "#c8ac69"},
+    { "Mint-X-Teal",        "#5aaa9a"},
+
+    { "Mint-X-Dark",        "#accd8a"},
+    { "Mint-X-Dark-Aqua",   "#6cabcd"},
+    { "Mint-X-Dark-Blue",   "#5b73c4"},
+    { "Mint-X-Dark-Brown",  "#aa876a"},
+    { "Mint-X-Dark-Grey",   "#9d9d9d"},
+    { "Mint-X-Dark-Orange", "#db9d61"},
+    { "Mint-X-Dark-Pink",   "#c76199"},
+    { "Mint-X-Dark-Purple", "#8c6ec9"},
+    { "Mint-X-Dark-Red",    "#c15b58"},
+    { "Mint-X-Dark-Sand",   "#c8ac69"},
+    { "Mint-X-Dark-Teal",   "#5aaa9a"},
+
+    { "Mint-Y",             "#35a854"},
+    { "Mint-Y-Aqua",        "#1f9ede"},
+    { "Mint-Y-Blue",        "#0c75de"},
+    { "Mint-Y-Grey",        "#70737a"},
+    { "Mint-Y-Orange",      "#ff7139"},
+    { "Mint-Y-Pink",        "#e54980"},
+    { "Mint-Y-Purple",      "#8c5dd9"},
+    { "Mint-Y-Red",         "#e82127"},
+    { "Mint-Y-Sand",        "#c5a07c"},
+    { "Mint-Y-Teal",        "#199ca8"},
+
+    { "Mint-Y-Dark",        "#35a854"},
+    { "Mint-Y-Dark-Aqua",   "#1f9ede"},
+    { "Mint-Y-Dark-Blue",   "#0c75de"},
+    { "Mint-Y-Dark-Grey",   "#70737a"},
+    { "Mint-Y-Dark-Orange", "#ff7139"},
+    { "Mint-Y-Dark-Pink",   "#e54980"},
+    { "Mint-Y-Dark-Purple", "#8c5dd9"},
+    { "Mint-Y-Dark-Red",    "#e82127"},
+    { "Mint-Y-Dark-Sand",   "#c5a07c"},
+    { "Mint-Y-Dark-Teal",   "#199ca8"},
+};
 
 static gboolean
 namespace_matches (const char         *namespace,
@@ -85,33 +174,107 @@ namespace_matches (const char         *namespace,
   return FALSE;
 }
 
+// static GVariant *
+// get_gtk_theme (gpointer data)
+// {
+//     SettingDefinition *def = (SettingDefinition *) data;
+//     SettingsBundle *bundle = g_hash_table_lookup (settings_table, def->gs_schema_id);
+
+//     GtkSettings *gtk_settings = gtk_settings_get_default ();
+//     g_autofree gchar *theme_name = NULL;
+
+//     g_object_get (gtk_settings,
+//                   "gtk-theme-name", &theme_name,
+//                   NULL);
+
+//     return g_variant_new_string (theme_name);
+// }
+
 static GVariant *
-get_color_scheme (void)
+get_color_scheme (gpointer data)
 {
-  SettingsBundle *bundle = g_hash_table_lookup (settings, used_interface_schema);
-  int color_scheme;
+    SettingDefinition *def = (SettingDefinition *) data;
+    SettingsBundle *bundle = g_hash_table_lookup (settings_table, def->gs_schema_id);
+    if (bundle != NULL && g_settings_schema_has_key (bundle->schema, "color-scheme"))
+    {
+        int color_scheme;
 
-  if (!g_settings_schema_has_key (bundle->schema, "color-scheme"))
-    return g_variant_new_uint32 (0); /* No preference */
+        color_scheme = g_settings_get_enum (bundle->settings, "color-scheme");
+        g_debug ("Color scheme: %s", COLOR_SCHEME_NAMES[color_scheme]);
+        return g_variant_new_uint32 (color_scheme); /* No preference */
+    }
 
-  color_scheme = g_settings_get_enum (bundle->settings, "color-scheme");
-
-  return g_variant_new_uint32 (color_scheme);
+    g_debug ("Using default color scheme");
+    return g_variant_new_uint32 (COLOR_SCHEME_DEFAULT); /* No preference */
 }
 
-// static GVariant *
-// get_high_contrast (void)
-// {
-//   SettingsBundle *bundle = g_hash_table_lookup (settings, used_interface_schema);
-//   gboolean high_contrast;
+static GVariant *
+get_high_contrast (gpointer data)
+{
+    SettingDefinition *def = (SettingDefinition *) data;
+    SettingsBundle *bundle = g_hash_table_lookup (settings_table, def->gs_schema_id);
 
-//   if (!g_settings_schema_has_key (bundle->schema, "high-contrast"))
-//     return g_variant_new_boolean (FALSE);
+    if (bundle != NULL && g_settings_schema_has_key (bundle->schema, "high-contrast"))
+    {
+        gboolean high_contrast;
 
-//   high_contrast = g_settings_get_boolean (bundle->settings, "high-contrast");
+        high_contrast = g_settings_get_boolean (bundle->settings, "high-contrast");
+        g_debug ("High contrast: %s", high_contrast ? "true" : "false");
+        return g_variant_new_uint32 (high_contrast ? 1 : 0);
+    }
 
-//   return g_variant_new_boolean (high_contrast);
-// }
+    g_debug ("Using default high contrast: false");
+    return g_variant_new_uint32 (0); /* No preference */
+}
+
+static GVariant *
+get_accent_color (gpointer data)
+{
+    SettingDefinition *def = (SettingDefinition *) data;
+    SettingsBundle *bundle = g_hash_table_lookup (settings_table, def->gs_schema_id);
+    GtkSettings *gtk_settings = gtk_settings_get_default ();
+    g_autofree gchar *theme_name = NULL;
+    g_autofree gchar *out_color = NULL;
+    gboolean prefer_dark;
+    GdkRGBA rgba;
+    gint i;
+
+    g_object_get (gtk_settings,
+                  "gtk-theme-name", &theme_name,
+                  "gtk-application-prefer-dark-theme", &prefer_dark,
+                  NULL);
+
+    g_debug ("Looking up the accent color for gtk theme '%s'", theme_name);
+
+    for (i = 0; i < G_N_ELEMENTS (colors); i++)
+    {
+        ColorMatch match = colors[i];
+
+        if (g_strcmp0 (theme_name, match.theme_name) == 0)
+        {
+            out_color = g_strdup (match.accent_color);
+        }
+    }
+
+    if (out_color == NULL)
+    {
+        g_debug ("No matching theme found for accent-rgb setting, checking gsettings");
+
+        if (bundle != NULL && g_settings_schema_has_key (bundle->schema, "accent-rgb"))
+        {
+            out_color = g_settings_get_string (bundle->settings, "accent-rgb");
+        }
+    }
+
+    if (out_color != NULL && gdk_rgba_parse (&rgba, out_color))
+    {
+        g_debug ("Using accent color: '%s' (r%.3f, g%.3f, b%.3f)", out_color, rgba.red, rgba.green, rgba.blue);
+        return g_variant_new ("(ddd)", rgba.red, rgba.green, rgba.blue);
+    }
+
+    g_debug ("No accent color");
+    return g_variant_new ("(ddd)", -1.0, -1.0, -1.0); /* Out of 0-1.0 range = no preference */
+}
 
 static gboolean
 settings_handle_read_all (XdpImplSettings       *object,
@@ -119,32 +282,42 @@ settings_handle_read_all (XdpImplSettings       *object,
                           const char * const    *arg_namespaces,
                           gpointer               data)
 {
-  g_autoptr(GVariantBuilder) builder = g_variant_builder_new (G_VARIANT_TYPE ("(a{sa{sv}})"));
+    g_autoptr(GVariantBuilder) builder = g_variant_builder_new (G_VARIANT_TYPE ("(a{sa{sv}})"));
+    gint i;
 
-  g_variant_builder_open (builder, G_VARIANT_TYPE ("a{sa{sv}}"));
+    // This goes through our setting_defs and assumes that a portal namespace change
+    // means there will be no more entries with the previous namespace further down setting_defs.
 
-  if (namespace_matches ("org.freedesktop.appearance", arg_namespaces))
+    g_variant_builder_open (builder, G_VARIANT_TYPE ("a{sa{sv}}"));
+
+    GVariantDict dict;
+    const gchar *current_ns = NULL;
+
+    for (i = 0; i < G_N_ELEMENTS (setting_defs); i++)
     {
-      GVariantDict dict;
+        if (!namespace_matches (setting_defs[i].portal_ns, arg_namespaces))
+          continue;
 
-      g_variant_dict_init (&dict, NULL);
-      g_variant_dict_insert_value (&dict, "color-scheme", get_color_scheme ());
+        if (g_strcmp0 (current_ns, setting_defs[i].portal_ns) != 0)
+        {
+            if (current_ns != NULL)
+            {
+                g_variant_builder_add (builder, "{s@a{sv}}", current_ns, g_variant_dict_end (&dict));
+            }
 
-      g_variant_builder_add (builder, "{s@a{sv}}", "org.freedesktop.appearance", g_variant_dict_end (&dict));
-    }
+            current_ns = setting_defs[i].portal_ns;
+            g_variant_dict_init (&dict, NULL);
+        }
 
-  // if (namespace_matches ("org.gnome.desktop.a11y.interface", arg_namespaces))
-  //   {
-  //     GVariantDict dict;
+        g_variant_dict_insert_value (&dict, setting_defs[i].portal_key, setting_defs[i].lookup_func ((gpointer) &setting_defs[i]));
+  }
 
-  //     g_variant_dict_init (&dict, NULL);
-  //     g_variant_dict_insert_value (&dict, "high-contrast", get_high_contrast ());
-
-  //     g_variant_builder_add (builder, "{s@a{sv}}", "org.gnome.desktop.a11y.interface", g_variant_dict_end (&dict));
-  //   }
+  if (current_ns != NULL)
+  {
+    g_variant_builder_add (builder, "{s@a{sv}}", current_ns, g_variant_dict_end (&dict));
+  }
 
   g_variant_builder_close (builder);
-
   g_dbus_method_invocation_return_value (invocation, g_variant_builder_end (builder));
 
   return TRUE;
@@ -155,108 +328,90 @@ settings_handle_read (XdpImplSettings       *object,
                       GDBusMethodInvocation *invocation,
                       const char            *arg_namespace,
                       const char            *arg_key,
-                      gpointer               data)
+                      gpointer               user_data)
 {
-  g_debug ("Read %s %s", arg_namespace, arg_key);
+    g_debug ("Read %s %s", arg_namespace, arg_key);
+    GVariant *out = NULL;
+    gint i;
 
-  if (strcmp (arg_namespace, "org.freedesktop.appearance") == 0 &&
-           strcmp (arg_key, "color-scheme") == 0)
+    for (i = 0; i < G_N_ELEMENTS (setting_defs); i++)
     {
-      g_dbus_method_invocation_return_value (invocation,
-                                             g_variant_new ("(v)", get_color_scheme ()));
-      return TRUE;
+        if (g_strcmp0 (arg_namespace, setting_defs[i].portal_ns) == 0 &&
+            g_strcmp0 (arg_key, setting_defs[i].portal_key) == 0)
+        {
+            out = g_variant_new ("(v)", setting_defs[i].lookup_func ((gpointer) &setting_defs[i]));
+            g_dbus_method_invocation_return_value (invocation, out);
+            break;
+        }
     }
-  // else
-  // if (strcmp (arg_namespace, "org.gnome.desktop.a11y.interface") == 0 &&
-  //          strcmp (arg_key, "high-contrast") == 0)
-  //   {
-  //     g_dbus_method_invocation_return_value (invocation,
-  //                                            g_variant_new ("(v)", get_high_contrast ()));
-  //     return TRUE;
-  //   }
 
-  g_debug ("Attempted to read unknown namespace/key pair: %s %s", arg_namespace, arg_key);
-  g_dbus_method_invocation_return_error_literal (invocation, XDG_DESKTOP_PORTAL_ERROR,
-                                                 XDG_DESKTOP_PORTAL_ERROR_NOT_FOUND,
-                                                 _("Requested setting not found"));
+    if (out == NULL)
+    {
+        g_debug ("Attempted to read unknown namespace/key pair: %s %s", arg_namespace, arg_key);
+        g_dbus_method_invocation_return_error_literal (invocation, XDG_DESKTOP_PORTAL_ERROR,
+                                                       XDG_DESKTOP_PORTAL_ERROR_NOT_FOUND,
+                                                       _("Requested setting not found"));
+    }
 
-  return TRUE;
-}
-
-typedef struct {
-  XdpImplSettings *self;
-  const char *namespace;
-} ChangedSignalUserData;
-
-static ChangedSignalUserData *
-changed_signal_user_data_new (XdpImplSettings *settings,
-                              const char      *namespace)
-{
-  ChangedSignalUserData *data = g_new (ChangedSignalUserData, 1);
-  data->self = settings;
-  data->namespace = namespace;
-  return data;
+    return TRUE;
 }
 
 static void
-changed_signal_user_data_destroy (gpointer  data,
-                                  GClosure *closure)
-{
-  g_free (data);
-}
-
-static void
-on_settings_changed (GSettings             *settings,
+on_settings_changed (GSettings             *gsettings,
                      const char            *key,
-                     ChangedSignalUserData *user_data)
+                     gpointer               user_data)
 {
-  g_autoptr (GVariant) new_value = g_settings_get_value (settings, key);
+    XdpImplSettings *xdg_settings = XDP_IMPL_SETTINGS (user_data);
+    gchar *schema_id;
+    gint i;
 
-  g_debug ("Emitting changed for %s %s", user_data->namespace, key);
+    g_object_get (gsettings, "schema-id", &schema_id, NULL);
+    g_debug ("Emitting changed for %s %s", schema_id, key);
 
-  if (strcmp (user_data->namespace, used_interface_schema) == 0 &&
-      strcmp (key, "color-scheme") == 0)
-  {
-    xdp_impl_settings_emit_setting_changed (user_data->self,
-                                            "org.freedesktop.appearance", key,
-                                            g_variant_new ("v", get_color_scheme ()));
-  }
-
+    for (i = 0; i < G_N_ELEMENTS (setting_defs); i++)
+    {
+        if (g_strcmp0 (schema_id, setting_defs[i].gs_schema_id) == 0 &&
+            g_strcmp0 (key, setting_defs[i].gs_key) == 0)
+        {
+            GVariant *out = g_variant_new ("v", setting_defs[i].lookup_func ((gpointer) &setting_defs[i]));
+            xdp_impl_settings_emit_setting_changed (xdg_settings, setting_defs[i].portal_ns, setting_defs[i].portal_key, out);
+            break;
+        }
+    }
 }
 
 static void
 init_settings_table (XdpImplSettings *settings,
                      GHashTable      *table)
 {
-    const gchar *schemas[1] = { 0 };
-
-    schemas[0] = XAPP_PORTAL_INTERFACE_SCHEMA;
-    used_interface_schema = XAPP_PORTAL_INTERFACE_SCHEMA;
-
     size_t i;
     GSettingsSchemaSource *source = g_settings_schema_source_get_default ();
 
-    for (i = 0; i < G_N_ELEMENTS (schemas); ++i)
+    for (i = 0; i < G_N_ELEMENTS (setting_defs); i++)
     {
         GSettings *setting;
         GSettingsSchema *schema;
         SettingsBundle *bundle;
-        const char *schema_name = schemas[i];
-
-        schema = g_settings_schema_source_lookup (source, schema_name, TRUE);
+        schema = g_settings_schema_source_lookup (source, setting_defs[i].gs_schema_id, TRUE);
         if (!schema)
         {
-            g_debug ("%s schema not found", schema_name);
+            g_debug ("%s schema not found", setting_defs[i].gs_schema_id);
             continue;
         }
 
-        setting = g_settings_new (schema_name);
+        if (g_hash_table_contains (settings_table, setting_defs[i].gs_schema_id))
+        {
+            g_debug ("Already monitoring %s", setting_defs[i].gs_schema_id);
+            continue;
+        }
+        g_debug ("Initing GSettings for '%s'", setting_defs[i].gs_schema_id);
+        setting = g_settings_new (setting_defs[i].gs_schema_id);
         bundle = settings_bundle_new (schema, setting);
-        g_signal_connect_data (setting, "changed", G_CALLBACK(on_settings_changed),
-                               changed_signal_user_data_new (settings, schema_name),
-                               changed_signal_user_data_destroy, 0);
-        g_hash_table_insert (table, (gchar *) schema_name, bundle);
+        g_signal_connect (setting, "changed", G_CALLBACK(on_settings_changed), settings);
+        g_hash_table_insert (settings_table, (gpointer) setting_defs[i].gs_schema_id, bundle);
     }
+
+    g_settings_schema_source_unref (source);
 }
 
 gboolean
@@ -267,12 +422,14 @@ settings_init (GDBusConnection  *bus,
 
   helper = G_DBUS_INTERFACE_SKELETON (xdp_impl_settings_skeleton_new ());
 
+  g_object_set (helper, "version", 2, NULL);
+
   g_signal_connect (helper, "handle-read", G_CALLBACK (settings_handle_read), NULL);
   g_signal_connect (helper, "handle-read-all", G_CALLBACK (settings_handle_read_all), NULL);
 
-  settings = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) settings_bundle_free);
+  settings_table= g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) settings_bundle_free);
 
-  init_settings_table (XDP_IMPL_SETTINGS (helper), settings);
+  init_settings_table (XDP_IMPL_SETTINGS (helper), settings_table);
 
   if (!g_dbus_interface_skeleton_export (helper,
                                          bus,

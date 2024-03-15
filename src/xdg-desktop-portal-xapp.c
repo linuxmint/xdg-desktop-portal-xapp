@@ -35,6 +35,7 @@
 #include <gio/gio.h>
 #include <gio/gdesktopappinfo.h>
 #include <gio/gunixfdlist.h>
+#include <gtk/gtk.h>
 
 #include <glib/gi18n.h>
 #include <locale.h>
@@ -49,7 +50,6 @@
 #include "settings.h"
 #include "wallpaper.h"
 
-static GMainLoop *loop = NULL;
 static GHashTable *outstanding_handles = NULL;
 
 static gboolean opt_verbose;
@@ -153,7 +153,7 @@ on_name_lost (GDBusConnection *connection,
               gpointer         user_data)
 {
   g_debug ("name lost");
-  g_main_loop_quit (loop);
+  gtk_main_quit ();
 }
 
 int
@@ -237,7 +237,7 @@ main (int argc, char *argv[])
 
   g_set_prgname ("xdg-desktop-portal-xapp");
 
-  loop = g_main_loop_new (NULL, FALSE);
+  gtk_init (NULL, NULL);
 
   outstanding_handles = g_hash_table_new (g_str_hash, g_str_equal);
 
@@ -257,8 +257,7 @@ main (int argc, char *argv[])
                              NULL,
                              NULL);
 
-  g_main_loop_run (loop);
-
+  gtk_main ();
   g_bus_unown_name (owner_id);
 
   return 0;
