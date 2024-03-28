@@ -97,7 +97,7 @@
       </arg>
       <arg type="u" name="flags" direction="in">
         <doc:doc>
-          <doc:summary>Flags that spefify what should be inhibited</doc:summary>
+          <doc:summary>Flags that specify what should be inhibited</doc:summary>
         </doc:doc>
       </arg>
       <arg type="u" name="inhibit_cookie" direction="out">
@@ -107,7 +107,7 @@
       </arg>
       <doc:doc>
         <doc:summary>
-          Proactively indicates that the calling application is performing an action that should not be interrupted and sets a reason to be displayed to the user when an interruption is about to take placea.
+          Proactively indicates that the calling application is performing an action that should not be interrupted and sets a reason to be displayed to the user when an interruption is about to take place.
         </doc:summary>
         <doc:description>
           <doc:para>Applications should invoke this method when they begin an operation that
@@ -175,7 +175,7 @@
     <method name="IsInhibited">
       <arg type="u" name="flags" direction="in">
         <doc:doc>
-          <doc:summary>Flags that spefify what should be inhibited</doc:summary>
+          <doc:summary>Flags that specify what should be inhibited</doc:summary>
         </doc:doc>
       </arg>
       <arg type="b" name="is_inhibited" direction="out">
@@ -296,7 +296,7 @@
               </doc:item>
               <doc:item>
                 <doc:term>1</doc:term>
-                <doc:definition>No confirmation inferface should be shown.</doc:definition>
+                <doc:definition>No confirmation interface should be shown.</doc:definition>
               </doc:item>
               <doc:item>
                 <doc:term>2</doc:term>
