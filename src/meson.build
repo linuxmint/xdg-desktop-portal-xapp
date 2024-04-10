@@ -11,6 +11,7 @@ desktop_portal_interfaces_dir = xdg_desktop_portal_dep.get_variable(
 )
 
 desktop_portal_dbus_interfaces = [
+  desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Background.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Inhibit.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Lockdown.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Request.xml',
@@ -35,6 +36,7 @@ desktop_dbus_interfaces = files(
   top_srcdir / 'data' / 'org.freedesktop.ScreenSaver.xml',
   top_srcdir / 'data' / 'org.gnome.SessionManager.xml',
   top_srcdir / 'data' / 'org.gnome.Shell.Screenshot.xml',
+  top_srcdir / 'data' / 'org.cinnamon.PortalHandlers.xml',
   top_srcdir / 'data' / 'org.cinnamon.ScreenSaver.xml',
   top_srcdir / 'data' / 'org.gnome.ScreenSaver.xml',
   top_srcdir / 'data' / 'org.mate.ScreenSaver.xml'
@@ -63,6 +65,7 @@ deps = [
 ]
 
 sources = built_sources + files(
+  'background.c',
   'inhibit.c',
   'lockdown.c',
   'request.c',

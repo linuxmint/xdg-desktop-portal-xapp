@@ -43,6 +43,7 @@
 #include "xdg-desktop-portal-dbus.h"
 
 #include "utils.h"
+#include "background.h"
 #include "inhibit.h"
 #include "lockdown.h"
 #include "request.h"
@@ -133,6 +134,12 @@ on_bus_acquired (GDBusConnection *connection,
     }
 
   if (!wallpaper_init (connection, &error))
+    {
+      g_warning ("error: %s\n", error->message);
+      g_clear_error (&error);
+    }
+
+  if (CINNAMON_MODE && !background_init (connection, &error))
     {
       g_warning ("error: %s\n", error->message);
       g_clear_error (&error);
