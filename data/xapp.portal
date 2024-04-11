@@ -1,4 +1,4 @@
 [portal]
 DBusName=org.freedesktop.impl.portal.desktop.xapp
-Interfaces=org.freedesktop.impl.portal.Wallpaper;org.freedesktop.impl.portal.Inhibit;org.freedesktop.impl.portal.Screenshot;org.freedesktop.impl.portal.Lockdown;org.freedesktop.impl.portal.Settings;
+Interfaces=org.freedesktop.impl.portal.Wallpaper;org.freedesktop.impl.portal.Inhibit;org.freedesktop.impl.portal.Screenshot;org.freedesktop.impl.portal.Lockdown;org.freedesktop.impl.portal.Settings;org.freedesktop.impl.portal.Background;
 UseIn=X-Cinnamon;MATE;XFCE;
