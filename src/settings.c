@@ -58,7 +58,6 @@ settings_bundle_free (SettingsBundle *bundle)
 }
 
 // static GVariant *get_gtk_theme (gpointer data);
-static GVariant *get_accent_color (gpointer data);
 static GVariant *get_color_scheme (gpointer data);
 static GVariant *get_high_contrast (gpointer data);
 
@@ -86,65 +85,7 @@ typedef struct
 // ******** KEEP THE NAMESPACES GROUPED TOGETHER. See settings_handle_read_all () *******
 static const SettingDefinition setting_defs[] = {
     { "org.freedesktop.appearance",       "contrast",             XAPP_PORTAL_INTERFACE_SCHEMA,               "high-contrast",        get_high_contrast },
-    { "org.freedesktop.appearance",       "color-scheme",         XAPP_PORTAL_INTERFACE_SCHEMA,               "color-scheme",         get_color_scheme },
-    { "org.freedesktop.appearance",       "accent-color",         XAPP_PORTAL_INTERFACE_SCHEMA,               "accent-rgb",           get_accent_color },
-    // { "org.gnome.desktop.interface",      "gtk-theme",            CINNAMON_DESKTOP_INTERFACE_SCHEMA,          "gtk-theme",            get_gtk_theme }
-};
-
-typedef struct
-{
-    const gchar *theme_name;
-    const gchar *accent_color;
-} ColorMatch;
-
-// Instead (or as another fallback) we could get GtkStyleContext and
-// Run gtk_style_context_lookup_color() with a reliable color name.
-static const ColorMatch colors[] = {
-    { "Mint-X",             "#9ab87x"},
-    { "Mint-X-Aqua",        "#6cabcd"},
-    { "Mint-X-Blue",        "#5b73c4"},
-    { "Mint-X-Brown",       "#aa876a"},
-    { "Mint-X-Grey",        "#9d9d9d"},
-    { "Mint-X-Orange",      "#db9d61"},
-    { "Mint-X-Pink",        "#c76199"},
-    { "Mint-X-Purple",      "#8c6ec9"},
-    { "Mint-X-Red",         "#c15b58"},
-    { "Mint-X-Sand",        "#c8ac69"},
-    { "Mint-X-Teal",        "#5aaa9a"},
-
-    { "Mint-X-Dark",        "#accd8a"},
-    { "Mint-X-Dark-Aqua",   "#6cabcd"},
-    { "Mint-X-Dark-Blue",   "#5b73c4"},
-    { "Mint-X-Dark-Brown",  "#aa876a"},
-    { "Mint-X-Dark-Grey",   "#9d9d9d"},
-    { "Mint-X-Dark-Orange", "#db9d61"},
-    { "Mint-X-Dark-Pink",   "#c76199"},
-    { "Mint-X-Dark-Purple", "#8c6ec9"},
-    { "Mint-X-Dark-Red",    "#c15b58"},
-    { "Mint-X-Dark-Sand",   "#c8ac69"},
-    { "Mint-X-Dark-Teal",   "#5aaa9a"},
-
-    { "Mint-Y",             "#35a854"},
-    { "Mint-Y-Aqua",        "#1f9ede"},
-    { "Mint-Y-Blue",        "#0c75de"},
-    { "Mint-Y-Grey",        "#70737a"},
-    { "Mint-Y-Orange",      "#ff7139"},
-    { "Mint-Y-Pink",        "#e54980"},
-    { "Mint-Y-Purple",      "#8c5dd9"},
-    { "Mint-Y-Red",         "#e82127"},
-    { "Mint-Y-Sand",        "#c5a07c"},
-    { "Mint-Y-Teal",        "#199ca8"},
-
-    { "Mint-Y-Dark",        "#35a854"},
-    { "Mint-Y-Dark-Aqua",   "#1f9ede"},
-    { "Mint-Y-Dark-Blue",   "#0c75de"},
-    { "Mint-Y-Dark-Grey",   "#70737a"},
-    { "Mint-Y-Dark-Orange", "#ff7139"},
-    { "Mint-Y-Dark-Pink",   "#e54980"},
-    { "Mint-Y-Dark-Purple", "#8c5dd9"},
-    { "Mint-Y-Dark-Red",    "#e82127"},
-    { "Mint-Y-Dark-Sand",   "#c5a07c"},
-    { "Mint-Y-Dark-Teal",   "#199ca8"},
+    { "org.freedesktop.appearance",       "color-scheme",         XAPP_PORTAL_INTERFACE_SCHEMA,               "color-scheme",         get_color_scheme }
 };
 
 static gboolean
@@ -173,22 +114,6 @@ namespace_matches (const char         *namespace,
 
   return FALSE;
 }
-
-// static GVariant *
-// get_gtk_theme (gpointer data)
-// {
-//     SettingDefinition *def = (SettingDefinition *) data;
-//     SettingsBundle *bundle = g_hash_table_lookup (settings_table, def->gs_schema_id);
-
-//     GtkSettings *gtk_settings = gtk_settings_get_default ();
-//     g_autofree gchar *theme_name = NULL;
-
-//     g_object_get (gtk_settings,
-//                   "gtk-theme-name", &theme_name,
-//                   NULL);
-
-//     return g_variant_new_string (theme_name);
-// }
 
 static GVariant *
 get_color_scheme (gpointer data)
@@ -225,55 +150,6 @@ get_high_contrast (gpointer data)
 
     g_debug ("Using default high contrast: false");
     return g_variant_new_uint32 (0); /* No preference */
-}
-
-static GVariant *
-get_accent_color (gpointer data)
-{
-    SettingDefinition *def = (SettingDefinition *) data;
-    SettingsBundle *bundle = g_hash_table_lookup (settings_table, def->gs_schema_id);
-    GtkSettings *gtk_settings = gtk_settings_get_default ();
-    g_autofree gchar *theme_name = NULL;
-    g_autofree gchar *out_color = NULL;
-    gboolean prefer_dark;
-    GdkRGBA rgba;
-    gint i;
-
-    g_object_get (gtk_settings,
-                  "gtk-theme-name", &theme_name,
-                  "gtk-application-prefer-dark-theme", &prefer_dark,
-                  NULL);
-
-    g_debug ("Looking up the accent color for gtk theme '%s'", theme_name);
-
-    for (i = 0; i < G_N_ELEMENTS (colors); i++)
-    {
-        ColorMatch match = colors[i];
-
-        if (g_strcmp0 (theme_name, match.theme_name) == 0)
-        {
-            out_color = g_strdup (match.accent_color);
-        }
-    }
-
-    if (out_color == NULL)
-    {
-        g_debug ("No matching theme found for accent-rgb setting, checking gsettings");
-
-        if (bundle != NULL && g_settings_schema_has_key (bundle->schema, "accent-rgb"))
-        {
-            out_color = g_settings_get_string (bundle->settings, "accent-rgb");
-        }
-    }
-
-    if (out_color != NULL && gdk_rgba_parse (&rgba, out_color))
-    {
-        g_debug ("Using accent color: '%s' (r%.3f, g%.3f, b%.3f)", out_color, rgba.red, rgba.green, rgba.blue);
-        return g_variant_new ("(ddd)", rgba.red, rgba.green, rgba.blue);
-    }
-
-    g_debug ("No accent color");
-    return g_variant_new ("(ddd)", -1.0, -1.0, -1.0); /* Out of 0-1.0 range = no preference */
 }
 
 static gboolean
@@ -421,8 +297,6 @@ settings_init (GDBusConnection  *bus,
   GDBusInterfaceSkeleton *helper;
 
   helper = G_DBUS_INTERFACE_SKELETON (xdp_impl_settings_skeleton_new ());
-
-  g_object_set (helper, "version", 2, NULL);
 
   g_signal_connect (helper, "handle-read", G_CALLBACK (settings_handle_read), NULL);
   g_signal_connect (helper, "handle-read-all", G_CALLBACK (settings_handle_read_all), NULL);
