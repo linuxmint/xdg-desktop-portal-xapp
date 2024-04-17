@@ -9,6 +9,7 @@
 #include <glib/gstdio.h>
 #include <gio/gdesktopappinfo.h>
 
+#include "xdg-desktop-portal-dbus.h"
 #include "common-dbus.h"
 
 #include "utils.h"

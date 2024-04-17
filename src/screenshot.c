@@ -13,6 +13,7 @@
 #include <gio/gdesktopappinfo.h>
 #include <gio/gunixfdlist.h>
 
+#include "xdg-desktop-portal-dbus.h"
 #include "common-dbus.h"
 
 #include "screenshot.h"
