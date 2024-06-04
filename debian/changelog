@@ -1,3 +1,15 @@
+xdg-desktop-portal-xapp (1.0.5) wilma; urgency=medium
+
+  [ Michael Webster ]
+  * Updates org.freedesktop.impl.portal.Settings backend to v2.
+  * Fix typos.
+  * Implement org.freedesktop.impl.portal.Background. (#15) (Closes: #2)
+  * Fix some missing includes.
+  * settings: Remove accent-color, and cleanup other unused code.
+  * debian/rules: Fix build type.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Tue, 04 Jun 2024 15:48:35 +0100
+
 xdg-desktop-portal-xapp (1.0.4) virginia; urgency=medium
 
   [ zehkira ]
