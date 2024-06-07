@@ -286,8 +286,6 @@ init_settings_table (XdpImplSettings *settings,
         g_signal_connect (setting, "changed", G_CALLBACK(on_settings_changed), settings);
         g_hash_table_insert (settings_table, (gpointer) setting_defs[i].gs_schema_id, bundle);
     }
-
-    g_settings_schema_source_unref (source);
 }
 
 gboolean
