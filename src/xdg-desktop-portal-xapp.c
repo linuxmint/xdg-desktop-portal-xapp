@@ -139,7 +139,7 @@ on_bus_acquired (GDBusConnection *connection,
       g_clear_error (&error);
     }
 
-  if (CINNAMON_MODE && !background_init (connection, &error))
+  if (!background_init (connection, &error))
     {
       g_warning ("error: %s\n", error->message);
       g_clear_error (&error);

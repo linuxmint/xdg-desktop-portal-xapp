@@ -175,6 +175,15 @@ handle_get_app_state (XdpImplBackground *object,
 {
     g_debug ("background: handle GetAppState");
 
+    if (!CINNAMON_MODE)
+    {
+        g_dbus_method_invocation_return_error (invocation,
+                                               XDG_DESKTOP_PORTAL_ERROR,
+                                               XDG_DESKTOP_PORTAL_ERROR_FAILED,
+                                               "GetAppState currently only supported in Cinnamon");
+        return TRUE;
+    }
+
     if (app_state == NULL)
         app_state = get_app_state ();
 
@@ -243,16 +252,16 @@ background_init (GDBusConnection *bus,
                                            error))
         return FALSE;
 
-    portal_handlers = org_cinnamon_portal_handlers_proxy_new_sync (bus,
-                                                                   G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START,
-                                                                   "org.Cinnamon",
-                                                                   "/org/Cinnamon",
-                                                                   NULL,
-                                                                   error);
-    g_signal_connect (portal_handlers, "g-signal", G_CALLBACK (on_cinnamon_signal), helper);
-
-    if (portal_handlers == NULL)
-        return FALSE;
+    if (CINNAMON_MODE)
+    {
+        portal_handlers = org_cinnamon_portal_handlers_proxy_new_sync (bus,
+                                                                       G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START,
+                                                                       "org.Cinnamon",
+                                                                       "/org/Cinnamon",
+                                                                       NULL,
+                                                                       error);
+        g_signal_connect (portal_handlers, "g-signal", G_CALLBACK (on_cinnamon_signal), helper);
+    }
 
     g_debug ("providing %s", g_dbus_interface_skeleton_get_info (helper)->name);
 
