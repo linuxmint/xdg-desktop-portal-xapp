@@ -1,3 +1,10 @@
+xdg-desktop-portal-xapp (1.0.7) wilma; urgency=medium
+
+  [ Michael Webster ]
+  * background: Allow enabling background apps for partial support in Xfce and MATE.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Fri, 21 Jun 2024 17:52:12 +0100
+
 xdg-desktop-portal-xapp (1.0.6) wilma; urgency=medium
 
   [ Michael Webster ]
