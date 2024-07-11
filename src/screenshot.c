@@ -303,7 +303,7 @@ handle_screenshot (XdpImplScreenshot *object,
         org_gnome_shell_screenshot_call_screenshot (cinnamon,
                                                  FALSE,
                                                  TRUE,
-                                                 "Screenshot",
+                                                 handle->save_path,
                                                  NULL,
                                                  cinnamon_screenshot_done,
                                                  handle);
