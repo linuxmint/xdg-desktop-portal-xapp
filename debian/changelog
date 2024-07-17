@@ -1,3 +1,10 @@
+xdg-desktop-portal-xapp (1.0.8) wilma; urgency=medium
+
+  [ Michael Webster ]
+  * screenshot.c: Use the filename provided by the portal request.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Wed, 17 Jul 2024 15:49:44 +0100
+
 xdg-desktop-portal-xapp (1.0.7) wilma; urgency=medium
 
   [ Michael Webster ]
