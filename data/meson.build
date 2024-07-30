@@ -3,7 +3,7 @@ libexecdir_conf.set('libexecdir', prefix / libexecdir)
 
 # Portal
 install_data(
-  [ 'xapp.portal' ],
+  [ 'xapp.portal', 'xapp-gnome-keyring.portal' ],
   install_dir: datadir / 'xdg-desktop-portal' / 'portals'
 )
 
