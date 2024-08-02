@@ -25,7 +25,6 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <gdk/gdk.h>
-#include <gtk/gtk.h>
 
 #include "settings.h"
 #include "utils.h"
@@ -57,7 +56,6 @@ settings_bundle_free (SettingsBundle *bundle)
   g_free (bundle);
 }
 
-// static GVariant *get_gtk_theme (gpointer data);
 static GVariant *get_color_scheme (gpointer data);
 static GVariant *get_high_contrast (gpointer data);
 

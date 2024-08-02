@@ -50,7 +50,9 @@ built_sources += gnome.gdbus_codegen(
 config_entries = {
     'GETTEXT_PACKAGE' : '"@0@"'.format(meson.project_name()),
     'LOCALEDIR': '"@0@"'.format(prefix / get_option('localedir')),
-    'PACKAGE_STRING': '"xdg-desktop-portal-xapp @0@"'.format(meson.project_version())
+    'PACKAGE_STRING': '"xdg-desktop-portal-xapp @0@"'.format(meson.project_version()),
+    'G_LOG_DOMAIN': '"xdg-desktop-portal-xapp"'
+
 }
 config = configuration_data(config_entries)
 built_sources += configure_file(output: 'config.h', configuration: config)
@@ -59,7 +61,6 @@ deps = [
   meson.get_compiler('c').find_library('m'),
   dependency('glib-2.0', version: '>= 2.44'),
   dependency('gio-unix-2.0'),
-  dependency('gtk+-3.0'),
   dependency('gdk-3.0'),
   xdg_desktop_portal_dep,
 ]
