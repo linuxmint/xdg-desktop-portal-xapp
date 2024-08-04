@@ -1,3 +1,12 @@
+xdg-desktop-portal-xapp (1.0.9) wilma; urgency=medium
+
+  [ Michael Webster ]
+  * Add fallback support for the Secret portal.
+  * debian: Install the new portal file.
+  * Don't try to initialize gtk, use GMainLoop instead.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Sun, 04 Aug 2024 14:04:28 +0100
+
 xdg-desktop-portal-xapp (1.0.8) wilma; urgency=medium
 
   [ Michael Webster ]
