@@ -24,7 +24,6 @@
 #include <string.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
-#include <gdk/gdk.h>
 
 #include "settings.h"
 #include "utils.h"
