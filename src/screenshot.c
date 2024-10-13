@@ -52,6 +52,8 @@ send_response (ScreenshotHandle *handle)
     if (handle->request->exported)
       request_unexport (handle->request);
 
+    g_debug ("Sending screenshot/pickcolor response");
+
     if (strcmp (handle->retval, "url") == 0)
     {
         GVariantBuilder opt_builder;
@@ -137,6 +139,8 @@ cinnamon_color_pick_done (GObject *source,
       handle->response = 2;
     }
 
+    g_debug ("ColorPicker returned: %f %f %f", handle->red, handle->green, handle->blue);
+
     handle->response = 0;
     
     send_response (handle);
@@ -203,6 +207,8 @@ construct_filename (void)
     // saved to. The placeholder is a timestamp, e.g. "2017-05-21 12-24-03".
     filename = g_strdup_printf ("%s/Screenshot from %s.png", pic_dir, timestamp);
 
+    g_debug ("Saving screenshot to %s", filename);
+
     g_free (timestamp);
     g_date_time_unref (datetime);
 
@@ -224,6 +230,8 @@ handle_pick_color (XdpImplScreenshot *object,
 
     sender = g_dbus_method_invocation_get_sender (invocation);
     request = request_new (sender, arg_app_id, arg_handle);
+
+    g_debug ("Got new PickColor request from '%s'", sender);
 
     handle = g_new0 (ScreenshotHandle, 1);
     handle->impl = object;
@@ -278,6 +286,8 @@ handle_screenshot (XdpImplScreenshot *object,
         GSubprocess *proc;
         GError *error = NULL;
 
+        g_debug ("Using xfce4-screenshooter to handle screenshot");
+
         const gchar *argv[] = {
             "xfce4-screenshooter",
             "-f",
@@ -300,6 +310,7 @@ handle_screenshot (XdpImplScreenshot *object,
     else
     if (CINNAMON_MODE)
     {
+        g_debug ("Calling Cinnamon to handle screenshot");
         org_gnome_shell_screenshot_call_screenshot (cinnamon,
                                                  FALSE,
                                                  TRUE,
@@ -311,6 +322,7 @@ handle_screenshot (XdpImplScreenshot *object,
     else
     {
         // mate
+        g_debug ("Screenshot not supported in MATE");
         handle->response = 2;
         send_response (handle);
     }

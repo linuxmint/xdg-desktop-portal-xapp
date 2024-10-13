@@ -240,7 +240,7 @@ main (int argc, char *argv[])
   g_set_printerr_handler (printerr_handler);
 
   if (opt_verbose)
-    g_log_set_handler (NULL, G_LOG_LEVEL_DEBUG, message_handler, NULL);
+    g_log_set_handler (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, message_handler, NULL);
 
   g_set_prgname ("xdg-desktop-portal-xapp");
 
