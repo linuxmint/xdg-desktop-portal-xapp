@@ -1,3 +1,11 @@
+xdg-desktop-portal-xapp (1.1.0) xia; urgency=medium
+
+  [ Michael Webster ]
+  * Remove Gdk references and meson dependency.
+  * Improve screenshot logging, fix debug mode.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Mon, 25 Nov 2024 11:08:32 +0000
+
 xdg-desktop-portal-xapp (1.0.9) wilma; urgency=medium
 
   [ Michael Webster ]
