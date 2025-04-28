@@ -24,6 +24,7 @@
 #include <string.h>
 #include <glib/gi18n.h>
 #include <gio/gio.h>
+#include <gtk/gtk.h>
 
 #include "settings.h"
 #include "utils.h"
@@ -31,6 +32,7 @@
 #include "xdg-desktop-portal-dbus.h"
 
 static GHashTable *settings_table;
+static gboolean use_gtk = FALSE;
 
 typedef struct {
   GSettingsSchema *schema;
@@ -55,6 +57,7 @@ settings_bundle_free (SettingsBundle *bundle)
   g_free (bundle);
 }
 
+static GVariant *get_accent_color (gpointer data);
 static GVariant *get_color_scheme (gpointer data);
 static GVariant *get_high_contrast (gpointer data);
 
@@ -81,9 +84,11 @@ typedef struct
 
 // ******** KEEP THE NAMESPACES GROUPED TOGETHER. See settings_handle_read_all () *******
 static const SettingDefinition setting_defs[] = {
-    { "org.freedesktop.appearance",       "contrast",             XAPP_PORTAL_INTERFACE_SCHEMA,               "high-contrast",        get_high_contrast },
-    { "org.freedesktop.appearance",       "color-scheme",         XAPP_PORTAL_INTERFACE_SCHEMA,               "color-scheme",         get_color_scheme }
+    { "org.freedesktop.appearance", "contrast",     XAPP_PORTAL_INTERFACE_SCHEMA,   "high-contrast",    get_high_contrast },
+    { "org.freedesktop.appearance", "color-scheme", XAPP_PORTAL_INTERFACE_SCHEMA,   "color-scheme",     get_color_scheme },
+    { "org.freedesktop.appearance", "accent-color", XAPP_PORTAL_INTERFACE_SCHEMA,   "accent-rgb",       get_accent_color }
 };
+#define ACCENT_COLOR_DEF 3
 
 static gboolean
 namespace_matches (const char         *namespace,
@@ -147,6 +152,70 @@ get_high_contrast (gpointer data)
 
     g_debug ("Using default high contrast: false");
     return g_variant_new_uint32 (0); /* No preference */
+}
+
+static GVariant *
+get_accent_color (gpointer data)
+{
+    if (!use_gtk)
+    {
+        g_debug ("GDK backend not available, cannot get accent color");
+        return g_variant_new ("(ddd)", -1.0, -1.0, -1.0); /* Out of 0-1.0 range = no preference */
+    }
+
+    SettingDefinition *def = (SettingDefinition *) data;
+    SettingsBundle *bundle = g_hash_table_lookup (settings_table, def->gs_schema_id);
+    GtkSettings *gtk_settings = gtk_settings_get_default ();
+    GtkCssProvider *theme_provider;
+    GtkStyleContext *context;
+    g_autofree gchar *theme_name = NULL;
+    g_autofree gchar *out_color = NULL;
+    GdkRGBA rgba;
+    gboolean got_accent = FALSE;
+
+    g_object_get (gtk_settings,
+                  "gtk-theme-name", &theme_name,
+                  NULL);
+
+    context = gtk_style_context_new ();
+    theme_provider = gtk_css_provider_get_named (theme_name, NULL);
+    gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (theme_provider), GTK_STYLE_PROVIDER_PRIORITY_THEME);
+    
+    if (gtk_style_context_lookup_color (context, "accent_color", &rgba))
+    {
+        got_accent = TRUE;
+        g_debug ("Found accent_color in current Gtk3 theme '%s'", theme_name);
+    }
+    else
+    {
+        g_debug ("No accent_color found in Gtk3 theme '%s', checking gsettings", theme_name);
+        g_autofree gchar *settings_color = NULL;
+
+        if (bundle != NULL && g_settings_schema_has_key (bundle->schema, "accent-rgb"))
+        {
+            settings_color = g_settings_get_string (bundle->settings, "accent-rgb");
+        }
+
+        if (settings_color != NULL && gdk_rgba_parse (&rgba, settings_color))
+        {
+            got_accent = TRUE;
+            g_debug ("Use accent color from settings");
+        }
+    }
+
+    g_object_unref (context);
+
+    if (got_accent)
+    {
+        gchar *rgba_str = gdk_rgba_to_string (&rgba);
+        g_debug ("Using accent color: %s (r%.3f, g%.3f, b%.3f)", rgba_str, rgba.red, rgba.green, rgba.blue);
+        g_free (rgba_str);
+
+        return g_variant_new ("(ddd)", rgba.red, rgba.green, rgba.blue);
+    }
+
+    g_debug ("No accent color");
+    return g_variant_new ("(ddd)", -1.0, -1.0, -1.0); /* Out of 0-1.0 range = no preference */
 }
 
 static gboolean
@@ -235,7 +304,7 @@ on_settings_changed (GSettings             *gsettings,
                      gpointer               user_data)
 {
     XdpImplSettings *xdg_settings = XDP_IMPL_SETTINGS (user_data);
-    gchar *schema_id;
+    g_autofree gchar *schema_id = NULL;
     gint i;
 
     g_object_get (gsettings, "schema-id", &schema_id, NULL);
@@ -251,6 +320,17 @@ on_settings_changed (GSettings             *gsettings,
             break;
         }
     }
+}
+
+static void
+on_gtk3_theme_changed (GtkSettings *gtk_settings,
+                       GParamSpec  *pspec,
+                       gpointer     user_data)
+{
+    XdpImplSettings *xdg_settings = XDP_IMPL_SETTINGS (user_data);
+
+    GVariant *out = g_variant_new ("v", get_accent_color ((gpointer) &setting_defs[ACCENT_COLOR_DEF]));
+    xdp_impl_settings_emit_setting_changed (xdg_settings, "org.freedesktop.appearance", "accent-color", out);
 }
 
 static void
@@ -280,13 +360,14 @@ init_settings_table (XdpImplSettings *settings,
         g_debug ("Initing GSettings for '%s'", setting_defs[i].gs_schema_id);
         setting = g_settings_new (setting_defs[i].gs_schema_id);
         bundle = settings_bundle_new (schema, setting);
-        g_signal_connect (setting, "changed", G_CALLBACK(on_settings_changed), settings);
+        g_signal_connect (setting, "changed", G_CALLBACK (on_settings_changed), settings);
         g_hash_table_insert (settings_table, (gpointer) setting_defs[i].gs_schema_id, bundle);
     }
 }
 
 gboolean
 settings_init (GDBusConnection  *bus,
+               gboolean          have_gdk_backend,
                GError          **error)
 {
   GDBusInterfaceSkeleton *helper;
@@ -297,8 +378,14 @@ settings_init (GDBusConnection  *bus,
   g_signal_connect (helper, "handle-read-all", G_CALLBACK (settings_handle_read_all), NULL);
 
   settings_table= g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) settings_bundle_free);
-
+  use_gtk = have_gdk_backend;
   init_settings_table (XDP_IMPL_SETTINGS (helper), settings_table);
+
+  if (use_gtk)
+  {
+      GtkSettings *gtk_settings = gtk_settings_get_default ();
+      g_signal_connect (gtk_settings, "notify::gtk-theme-name", G_CALLBACK (on_gtk3_theme_changed), helper);
+  }
 
   if (!g_dbus_interface_skeleton_export (helper,
                                          bus,
