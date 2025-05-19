@@ -37,6 +37,8 @@
 #include <gio/gunixfdlist.h>
 
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
+
 #include <locale.h>
 
 #include "xdg-desktop-portal-dbus.h"
@@ -58,6 +60,8 @@ static gboolean opt_replace;
 static gboolean show_version;
 const gchar *mode = NULL;
 gchar *desktop_arg;
+
+static gboolean have_gdk_backend = FALSE;
 
 const gchar *desktops[] = { "cinnamon", "mate", "xfce", NULL };
 
@@ -104,7 +108,7 @@ on_bus_acquired (GDBusConnection *connection,
   GError *error = NULL;
 
   // For fallback we can handle settings, it's pretty universal, the rest, no.
-  if (!settings_init (connection, &error))
+  if (!settings_init (connection, have_gdk_backend, &error))
     {
       g_warning ("error: %s\n", error->message);
       g_clear_error (&error);
@@ -204,10 +208,19 @@ main (int argc, char *argv[])
     }
 
   if (show_version)
-    {
+  {
       g_print (PACKAGE_STRING "\n");
       return 0;
-    }
+  }
+
+  if (gtk_init_check (&argc, &argv))
+  {
+      have_gdk_backend = TRUE;
+  }
+  else
+  {
+      g_critical ("Failed to initialize Gtk");
+  }
 
   if (desktop_arg)
   {

@@ -29,4 +29,4 @@ typedef enum
   COLOR_SCHEME_PREFER_LIGHT,
 } ColorScheme;
 
-gboolean settings_init (GDBusConnection *bus, GError **error);
+gboolean settings_init (GDBusConnection *bus, gboolean have_gdk_backend, GError **error);
