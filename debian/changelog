@@ -1,3 +1,11 @@
+xdg-desktop-portal-xapp (1.1.1) zara; urgency=medium
+
+  [ Michael Webster ]
+  * debian/control: Use correct package to get systemd .pc file.
+  * settings.c: Implement accent-color setting. (#23)
+
+ -- Clement Lefebvre <root@linuxmint.com>  Tue, 20 May 2025 13:17:55 +0100
+
 xdg-desktop-portal-xapp (1.1.0) xia; urgency=medium
 
   [ Michael Webster ]

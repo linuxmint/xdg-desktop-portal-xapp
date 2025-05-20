@@ -1,4 +1,4 @@
-project('xdg-desktop-portal-xapp', 'c', version : '1.1.0', meson_version : '>= 0.56.0', license : 'LGPLv2.1+')
+project('xdg-desktop-portal-xapp', 'c', version : '1.1.1', meson_version : '>= 0.56.0', license : 'LGPLv2.1+')
 
 prefix = get_option('prefix')
 datadir = get_option('datadir')
