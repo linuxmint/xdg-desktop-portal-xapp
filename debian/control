@@ -7,7 +7,7 @@ Build-Depends:
  libglib2.0-dev (>= 2.44),
  libgtk-3-dev (>= 3.0),
  meson (>= 0.53.0),
- systemd-dev (>= 253) | systemd (>= 242),
+ systemd-dev (>= 253-2~) | systemd (<< 253-2~),
  xdg-desktop-portal-dev (>= 1.7.1),
 Standards-Version: 4.6.0
 Homepage: https://github.com/linuxmint/xdg-desktop-portal-xapp
