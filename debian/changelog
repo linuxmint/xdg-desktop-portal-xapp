@@ -1,3 +1,12 @@
+xdg-desktop-portal-xapp (1.1.2) zara; urgency=medium
+
+  [ Michael Webster ]
+  * settings.c: Fix ACCENT_COLOR_DEF.
+  * debian/control: Restore 'systemd' as an alternate location for pkgconfig files.
+  * debian/control: Fix systemd-dev | systemd versions.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Wed, 30 Jul 2025 16:10:27 +0200
+
 xdg-desktop-portal-xapp (1.1.1) zara; urgency=medium
 
   [ Michael Webster ]
