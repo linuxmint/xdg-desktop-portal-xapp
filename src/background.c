@@ -242,7 +242,10 @@ background_init (GDBusConnection *bus,
 
     helper = G_DBUS_INTERFACE_SKELETON (xdp_impl_background_skeleton_new ());
 
+    /* See https://github.com/flatpak/xdg-desktop-portal/commit/458560c768d5acf7e163ba57f219725294f5ff51 */
+    /* Starting with xdg-desktop-portal 1.19.0 this signal is no longer emitted. */
     g_signal_connect (helper, "handle-enable-autostart", G_CALLBACK (handle_enable_autostart), NULL);
+
     g_signal_connect (helper, "handle-get-app-state", G_CALLBACK (handle_get_app_state), NULL);
     g_signal_connect (helper, "handle-notify-background", G_CALLBACK (handle_notify_background), NULL);
 
