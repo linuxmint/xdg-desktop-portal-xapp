@@ -44,6 +44,7 @@
 #include "xdg-desktop-portal-dbus.h"
 
 #include "utils.h"
+#include "appchooser.h"
 #include "background.h"
 #include "inhibit.h"
 #include "lockdown.h"
@@ -118,6 +119,12 @@ on_bus_acquired (GDBusConnection *connection,
   {
     return;
   }
+
+  if (!app_chooser_init(connection, &error))
+    {
+      g_warning ("error: %s\n", error->message);
+      g_clear_error (&error);
+    }
 
   if ((CINNAMON_MODE || XFCE_MODE) && !screenshot_init (connection, &error))
     {
