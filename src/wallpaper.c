@@ -145,7 +145,7 @@ on_file_copy_cb (GObject *source_object,
     if (set_gsettings (dest_uri))
         handle->response = 0;
     else
-        handle->response = 1;
+        handle->response = 2;
 
 out:
     send_response (handle);
