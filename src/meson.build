@@ -11,6 +11,7 @@ desktop_portal_interfaces_dir = xdg_desktop_portal_dep.get_variable(
 )
 
 desktop_portal_dbus_interfaces = [
+  desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.AppChooser.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Background.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Inhibit.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Lockdown.xml',
@@ -30,6 +31,13 @@ built_sources = gnome.gdbus_codegen(
   sources: desktop_portal_dbus_interfaces,
   interface_prefix: 'org.freedesktop.impl.portal.',
   namespace: 'XdpImpl',
+)
+
+# GResources
+built_sources += gnome.compile_resources(
+  'xdg-desktop-portal-xapp-resources',
+  'xdg-desktop-portal-xapp.gresource.xml',
+  c_name: '_xdg_desktop',
 )
 
 desktop_dbus_interfaces = files(
@@ -66,7 +74,13 @@ deps = [
 ]
 
 sources = built_sources + files(
+  'appchooser.c',
+  'appchooserdialog.c',
+  'appchooserrow.c',
   'background.c',
+  'externalwindow.c',
+  'externalwindow-wayland.c',
+  'externalwindow-x11.c',
   'inhibit.c',
   'lockdown.c',
   'request.c',
