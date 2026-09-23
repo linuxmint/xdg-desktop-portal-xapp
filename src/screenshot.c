@@ -132,9 +132,17 @@ cinnamon_color_pick_done (GObject *source,
                                                          result,
                                                          &error))
     {
-        g_warning ("Failed to pick color: %s", error->message);
+        if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+        {
+            handle->response = 1;
+        }
+        else
+        {
+            g_warning ("Failed to pick color: %s", error->message);
+            handle->response = 2;
+        }
+
         g_clear_error (&error);
-        handle->response = 2;
         send_response (handle);
         return;
     }
