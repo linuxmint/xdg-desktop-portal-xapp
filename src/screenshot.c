@@ -4,6 +4,7 @@
 
 #include <errno.h>
 #include <locale.h>
+#include <signal.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -32,6 +33,10 @@ typedef struct {
     double red, green, blue;
     const char *retval;
     char *save_path;
+
+    GSubprocess *proc;
+    GCancellable *cancellable;
+    gboolean closed;
 } ScreenshotHandle;
 
 static void
@@ -40,6 +45,8 @@ screenshot_handle_free (gpointer data)
     ScreenshotHandle *handle = data;
 
     g_clear_object (&handle->request);
+    g_clear_object (&handle->proc);
+    g_clear_object (&handle->cancellable);
     g_free (handle->uri);
     g_free (handle->save_path);
 
@@ -102,6 +109,10 @@ xfce4_screenshooter_finished (GSubprocess  *proc,
         }
 
         handle->response = 2;
+    }
+    else if (handle->closed)
+    {
+        handle->response = 1;
     }
     else if (!g_subprocess_get_successful (proc))
     {
@@ -181,9 +192,12 @@ cinnamon_screenshot_finished (GSubprocess  *proc,
         }
         handle->response = 2;
     }
+    else if (handle->closed)
+    {
+        handle->response = 1;
+    }
     else if (!g_subprocess_get_successful (proc))
     {
-        // cinnamon-screenshot exits non-zero when the user cancels the
         // interactive UI without saving — that's a request cancel rather
         // than an error, so report response = 1.
         g_debug ("cinnamon-screenshot exited non-zero (likely user cancel)");
@@ -202,13 +216,14 @@ handle_close (XdpImplRequest *object,
               GDBusMethodInvocation *invocation,
               ScreenshotHandle *handle)
 {
-    GVariantBuilder opt_builder;
+    handle->closed = TRUE;
 
-    g_variant_builder_init (&opt_builder, G_VARIANT_TYPE_VARDICT);
-    xdp_impl_screenshot_complete_screenshot (handle->impl,
-                                             handle->invocation,
-                                             1,
-                                             g_variant_builder_end (&opt_builder));
+    if (handle->proc != NULL)
+        g_subprocess_send_signal (handle->proc, SIGTERM);
+
+    if (handle->cancellable != NULL)
+        g_cancellable_cancel (handle->cancellable);
+
     return FALSE;
 }
 
@@ -278,8 +293,9 @@ handle_pick_color (XdpImplScreenshot *object,
         return TRUE;
     }
 
+    handle->cancellable = g_cancellable_new ();
     org_cinnamon_screenshot_call_pick_color (cinnamon,
-                                             NULL,
+                                             handle->cancellable,
                                              cinnamon_color_pick_done,
                                              handle);
 
@@ -364,6 +380,7 @@ handle_screenshot (XdpImplScreenshot *object,
             }
             else
             {
+                handle->proc = proc;
                 g_subprocess_wait_async (proc, NULL, (GAsyncReadyCallback) xfce4_screenshooter_finished, handle);
             }
         }
@@ -422,6 +439,7 @@ handle_screenshot (XdpImplScreenshot *object,
             }
             else
             {
+                handle->proc = proc;
                 g_subprocess_wait_async (proc, NULL, (GAsyncReadyCallback) cinnamon_screenshot_finished, handle);
             }
         }
