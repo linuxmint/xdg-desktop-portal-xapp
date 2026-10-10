@@ -1,5 +1,10 @@
 <node name='/org/Cinnamon'>
   <interface name='org.Cinnamon'>
+    <method name="Eval">
+      <arg type="s" direction="in" name="script"/>
+      <arg type="b" direction="out" name="success"/>
+      <arg type="s" direction="out" name="result"/>
+    </method>
     <property name="AnimationsEnabled" type="b" access="read">
       <doc:doc>
         <doc:description>

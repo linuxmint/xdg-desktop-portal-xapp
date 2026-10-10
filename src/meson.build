@@ -15,6 +15,7 @@ desktop_portal_dbus_interfaces = [
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Inhibit.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Lockdown.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Request.xml',
+  desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.ScreenCast.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Session.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Settings.xml',
   desktop_portal_interfaces_dir / 'org.freedesktop.impl.portal.Wallpaper.xml',
@@ -38,6 +39,9 @@ desktop_dbus_interfaces = files(
   top_srcdir / 'data' / 'org.cinnamon.Screenshot.xml',
   top_srcdir / 'data' / 'org.cinnamon.PortalHandlers.xml',
   top_srcdir / 'data' / 'org.cinnamon.ScreenSaver.xml',
+  top_srcdir / 'data' / 'org.cinnamon.Muffin.ScreenCast.xml',
+  top_srcdir / 'data' / 'org.cinnamon.Muffin.DisplayConfig.xml',
+  top_srcdir / 'data' / 'org.Cinnamon.xml',
   top_srcdir / 'data' / 'org.gnome.ScreenSaver.xml',
   top_srcdir / 'data' / 'org.mate.ScreenSaver.xml'
 )
@@ -62,6 +66,7 @@ deps = [
   dependency('glib-2.0', version: '>= 2.44'),
   dependency('gio-unix-2.0'),
   dependency('gtk+-3.0'),
+  dependency('json-glib-1.0'),
   xdg_desktop_portal_dep,
 ]
 
@@ -70,6 +75,9 @@ sources = built_sources + files(
   'inhibit.c',
   'lockdown.c',
   'request.c',
+  'screencast/muffinscreencast.c',
+  'screencast/screencast.c',
+  'screencast/screencastdialog.c',
   'screenshot.c',
   'session.c',
   'settings.c',
