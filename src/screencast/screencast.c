@@ -16,10 +16,8 @@
  *
  */
 
-#include "config.h"
 
 #include <math.h>
-#include <string.h>
 
 #include <gio/gio.h>
 #include <glib/gi18n.h>
@@ -43,33 +41,35 @@
   "w.get_window_type() !== 1 && w.get_window_type() !== 2)." \
   "map(w => [String(w.get_id()), w.get_title() || '', w.get_wm_class() || ''])"
 
-typedef enum _ScDisplayRotation
+typedef enum _ScreenCastDisplayRotation
 {
-  SC_DISPLAY_ROTATION_NONE,
-  SC_DISPLAY_ROTATION_90,
-  SC_DISPLAY_ROTATION_180,
-  SC_DISPLAY_ROTATION_270,
-  SC_DISPLAY_ROTATION_FLIPPED,
-  SC_DISPLAY_ROTATION_90_FLIPPED,
-  SC_DISPLAY_ROTATION_180_FLIPPED,
-  SC_DISPLAY_ROTATION_270_FLIPPED,
-} ScDisplayRotation;
+  SCREEN_CAST_DISPLAY_ROTATION_NONE,
+  SCREEN_CAST_DISPLAY_ROTATION_90,
+  SCREEN_CAST_DISPLAY_ROTATION_180,
+  SCREEN_CAST_DISPLAY_ROTATION_270,
+  SCREEN_CAST_DISPLAY_ROTATION_FLIPPED,
+  SCREEN_CAST_DISPLAY_ROTATION_90_FLIPPED,
+  SCREEN_CAST_DISPLAY_ROTATION_180_FLIPPED,
+  SCREEN_CAST_DISPLAY_ROTATION_270_FLIPPED,
+} ScreenCastDisplayRotation;
+
+typedef enum _ScreenCastLayoutMode
+{
+  SCREEN_CAST_LAYOUT_MODE_LOGICAL = 1,
+  SCREEN_CAST_LAYOUT_MODE_PHYSICAL = 2,
+  SCREEN_CAST_LAYOUT_MODE_LOGICAL_WITH_UI_SCALE = 3,
+} ScreenCastLayoutMode;
 
 static MuffinScreenCast *muffin_screen_cast;
 static OrgCinnamon *cinnamon;
 
-static MuffinMonitor *muffin_monitor_new (const char *connector,
-                                          const char *label,
-                                          gboolean primary,
-                                          int x,
-                                          int y,
-                                          int width,
-                                          int height,
-                                          double scale,
-                                          guint rotation,
-                                          guint layout_mode);
+static GVariant *
+new_empty_results (void)
+{
+  return g_variant_new_array (G_VARIANT_TYPE ("{sv}"), NULL, 0);
+}
 
-void
+static void
 picker_item_free (gpointer data)
 {
   PickerItem *item = data;
@@ -104,25 +104,23 @@ monitor_free (gpointer data)
 }
 
 static gboolean
-monitor_is_rotated (guint rotation)
+monitor_is_rotated (ScreenCastDisplayRotation rotation)
 {
-  return rotation == SC_DISPLAY_ROTATION_90 ||
-         rotation == SC_DISPLAY_ROTATION_270 ||
-         rotation == SC_DISPLAY_ROTATION_90_FLIPPED ||
-         rotation == SC_DISPLAY_ROTATION_270_FLIPPED;
+  return rotation == SCREEN_CAST_DISPLAY_ROTATION_90 ||
+         rotation == SCREEN_CAST_DISPLAY_ROTATION_270 ||
+         rotation == SCREEN_CAST_DISPLAY_ROTATION_90_FLIPPED ||
+         rotation == SCREEN_CAST_DISPLAY_ROTATION_270_FLIPPED;
 }
 
 static MuffinMonitor *
 muffin_monitor_new (const char *connector,
                     const char *label,
                     gboolean primary,
-                    int x,
-                    int y,
-                    int width,
-                    int height,
+                    const ScreenCastRect *rect,
                     double scale,
-                    guint rotation,
-                    guint layout_mode)
+                    ScreenCastDisplayRotation rotation,
+                    ScreenCastLayoutMode layout_mode,
+                    int ui_scaling_factor)
 {
   MuffinMonitor *monitor;
 
@@ -130,26 +128,25 @@ muffin_monitor_new (const char *connector,
   monitor->connector = g_strdup (connector);
   monitor->label = g_strdup (label);
   monitor->primary = primary;
-  monitor->x = x;
-  monitor->y = y;
+  monitor->rect = *rect;
 
-  if (layout_mode == 2) /* PHYSICAL */
+  if (layout_mode == SCREEN_CAST_LAYOUT_MODE_LOGICAL_WITH_UI_SCALE)
     {
-      monitor->width = width;
-      monitor->height = height;
+      monitor->rect.width = round (rect->width / (scale * ui_scaling_factor));
+      monitor->rect.height = round (rect->height / (scale * ui_scaling_factor));
     }
-  else
+  else if (layout_mode == SCREEN_CAST_LAYOUT_MODE_LOGICAL)
     {
-      monitor->width = round (width / scale);
-      monitor->height = round (height / scale);
+      monitor->rect.width = round (rect->width / scale);
+      monitor->rect.height = round (rect->height / scale);
     }
 
   if (monitor_is_rotated (rotation))
     {
-      int tmp = monitor->width;
+      int tmp = monitor->rect.width;
 
-      monitor->width = monitor->height;
-      monitor->height = tmp;
+      monitor->rect.width = monitor->rect.height;
+      monitor->rect.height = tmp;
     }
 
   return monitor;
@@ -200,7 +197,8 @@ get_monitors (GDBusConnection *connection)
   GVariantIter monitors_iter;
   GVariantIter logical_iter;
   GHashTable *monitor_map;
-  guint layout_mode = 1; /* LOGICAL */
+  ScreenCastLayoutMode layout_mode = SCREEN_CAST_LAYOUT_MODE_LOGICAL;
+  int ui_scaling_factor = 1;
   guint serial;
 
   proxy = org_cinnamon_muffin_display_config_proxy_new_sync (connection,
@@ -229,6 +227,11 @@ get_monitors (GDBusConnection *connection)
     }
 
   g_variant_lookup (properties, "layout-mode", "u", &layout_mode);
+
+  if (!g_variant_lookup (properties, "legacy-ui-scaling-factor",
+                         "i", &ui_scaling_factor) ||
+      ui_scaling_factor < 1)
+    ui_scaling_factor = 1;
 
   monitor_map = g_hash_table_new_full (g_str_hash, g_str_equal,
                                        g_free, monitor_free);
@@ -263,7 +266,9 @@ get_monitors (GDBusConnection *connection)
       monitor = g_new0 (MuffinMonitor, 1);
       monitor->connector = g_strdup (connector);
       monitor->label = g_strdup (display_name);
-      read_current_width_and_height (modes, &monitor->width, &monitor->height);
+      read_current_width_and_height (modes,
+                                     &monitor->rect.width,
+                                     &monitor->rect.height);
 
       g_hash_table_insert (monitor_map, g_strdup (connector), monitor);
     }
@@ -277,6 +282,7 @@ get_monitors (GDBusConnection *connection)
       g_autoptr(GVariantIter) monitors_iter_inner = NULL;
       g_autoptr(GString) label_builder = NULL;
       MuffinMonitor *first_monitor = NULL;
+      ScreenCastRect rect;
       int x, y;
       double scale;
       guint rotation;
@@ -319,16 +325,20 @@ get_monitors (GDBusConnection *connection)
       if (!first_monitor)
         continue;
 
+      rect.x = x;
+      rect.y = y;
+      rect.width = first_monitor->rect.width;
+      rect.height = first_monitor->rect.height;
+
       g_ptr_array_add (result,
                        muffin_monitor_new (first_monitor->connector,
                                            label_builder->str,
                                            is_primary,
-                                           x, y,
-                                           first_monitor->width,
-                                           first_monitor->height,
+                                           &rect,
                                            scale,
-                                           rotation,
-                                           layout_mode));
+                                           (ScreenCastDisplayRotation) rotation,
+                                           layout_mode,
+                                           ui_scaling_factor));
     }
 
   g_hash_table_destroy (monitor_map);
@@ -410,7 +420,6 @@ typedef struct _ScreenCastSession
 {
   Session parent;
 
-  char *app_id;
   ScreenCastSelection selection;
   MuffinScreenCastSession *muffin_session;
   gboolean started;
@@ -452,7 +461,7 @@ screencast_session_finalize (GObject *object)
 {
   ScreenCastSession *screencast_session = (ScreenCastSession *)object;
 
-  g_free (screencast_session->app_id);
+  g_clear_object (&screencast_session->muffin_session);
 
   G_OBJECT_CLASS (screencast_session_parent_class)->finalize (object);
 }
@@ -479,8 +488,7 @@ screencast_session_class_init (ScreenCastSessionClass *klass)
 }
 
 static ScreenCastSession *
-screencast_session_new (const char *app_id,
-                        const char *session_handle)
+screencast_session_new (const char *session_handle)
 {
   ScreenCastSession *screencast_session;
 
@@ -489,7 +497,6 @@ screencast_session_new (const char *app_id,
   screencast_session = g_object_new (screencast_session_get_type (),
                                      "id", session_handle,
                                      NULL);
-  screencast_session->app_id = g_strdup (app_id);
 
   return screencast_session;
 }
@@ -503,15 +510,28 @@ typedef struct _StartOperation
   ScreenCastDialog *dialog;
   GPtrArray *items;
   MuffinScreenCastSession *muffin_session;
+  char *preview_dir;
+  guint preview_idle_id;
+  guint preview_index;
   gboolean completed;
 } StartOperation;
 
 static void
 start_operation_free (StartOperation *op)
 {
+  if (op->preview_idle_id)
+    g_source_remove (op->preview_idle_id);
+
+  if (op->preview_dir)
+    {
+      g_rmdir (op->preview_dir);
+      g_free (op->preview_dir);
+    }
+
   if (op->muffin_session)
     g_signal_handlers_disconnect_by_data (op->muffin_session, op);
 
+  g_clear_object (&op->muffin_session);
   g_clear_object (&op->request);
 
   if (op->dialog)
@@ -521,6 +541,7 @@ start_operation_free (StartOperation *op)
     }
 
   g_clear_pointer (&op->items, g_ptr_array_unref);
+  g_clear_object (&op->session);
 
   g_free (op);
 }
@@ -543,13 +564,12 @@ start_operation_complete (StartOperation *op,
     request_unexport (op->request);
 
   if (!results)
-    results = g_variant_new_array (G_VARIANT_TYPE ("{sv}"), NULL, 0);
+    results = new_empty_results ();
 
   xdp_impl_screen_cast_complete_start (op->impl,
                                        op->invocation,
                                        response,
                                        results);
-  g_variant_unref (results);
 
   start_operation_free (op);
 }
@@ -568,9 +588,34 @@ start_operation_cancel (StartOperation *op)
   start_operation_complete (op, 1, NULL);
 }
 
+static gboolean
+close_session_idle (gpointer user_data)
+{
+  Session *session = user_data;
+
+  if (!session->closed)
+    session_close (session);
+
+  g_object_unref (session);
+
+  return G_SOURCE_REMOVE;
+}
+
 static void
 on_muffin_session_closed (MuffinScreenCastSession *muffin_session,
                           gpointer user_data)
+{
+  ScreenCastSession *session = user_data;
+
+  g_debug ("Muffin screen cast session closed");
+
+  xdp_impl_session_emit_closed (XDP_IMPL_SESSION (session));
+  g_idle_add (close_session_idle, g_object_ref (session));
+}
+
+static void
+on_muffin_session_closed_during_start (MuffinScreenCastSession *muffin_session,
+                                       gpointer user_data)
 {
   StartOperation *op = user_data;
 
@@ -603,6 +648,9 @@ on_muffin_session_ready (MuffinScreenCastSession *muffin_session,
   results = g_variant_builder_end (&results_builder);
 
   op->session->started = TRUE;
+
+  g_signal_connect (muffin_session, "closed",
+                    G_CALLBACK (on_muffin_session_closed), op->session);
 
   start_operation_complete (op, 0, results);
 }
@@ -639,14 +687,32 @@ start_muffin_session (StartOperation *op,
       return FALSE;
     }
 
-  if (!muffin_screen_cast_session_record_selections (muffin_session,
-                                                     selections,
-                                                     op->session->selection.cursor_mode,
-                                                     &error))
+  for (i = 0; i < selections->len; i++)
     {
-      g_clear_object (&muffin_session);
-      start_operation_fail (op, error->message);
-      return FALSE;
+      PickerItem *selection;
+      gboolean recorded;
+
+      selection = g_ptr_array_index (selections, i);
+
+      if (selection->type == SCREEN_CAST_SOURCE_TYPE_MONITOR)
+        recorded = muffin_screen_cast_session_record_monitor (muffin_session,
+                                                              selection->id,
+                                                              selection->connector,
+                                                              op->session->selection.cursor_mode,
+                                                              &error);
+      else
+        recorded = muffin_screen_cast_session_record_window (muffin_session,
+                                                             selection->id,
+                                                             selection->window_id,
+                                                             op->session->selection.cursor_mode,
+                                                             &error);
+
+      if (!recorded)
+        {
+          g_clear_object (&muffin_session);
+          start_operation_fail (op, error->message);
+          return FALSE;
+        }
     }
 
   if (!muffin_screen_cast_session_start (muffin_session, &error))
@@ -657,12 +723,12 @@ start_muffin_session (StartOperation *op,
     }
 
   op->muffin_session = muffin_session;
-  op->session->muffin_session = muffin_session;
+  op->session->muffin_session = g_object_ref (muffin_session);
 
   g_signal_connect (op->muffin_session, "ready",
                     G_CALLBACK (on_muffin_session_ready), op);
   g_signal_connect (op->muffin_session, "closed",
-                    G_CALLBACK (on_muffin_session_closed), op);
+                    G_CALLBACK (on_muffin_session_closed_during_start), op);
 
   return TRUE;
 }
@@ -726,10 +792,10 @@ capture_preview (PickerItem *item,
         "function(a,b){o=b;l.quit();});"
         "l.run();o;",
         path,
-        item->x,
-        item->y,
-        item->width,
-        item->height);
+        item->rect.x,
+        item->rect.y,
+        item->rect.width,
+        item->rect.height);
     }
   else if (item->type == SCREEN_CAST_SOURCE_TYPE_WINDOW)
     {
@@ -765,6 +831,35 @@ capture_preview (PickerItem *item,
 }
 
 static gboolean
+on_preview_idle (gpointer user_data)
+{
+  StartOperation *op = user_data;
+  PickerItem *item;
+  g_autoptr(GdkPixbuf) preview = NULL;
+  g_autofree char *path = NULL;
+
+  if (op->dialog && op->preview_index < op->items->len)
+    {
+      item = g_ptr_array_index (op->items, op->preview_index);
+      path = g_strdup_printf ("%s/%u.png", op->preview_dir, op->preview_index);
+      preview = capture_preview (item, path);
+      g_remove (path);
+
+      screencast_dialog_set_item_preview (op->dialog, op->preview_index, preview);
+      op->preview_index++;
+
+      return G_SOURCE_CONTINUE;
+    }
+
+  op->preview_idle_id = 0;
+
+  if (op->dialog)
+    screencast_dialog_present (op->dialog);
+
+  return G_SOURCE_REMOVE;
+}
+
+static gboolean
 handle_start (XdpImplScreenCast *object,
               GDBusMethodInvocation *invocation,
               const char *arg_handle,
@@ -776,7 +871,6 @@ handle_start (XdpImplScreenCast *object,
   ScreenCastSession *session;
   StartOperation *op;
   GDBusConnection *connection;
-  g_autofree char *preview_dir = NULL;
   guint i;
 
   g_debug ("Got new Start request");
@@ -788,7 +882,7 @@ handle_start (XdpImplScreenCast *object,
     {
       g_warning ("No session found for %s", arg_session_handle);
       xdp_impl_screen_cast_complete_start (object, invocation, 2,
-                                           g_variant_new_array (G_VARIANT_TYPE ("{sv}"), NULL, 0));
+                                           new_empty_results ());
       return TRUE;
     }
 
@@ -796,12 +890,12 @@ handle_start (XdpImplScreenCast *object,
     {
       g_warning ("Session already started");
       xdp_impl_screen_cast_complete_start (object, invocation, 2,
-                                           g_variant_new_array (G_VARIANT_TYPE ("{sv}"), NULL, 0));
+                                           new_empty_results ());
       return TRUE;
     }
 
   op = g_new0 (StartOperation, 1);
-  op->session = session;
+  op->session = g_object_ref (session);
   op->impl = object;
   op->invocation = invocation;
   op->request = request_new (g_dbus_method_invocation_get_sender (invocation),
@@ -822,14 +916,11 @@ handle_start (XdpImplScreenCast *object,
           item = picker_item_new (SCREEN_CAST_SOURCE_TYPE_MONITOR, i);
           item->title = g_strdup (monitor->label);
           item->subtitle = g_strdup_printf ("%d×%d%s",
-                                            monitor->width,
-                                            monitor->height,
+                                            monitor->rect.width,
+                                            monitor->rect.height,
                                             monitor->primary ? "  (Primary)" : "");
           item->connector = g_strdup (monitor->connector);
-          item->x = monitor->x;
-          item->y = monitor->y;
-          item->width = monitor->width;
-          item->height = monitor->height;
+          item->rect = monitor->rect;
           g_ptr_array_add (op->items, item);
         }
     }
@@ -862,29 +953,19 @@ handle_start (XdpImplScreenCast *object,
   op->dialog = screencast_dialog_new (_("Choose what to share"),
                                       session->selection.multiple);
 
-  preview_dir = g_dir_make_tmp ("xdp-xapp-preview-XXXXXX", NULL);
+  op->preview_dir = g_dir_make_tmp ("xdp-xapp-preview-XXXXXX", NULL);
 
   for (i = 0; i < op->items->len; i++)
     {
       PickerItem *item = g_ptr_array_index (op->items, i);
-      g_autoptr(GdkPixbuf) preview = NULL;
 
-      if (preview_dir)
-        {
-          g_autofree char *path = g_strdup_printf ("%s/%u.png", preview_dir, i);
-
-          preview = capture_preview (item, path);
-          g_remove (path);
-        }
-
-      screencast_dialog_add_item (op->dialog, item->title, item->subtitle, preview);
+      screencast_dialog_add_item (op->dialog, item->title, item->subtitle);
     }
 
-  if (preview_dir)
-    g_rmdir (preview_dir);
-
   screencast_dialog_set_done_func (op->dialog, on_dialog_done, op);
-  screencast_dialog_present (op->dialog);
+
+  if (op->preview_dir)
+    op->preview_idle_id = g_idle_add (on_preview_idle, op);
 
   return TRUE;
 }
@@ -909,7 +990,7 @@ handle_select_sources (XdpImplScreenCast *object,
     {
       g_warning ("No session found for %s", arg_session_handle);
       xdp_impl_screen_cast_complete_select_sources (object, invocation, 2,
-                                                    g_variant_new_array (G_VARIANT_TYPE ("{sv}"), NULL, 0));
+                                                    new_empty_results ());
       return TRUE;
     }
 
@@ -932,7 +1013,7 @@ handle_select_sources (XdpImplScreenCast *object,
            session->selection.cursor_mode);
 
   xdp_impl_screen_cast_complete_select_sources (object, invocation, 0,
-                                                g_variant_new_array (G_VARIANT_TYPE ("{sv}"), NULL, 0));
+                                                new_empty_results ());
 
   return TRUE;
 }
@@ -951,7 +1032,7 @@ handle_create_session (XdpImplScreenCast *object,
 
   g_debug ("Got new CreateSession request");
 
-  session = (Session *)screencast_session_new (arg_app_id, arg_session_handle);
+  session = (Session *)screencast_session_new (arg_session_handle);
 
   if (!session_export (session,
                        g_dbus_method_invocation_get_connection (invocation),
@@ -967,7 +1048,7 @@ handle_create_session (XdpImplScreenCast *object,
     }
 
   xdp_impl_screen_cast_complete_create_session (object, invocation, response,
-                                                g_variant_new_array (G_VARIANT_TYPE ("{sv}"), NULL, 0));
+                                                new_empty_results ());
 
   return TRUE;
 }
@@ -981,7 +1062,7 @@ screen_cast_init (GDBusConnection *bus,
   helper = G_DBUS_INTERFACE_SKELETON (xdp_impl_screen_cast_skeleton_new ());
 
   g_object_set (helper,
-                "version", 5,
+                "version", 3,
                 "available-source-types",
                 SCREEN_CAST_SOURCE_TYPE_MONITOR | SCREEN_CAST_SOURCE_TYPE_WINDOW,
                 "available-cursor-modes",

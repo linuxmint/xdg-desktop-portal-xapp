@@ -22,20 +22,27 @@
 #include <gio/gio.h>
 #include <stdint.h>
 
+#include "screencast.h"
+
 typedef struct _MuffinScreenCast MuffinScreenCast;
 typedef struct _MuffinScreenCastSession MuffinScreenCastSession;
 
 MuffinScreenCast *muffin_screen_cast_new (GDBusConnection *connection);
 
-int muffin_screen_cast_get_api_version (MuffinScreenCast *screen_cast);
-
 MuffinScreenCastSession *muffin_screen_cast_create_session (MuffinScreenCast *screen_cast,
                                                             GError **error);
 
-gboolean muffin_screen_cast_session_record_selections (MuffinScreenCastSession *session,
-                                                       GPtrArray *streams,
-                                                       guint32 cursor_mode,
-                                                       GError **error);
+gboolean muffin_screen_cast_session_record_monitor (MuffinScreenCastSession *session,
+                                                    guint32 id,
+                                                    const char *connector,
+                                                    ScreenCastCursorMode cursor_mode,
+                                                    GError **error);
+
+gboolean muffin_screen_cast_session_record_window (MuffinScreenCastSession *session,
+                                                   guint32 id,
+                                                   guint64 window_id,
+                                                   ScreenCastCursorMode cursor_mode,
+                                                   GError **error);
 
 gboolean muffin_screen_cast_session_start (MuffinScreenCastSession *session,
                                            GError **error);

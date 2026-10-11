@@ -32,11 +32,11 @@ ScreenCastDialog *screencast_dialog_new (const char *heading,
 
 void screencast_dialog_add_item (ScreenCastDialog *dialog,
                                  const char *title,
-                                 const char *subtitle,
-                                 GdkPixbuf *preview);
+                                 const char *subtitle);
 
-void screencast_dialog_set_action_label (ScreenCastDialog *dialog,
-                                         const char *label);
+void screencast_dialog_set_item_preview (ScreenCastDialog *dialog,
+                                         guint index,
+                                         GdkPixbuf *preview);
 
 void screencast_dialog_set_done_func (ScreenCastDialog *dialog,
                                       ScreenCastDialogDoneFunc func,

@@ -32,12 +32,26 @@ struct _ScreenCastDialog
   gboolean destroyed;
 };
 
+static gboolean
+dialog_has_any_selection (ScreenCastDialog *dialog)
+{
+  guint i;
+
+  for (i = 0; i < dialog->check_buttons->len; i++)
+    {
+      GtkWidget *check = g_ptr_array_index (dialog->check_buttons, i);
+
+      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)))
+        return TRUE;
+    }
+
+  return FALSE;
+}
+
 static void
 screencast_dialog_update_share_sensitive (ScreenCastDialog *dialog)
 {
   GtkWidget *share_button;
-  gboolean any_selected = FALSE;
-  guint i;
 
   if (dialog->destroyed)
     return;
@@ -46,18 +60,8 @@ screencast_dialog_update_share_sensitive (ScreenCastDialog *dialog)
   if (!share_button)
     return;
 
-  for (i = 0; i < dialog->check_buttons->len; i++)
-    {
-      GtkWidget *check = g_ptr_array_index (dialog->check_buttons, i);
-
-      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)))
-        {
-          any_selected = TRUE;
-          break;
-        }
-    }
-
-  gtk_widget_set_sensitive (share_button, any_selected);
+  gtk_widget_set_sensitive (share_button,
+                            dialog_has_any_selection (dialog));
 }
 
 static void
@@ -82,20 +86,7 @@ on_check_toggled (GtkToggleButton *toggle,
         }
       else
         {
-          gboolean any_selected = FALSE;
-
-          for (i = 0; i < dialog->check_buttons->len; i++)
-            {
-              GtkWidget *check = g_ptr_array_index (dialog->check_buttons, i);
-
-              if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)))
-                {
-                  any_selected = TRUE;
-                  break;
-                }
-            }
-
-          if (!any_selected)
+          if (!dialog_has_any_selection (dialog))
             gtk_toggle_button_set_active (toggle, TRUE);
         }
     }
@@ -214,6 +205,28 @@ scale_to_fit (GdkPixbuf *pixbuf,
                                   GDK_INTERP_BILINEAR);
 }
 
+static GtkWidget *
+add_preview_to_card (GtkWidget *card,
+                     GdkPixbuf *preview)
+{
+  GdkPixbuf *scaled;
+  GtkWidget *image;
+
+  if (!preview)
+    return NULL;
+
+  scaled = scale_to_fit (preview, 240, 150);
+  if (!scaled)
+    return NULL;
+
+  image = gtk_image_new_from_pixbuf (scaled);
+  gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
+  gtk_box_pack_start (GTK_BOX (card), image, FALSE, FALSE, 0);
+  g_object_unref (scaled);
+
+  return image;
+}
+
 static gboolean
 on_pointer_enter (GtkWidget *widget,
                   GdkEventCrossing *event,
@@ -255,8 +268,7 @@ install_pointer_cursor (GtkWidget *widget)
 static GtkWidget *
 screencast_dialog_make_card (ScreenCastDialog *dialog,
                              const char *title,
-                             const char *subtitle,
-                             GdkPixbuf *preview)
+                             const char *subtitle)
 {
   GtkWidget *check;
   GtkWidget *card;
@@ -272,21 +284,7 @@ screencast_dialog_make_card (ScreenCastDialog *dialog,
   gtk_widget_set_margin_top (card, 8);
   gtk_widget_set_margin_bottom (card, 8);
   gtk_container_add (GTK_CONTAINER (check), card);
-
-  if (preview)
-    {
-      GdkPixbuf *scaled;
-      GtkWidget *image;
-
-      scaled = scale_to_fit (preview, 240, 150);
-      if (scaled)
-        {
-          image = gtk_image_new_from_pixbuf (scaled);
-          gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
-          gtk_box_pack_start (GTK_BOX (card), image, FALSE, FALSE, 0);
-          g_object_unref (scaled);
-        }
-    }
+  g_object_set_data (G_OBJECT (check), "card", card);
 
   title_label = gtk_label_new (title);
   gtk_label_set_xalign (GTK_LABEL (title_label), 0.5);
@@ -315,27 +313,40 @@ screencast_dialog_make_card (ScreenCastDialog *dialog,
 void
 screencast_dialog_add_item (ScreenCastDialog *dialog,
                             const char *title,
-                            const char *subtitle,
-                            GdkPixbuf *preview)
+                            const char *subtitle)
 {
   GtkWidget *card;
   GtkWidget *child;
 
-  card = screencast_dialog_make_card (dialog, title, subtitle, preview);
+  card = screencast_dialog_make_card (dialog, title, subtitle);
   child = gtk_flow_box_child_new ();
   gtk_container_add (GTK_CONTAINER (child), card);
   gtk_flow_box_insert (GTK_FLOW_BOX (dialog->grid), child, -1);
 }
 
 void
-screencast_dialog_set_action_label (ScreenCastDialog *dialog,
-                                    const char *label)
+screencast_dialog_set_item_preview (ScreenCastDialog *dialog,
+                                    guint index,
+                                    GdkPixbuf *preview)
 {
-  GtkWidget *share_button;
+  GtkWidget *check;
+  GtkWidget *card;
+  GtkWidget *image;
 
-  share_button = g_object_get_data (G_OBJECT (dialog->window), "share-button");
-  if (share_button)
-    gtk_button_set_label (GTK_BUTTON (share_button), label);
+  if (dialog->destroyed || index >= dialog->check_buttons->len)
+    return;
+
+  check = g_ptr_array_index (dialog->check_buttons, index);
+  card = g_object_get_data (G_OBJECT (check), "card");
+  if (!card)
+    return;
+
+  image = add_preview_to_card (card, preview);
+  if (!image)
+    return;
+
+  gtk_box_reorder_child (GTK_BOX (card), image, 0);
+  gtk_widget_show (image);
 }
 
 void

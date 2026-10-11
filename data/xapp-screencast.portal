@@ -1,0 +1,4 @@
+[portal]
+DBusName=org.freedesktop.impl.portal.desktop.xapp
+Interfaces=org.freedesktop.impl.portal.ScreenCast;
+UseIn=X-Cinnamon;

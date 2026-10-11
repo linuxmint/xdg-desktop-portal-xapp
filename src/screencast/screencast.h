@@ -26,7 +26,6 @@ typedef enum _ScreenCastSourceType
 {
   SCREEN_CAST_SOURCE_TYPE_MONITOR = 1,
   SCREEN_CAST_SOURCE_TYPE_WINDOW = 2,
-  SCREEN_CAST_SOURCE_TYPE_VIRTUAL = 4,
 } ScreenCastSourceType;
 
 typedef enum _ScreenCastCursorMode
@@ -44,15 +43,20 @@ typedef struct _ScreenCastSelection
   ScreenCastCursorMode cursor_mode;
 } ScreenCastSelection;
 
+typedef struct _ScreenCastRect
+{
+  int x;
+  int y;
+  int width;
+  int height;
+} ScreenCastRect;
+
 typedef struct _MuffinMonitor
 {
   char *connector;
   char *label;
   gboolean primary;
-  int x;
-  int y;
-  int width;
-  int height;
+  ScreenCastRect rect;
 } MuffinMonitor;
 
 typedef struct _PickerItem
@@ -63,13 +67,8 @@ typedef struct _PickerItem
   char *subtitle;
   char *connector;
   guint64 window_id;
-  int x;
-  int y;
-  int width;
-  int height;
+  ScreenCastRect rect;
 } PickerItem;
-
-void picker_item_free (gpointer data);
 
 gboolean screen_cast_init (GDBusConnection *connection,
                            GError **error);

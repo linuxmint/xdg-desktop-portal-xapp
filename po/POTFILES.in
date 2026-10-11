@@ -8,12 +8,13 @@ src/background.c
 src/filechooser.c
 src/remotedesktopdialog.c
 src/remotedesktopdialog.ui
-src/screencastdialog.ui
+src/screencast/screencast.c
+src/screencast/screencastdialog.ui
+src/screencast/screencastdialog.c
 src/screencastwidget.c
 src/screencastwidget.ui
 src/screenshotdialog.c
 src/screenshotdialog.ui
-src/screencast/screencastdialog.c
 src/settings.c
 src/wallpaperdialog.c
 src/wallpaperdialog.ui
