@@ -41,6 +41,8 @@
   "w.get_window_type() !== 1 && w.get_window_type() !== 2)." \
   "map(w => [String(w.get_id()), w.get_title() || '', w.get_wm_class() || ''])"
 
+#define ITEMS_PRESENT_AFTER 4
+
 typedef enum _ScreenCastDisplayRotation
 {
   SCREEN_CAST_DISPLAY_ROTATION_NONE,
@@ -513,6 +515,7 @@ typedef struct _StartOperation
   char *preview_dir;
   guint preview_idle_id;
   guint preview_index;
+  gboolean presented;
   gboolean completed;
 } StartOperation;
 
@@ -830,6 +833,19 @@ capture_preview (PickerItem *item,
   return gdk_pixbuf_new_from_file (path, &error);
 }
 
+static void
+maybe_present_dialog (StartOperation *op)
+{
+  if (op->presented || !op->dialog)
+    return;
+
+  if (op->preview_index >= ITEMS_PRESENT_AFTER || op->preview_index >= op->items->len)
+    {
+      op->presented = TRUE;
+      screencast_dialog_present (op->dialog);
+    }
+}
+
 static gboolean
 on_preview_idle (gpointer user_data)
 {
@@ -848,13 +864,17 @@ on_preview_idle (gpointer user_data)
       screencast_dialog_set_item_preview (op->dialog, op->preview_index, preview);
       op->preview_index++;
 
-      return G_SOURCE_CONTINUE;
+      maybe_present_dialog (op);
+
+      if (op->preview_index >= op->items->len)
+        op->preview_idle_id = 0;
+
+      return op->preview_idle_id ? G_SOURCE_CONTINUE : G_SOURCE_REMOVE;
     }
 
   op->preview_idle_id = 0;
 
-  if (op->dialog)
-    screencast_dialog_present (op->dialog);
+  maybe_present_dialog (op);
 
   return G_SOURCE_REMOVE;
 }
@@ -966,6 +986,8 @@ handle_start (XdpImplScreenCast *object,
 
   if (op->preview_dir)
     op->preview_idle_id = g_idle_add (on_preview_idle, op);
+  else
+    screencast_dialog_present (op->dialog);
 
   return TRUE;
 }

@@ -205,26 +205,21 @@ scale_to_fit (GdkPixbuf *pixbuf,
                                   GDK_INTERP_BILINEAR);
 }
 
-static GtkWidget *
-add_preview_to_card (GtkWidget *card,
-                     GdkPixbuf *preview)
+static void
+set_preview_image (GtkWidget *image,
+                   GdkPixbuf *preview)
 {
   GdkPixbuf *scaled;
-  GtkWidget *image;
 
   if (!preview)
-    return NULL;
+    return;
 
   scaled = scale_to_fit (preview, 240, 150);
   if (!scaled)
-    return NULL;
+    return;
 
-  image = gtk_image_new_from_pixbuf (scaled);
-  gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
-  gtk_box_pack_start (GTK_BOX (card), image, FALSE, FALSE, 0);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image), scaled);
   g_object_unref (scaled);
-
-  return image;
 }
 
 static gboolean
@@ -273,6 +268,7 @@ screencast_dialog_make_card (ScreenCastDialog *dialog,
   GtkWidget *check;
   GtkWidget *card;
   GtkWidget *title_label;
+  GtkWidget *image;
 
   check = gtk_toggle_button_new ();
   gtk_widget_set_size_request (check, 256, -1);
@@ -285,6 +281,13 @@ screencast_dialog_make_card (ScreenCastDialog *dialog,
   gtk_widget_set_margin_bottom (card, 8);
   gtk_container_add (GTK_CONTAINER (check), card);
   g_object_set_data (G_OBJECT (check), "card", card);
+
+  image = gtk_image_new ();
+  gtk_widget_set_size_request (image, 240, 150);
+  g_object_set_data (G_OBJECT (check), "preview-image", image);
+  gtk_widget_set_halign (image, GTK_ALIGN_CENTER);
+  gtk_widget_set_valign (image, GTK_ALIGN_CENTER);
+  gtk_box_pack_start (GTK_BOX (card), image, FALSE, FALSE, 0);
 
   title_label = gtk_label_new (title);
   gtk_label_set_xalign (GTK_LABEL (title_label), 0.5);
@@ -341,12 +344,9 @@ screencast_dialog_set_item_preview (ScreenCastDialog *dialog,
   if (!card)
     return;
 
-  image = add_preview_to_card (card, preview);
-  if (!image)
-    return;
-
-  gtk_box_reorder_child (GTK_BOX (card), image, 0);
-  gtk_widget_show (image);
+  image = g_object_get_data (G_OBJECT (check), "preview-image");
+  if (image)
+    set_preview_image (image, preview);
 }
 
 void
