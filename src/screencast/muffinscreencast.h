@@ -50,5 +50,7 @@ gboolean muffin_screen_cast_session_start (MuffinScreenCastSession *session,
 gboolean muffin_screen_cast_session_stop (MuffinScreenCastSession *session,
                                           GError **error);
 
+void muffin_screen_cast_session_abort (MuffinScreenCastSession *session);
+
 void muffin_screen_cast_session_add_stream_properties (MuffinScreenCastSession *session,
                                                        GVariantBuilder *streams_builder);

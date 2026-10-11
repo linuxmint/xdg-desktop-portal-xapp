@@ -100,6 +100,8 @@ screencast_dialog_emit_done (ScreenCastDialog *dialog,
 {
   GArray *selected_indices = NULL;
 
+  gtk_widget_hide (dialog->window);
+
   if (accepted)
     {
       guint i;

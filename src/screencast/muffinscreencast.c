@@ -67,6 +67,26 @@ typedef struct _MuffinScreenCastStreamClass
   GObjectClass parent_class;
 } MuffinScreenCastStreamClass;
 
+static void
+read_parameters (MuffinScreenCastStream *stream)
+{
+  GVariant *parameters;
+
+  parameters = org_cinnamon_muffin_screen_cast_stream_get_parameters (stream->proxy);
+  if (!parameters)
+    {
+      g_warning ("Screen cast stream %s missing parameters", stream->path);
+      return;
+    }
+
+  if (g_variant_lookup (parameters, "position", "(ii)",
+                        &stream->x, &stream->y))
+    stream->has_position = TRUE;
+  if (g_variant_lookup (parameters, "size", "(ii)",
+                        &stream->width, &stream->height))
+    stream->has_size = TRUE;
+}
+
 typedef struct _MuffinScreenCastSession
 {
   GObject parent;
@@ -123,9 +143,15 @@ on_pipewire_stream_added (OrgCinnamonMuffinScreenCastStream *stream_proxy,
                           guint arg_node_id,
                           MuffinScreenCastStream *stream)
 {
+  if (stream->pipewire_node_id != 0 ||
+      stream->session->n_needed_stream_node_ids == 0)
+    return;
+
   stream->pipewire_node_id = arg_node_id;
+  read_parameters (stream);
 
   stream->session->n_needed_stream_node_ids--;
+
   if (stream->session->n_needed_stream_node_ids == 0)
     g_signal_emit (stream->session, session_signals[SESSION_SIGNAL_READY], 0);
 }
@@ -196,7 +222,8 @@ cursor_mode_to_muffin_cursor_mode (ScreenCastCursorMode cursor_mode)
     case SCREEN_CAST_CURSOR_MODE_METADATA:
       return MUFFIN_CURSOR_MODE_METADATA;
     default:
-      g_assert_not_reached ();
+      g_warning ("Unknown cursor mode %u, using hidden", (guint) cursor_mode);
+      return MUFFIN_CURSOR_MODE_HIDDEN;
     }
 }
 
@@ -222,7 +249,6 @@ muffin_screen_cast_session_add_stream (MuffinScreenCastSession *session,
   GDBusConnection *connection;
   OrgCinnamonMuffinScreenCastStream *stream_proxy;
   MuffinScreenCastStream *stream;
-  GVariant *parameters;
 
   connection = g_dbus_proxy_get_connection (G_DBUS_PROXY (session->proxy));
   stream_proxy =
@@ -242,26 +268,13 @@ muffin_screen_cast_session_add_stream (MuffinScreenCastSession *session,
   stream->proxy = stream_proxy;
   stream->id = id;
 
-  parameters = org_cinnamon_muffin_screen_cast_stream_get_parameters (stream->proxy);
-  if (parameters)
-    {
-      if (g_variant_lookup (parameters, "position", "(ii)",
-                            &stream->x, &stream->y))
-        stream->has_position = TRUE;
-      if (g_variant_lookup (parameters, "size", "(ii)",
-                            &stream->width, &stream->height))
-        stream->has_size = TRUE;
-    }
-  else
-    {
-      g_warning ("Screen cast stream %s missing parameters", stream->path);
-    }
+  read_parameters (stream);
 
   g_signal_connect (stream_proxy, "pipewire-stream-added",
                     G_CALLBACK (on_pipewire_stream_added),
                     stream);
 
-  session->streams = g_list_prepend (session->streams, stream);
+  session->streams = g_list_append (session->streams, stream);
   session->n_needed_stream_node_ids++;
 
   return TRUE;
@@ -327,6 +340,19 @@ muffin_screen_cast_session_record_monitor (MuffinScreenCastSession *session,
                                                 id,
                                                 SCREEN_CAST_SOURCE_TYPE_MONITOR,
                                                 error);
+}
+
+void
+muffin_screen_cast_session_abort (MuffinScreenCastSession *session)
+{
+  g_autoptr(GError) error = NULL;
+
+  if (!session)
+    return;
+
+  if (!muffin_screen_cast_session_stop (session, &error))
+    g_warning ("Failed to stop muffin screencast session: %s",
+               error->message);
 }
 
 gboolean
@@ -422,6 +448,13 @@ muffin_screen_cast_create_session (MuffinScreenCast *screen_cast,
   GDBusConnection *connection;
   OrgCinnamonMuffinScreenCastSession *session_proxy;
   MuffinScreenCastSession *session;
+
+  if (!screen_cast->proxy)
+    {
+      g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+                   "Muffin ScreenCast is not available");
+      return NULL;
+    }
 
   g_variant_builder_init (&properties_builder, G_VARIANT_TYPE_VARDICT);
   properties = g_variant_builder_end (&properties_builder);

@@ -425,6 +425,7 @@ typedef struct _ScreenCastSession
   ScreenCastSelection selection;
   MuffinScreenCastSession *muffin_session;
   gboolean started;
+  gboolean start_pending;
 } ScreenCastSession;
 
 typedef struct _ScreenCastSessionClass
@@ -515,15 +516,28 @@ typedef struct _StartOperation
   char *preview_dir;
   guint preview_idle_id;
   guint preview_index;
+  guint defer_id;
+  GArray *selected_indices;
+  int busy_count;
   gboolean presented;
   gboolean completed;
+  gboolean finished_pending;
 } StartOperation;
 
 static void
 start_operation_free (StartOperation *op)
 {
   if (op->preview_idle_id)
-    g_source_remove (op->preview_idle_id);
+    {
+      g_source_remove (op->preview_idle_id);
+      op->preview_idle_id = 0;
+    }
+
+  if (op->defer_id)
+    {
+      g_source_remove (op->defer_id);
+      op->defer_id = 0;
+    }
 
   if (op->preview_dir)
     {
@@ -541,6 +555,12 @@ start_operation_free (StartOperation *op)
     {
       screencast_dialog_destroy (op->dialog);
       op->dialog = NULL;
+    }
+
+  if (op->selected_indices)
+    {
+      g_array_free (op->selected_indices, TRUE);
+      op->selected_indices = NULL;
     }
 
   g_clear_pointer (&op->items, g_ptr_array_unref);
@@ -562,6 +582,7 @@ start_operation_complete (StartOperation *op,
     }
 
   op->completed = TRUE;
+  op->session->start_pending = FALSE;
 
   if (op->request->exported)
     request_unexport (op->request);
@@ -574,7 +595,32 @@ start_operation_complete (StartOperation *op,
                                        response,
                                        results);
 
+  if (op->busy_count > 0)
+    {
+      op->finished_pending = TRUE;
+      return;
+    }
+
   start_operation_free (op);
+}
+
+static void
+start_operation_busy_enter (StartOperation *op)
+{
+  op->busy_count++;
+}
+
+static gboolean
+start_operation_busy_leave (StartOperation *op)
+{
+  op->busy_count--;
+
+  if (op->busy_count > 0 || !op->finished_pending)
+    return TRUE;
+
+  start_operation_free (op);
+
+  return FALSE;
 }
 
 static void
@@ -665,7 +711,10 @@ start_muffin_session (StartOperation *op,
   g_autoptr(GError) error = NULL;
   g_autoptr(GPtrArray) selections = NULL;
   MuffinScreenCastSession *muffin_session;
+  gboolean alive = TRUE;
   guint i;
+
+  start_operation_busy_enter (op);
 
   selections = g_ptr_array_new_with_free_func (NULL);
   for (i = 0; i < selected_indices->len; i++)
@@ -679,7 +728,7 @@ start_muffin_session (StartOperation *op,
   if (selections->len == 0)
     {
       start_operation_fail (op, "No source selected");
-      return FALSE;
+      goto out;
     }
 
   muffin_session = muffin_screen_cast_create_session (muffin_screen_cast,
@@ -687,8 +736,16 @@ start_muffin_session (StartOperation *op,
   if (!muffin_session)
     {
       start_operation_fail (op, error->message);
-      return FALSE;
+      goto out;
     }
+
+  op->muffin_session = muffin_session;
+  op->session->muffin_session = g_object_ref (muffin_session);
+
+  g_signal_connect (muffin_session, "ready",
+                    G_CALLBACK (on_muffin_session_ready), op);
+  g_signal_connect (muffin_session, "closed",
+                    G_CALLBACK (on_muffin_session_closed_during_start), op);
 
   for (i = 0; i < selections->len; i++)
     {
@@ -712,28 +769,41 @@ start_muffin_session (StartOperation *op,
 
       if (!recorded)
         {
-          g_clear_object (&muffin_session);
+          g_signal_handlers_disconnect_by_data (muffin_session, op);
+          muffin_screen_cast_session_abort (muffin_session);
+          g_clear_pointer ((GObject **) &op->muffin_session, g_object_unref);
+          g_clear_pointer ((GObject **) &op->session->muffin_session, g_object_unref);
           start_operation_fail (op, error->message);
-          return FALSE;
+          goto out;
         }
     }
 
   if (!muffin_screen_cast_session_start (muffin_session, &error))
     {
-      g_clear_object (&muffin_session);
+      g_signal_handlers_disconnect_by_data (muffin_session, op);
+      muffin_screen_cast_session_abort (muffin_session);
+      g_clear_pointer ((GObject **) &op->muffin_session, g_object_unref);
+      g_clear_pointer ((GObject **) &op->session->muffin_session, g_object_unref);
       start_operation_fail (op, error->message);
-      return FALSE;
+      goto out;
     }
+out:
+  alive = start_operation_busy_leave (op);
 
-  op->muffin_session = muffin_session;
-  op->session->muffin_session = g_object_ref (muffin_session);
+  return alive;
+}
 
-  g_signal_connect (op->muffin_session, "ready",
-                    G_CALLBACK (on_muffin_session_ready), op);
-  g_signal_connect (op->muffin_session, "closed",
-                    G_CALLBACK (on_muffin_session_closed_during_start), op);
+static gboolean
+start_muffin_session_timeout (gpointer user_data)
+{
+  StartOperation *op = user_data;
+  GArray *indices = g_steal_pointer (&op->selected_indices);
 
-  return TRUE;
+  op->defer_id = 0;
+  start_muffin_session (op, indices);
+  g_array_free (indices, TRUE);
+
+  return G_SOURCE_REMOVE;
 }
 
 static void
@@ -743,6 +813,7 @@ on_dialog_done (ScreenCastDialog *dialog,
                 gpointer user_data)
 {
   StartOperation *op = user_data;
+  guint i;
 
   if (op->completed)
     return;
@@ -755,7 +826,13 @@ on_dialog_done (ScreenCastDialog *dialog,
       return;
     }
 
-  start_muffin_session (op, selected_indices);
+  op->selected_indices = g_array_new (FALSE, FALSE, sizeof (guint));
+  for (i = 0; i < selected_indices->len; i++)
+    g_array_append_val (op->selected_indices,
+                        g_array_index (selected_indices, guint, i));
+
+  op->session->start_pending = TRUE;
+  op->defer_id = g_timeout_add (100, start_muffin_session_timeout, op);
 }
 
 static gboolean
@@ -780,6 +857,7 @@ capture_preview (PickerItem *item,
   g_autoptr(GError) error = NULL;
   g_autofree char *script = NULL;
   g_autofree char *response = NULL;
+  g_autoptr(GdkPixbuf) pixbuf = NULL;
   gboolean success = FALSE;
 
   if (!cinnamon)
@@ -827,10 +905,20 @@ capture_preview (PickerItem *item,
       return NULL;
     }
 
+  if (!success)
+    {
+      g_warning ("Cinnamon Eval failed to capture preview");
+      return NULL;
+    }
+
   if (!g_file_test (path, G_FILE_TEST_EXISTS))
     return NULL;
 
-  return gdk_pixbuf_new_from_file (path, &error);
+  pixbuf = gdk_pixbuf_new_from_file (path, &error);
+  if (!pixbuf)
+    g_warning ("Failed to load preview %s: %s", path, error->message);
+
+  return g_steal_pointer (&pixbuf);
 }
 
 static void
@@ -853,6 +941,9 @@ on_preview_idle (gpointer user_data)
   PickerItem *item;
   g_autoptr(GdkPixbuf) preview = NULL;
   g_autofree char *path = NULL;
+  gboolean keep_going = FALSE;
+
+  start_operation_busy_enter (op);
 
   if (op->dialog && op->preview_index < op->items->len)
     {
@@ -861,22 +952,26 @@ on_preview_idle (gpointer user_data)
       preview = capture_preview (item, path);
       g_remove (path);
 
-      screencast_dialog_set_item_preview (op->dialog, op->preview_index, preview);
+      if (op->dialog)
+        screencast_dialog_set_item_preview (op->dialog, op->preview_index, preview);
       op->preview_index++;
 
       maybe_present_dialog (op);
 
-      if (op->preview_index >= op->items->len)
-        op->preview_idle_id = 0;
-
-      return op->preview_idle_id ? G_SOURCE_CONTINUE : G_SOURCE_REMOVE;
+      keep_going = op->preview_index < op->items->len;
+    }
+  else
+    {
+      maybe_present_dialog (op);
     }
 
-  op->preview_idle_id = 0;
+  if (!start_operation_busy_leave (op))
+    return G_SOURCE_REMOVE;
 
-  maybe_present_dialog (op);
+  if (!keep_going)
+    op->preview_idle_id = 0;
 
-  return G_SOURCE_REMOVE;
+  return keep_going ? G_SOURCE_CONTINUE : G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -898,7 +993,8 @@ handle_start (XdpImplScreenCast *object,
   connection = g_dbus_method_invocation_get_connection (invocation);
 
   session = (ScreenCastSession *)lookup_session (arg_session_handle);
-  if (!session)
+  if (!session ||
+      !G_TYPE_CHECK_INSTANCE_TYPE (session, screencast_session_get_type ()))
     {
       g_warning ("No session found for %s", arg_session_handle);
       xdp_impl_screen_cast_complete_start (object, invocation, 2,
@@ -906,7 +1002,7 @@ handle_start (XdpImplScreenCast *object,
       return TRUE;
     }
 
-  if (session->started)
+  if (session->started || session->start_pending)
     {
       g_warning ("Session already started");
       xdp_impl_screen_cast_complete_start (object, invocation, 2,
@@ -938,7 +1034,7 @@ handle_start (XdpImplScreenCast *object,
           item->subtitle = g_strdup_printf ("%d×%d%s",
                                             monitor->rect.width,
                                             monitor->rect.height,
-                                            monitor->primary ? "  (Primary)" : "");
+                                            monitor->primary ? _("  (Primary)") : "");
           item->connector = g_strdup (monitor->connector);
           item->rect = monitor->rect;
           g_ptr_array_add (op->items, item);
@@ -1008,7 +1104,8 @@ handle_select_sources (XdpImplScreenCast *object,
   g_debug ("Got new SelectSources request");
 
   session = (ScreenCastSession *)lookup_session (arg_session_handle);
-  if (!session)
+  if (!session ||
+      !G_TYPE_CHECK_INSTANCE_TYPE (session, screencast_session_get_type ()))
     {
       g_warning ("No session found for %s", arg_session_handle);
       xdp_impl_screen_cast_complete_select_sources (object, invocation, 2,
@@ -1081,6 +1178,17 @@ screen_cast_init (GDBusConnection *bus,
 {
   GDBusInterfaceSkeleton *helper;
 
+  cinnamon = org_cinnamon_proxy_new_sync (bus,
+                                          G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START,
+                                          "org.Cinnamon",
+                                          "/org/Cinnamon",
+                                          NULL,
+                                          error);
+  if (!cinnamon)
+    return FALSE;
+
+  muffin_screen_cast = muffin_screen_cast_new (bus);
+
   helper = G_DBUS_INTERFACE_SKELETON (xdp_impl_screen_cast_skeleton_new ());
 
   g_object_set (helper,
@@ -1104,16 +1212,6 @@ screen_cast_init (GDBusConnection *bus,
                                          bus,
                                          DESKTOP_PORTAL_OBJECT_PATH,
                                          error))
-    return FALSE;
-
-  muffin_screen_cast = muffin_screen_cast_new (bus);
-  cinnamon = org_cinnamon_proxy_new_sync (bus,
-                                          G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START,
-                                          "org.Cinnamon",
-                                          "/org/Cinnamon",
-                                          NULL,
-                                          error);
-  if (!cinnamon)
     return FALSE;
 
   g_debug ("providing %s", g_dbus_interface_skeleton_get_info (helper)->name);
