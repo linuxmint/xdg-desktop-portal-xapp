@@ -13,6 +13,7 @@ src/screencastwidget.c
 src/screencastwidget.ui
 src/screenshotdialog.c
 src/screenshotdialog.ui
+src/screencast/screencastdialog.c
 src/settings.c
 src/wallpaperdialog.c
 src/wallpaperdialog.ui
