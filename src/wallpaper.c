@@ -14,7 +14,9 @@
 
 #include "xdg-desktop-portal-dbus.h"
 
+#include "externalwindow.h"
 #include "wallpaper.h"
+#include "wallpaperdialog.h"
 #include "request.h"
 #include "utils.h"
 
@@ -25,8 +27,12 @@ typedef struct {
     XdpImplWallpaper *impl;
     GDBusMethodInvocation *invocation;
     Request *request;
+    GCancellable *cancellable;
+    ExternalWindow *parent;
+    GtkWidget *dialog;
+    GBytes *image;
+    gboolean show_preview;
     guint response;
-    gchar *picture_uri;
 } WallpaperDialogHandle;
 
 static void
@@ -34,8 +40,11 @@ wallpaper_dialog_handle_free (gpointer data)
 {
     WallpaperDialogHandle *handle = data;
 
+    g_clear_pointer (&handle->dialog, gtk_widget_destroy);
+    g_clear_object (&handle->parent);
+    g_clear_object (&handle->cancellable);
+    g_clear_pointer (&handle->image, g_bytes_unref);
     g_clear_object (&handle->request);
-    g_clear_pointer (&handle->picture_uri, g_free);
 
     g_free (handle);
 }
@@ -51,6 +60,14 @@ send_response (WallpaperDialogHandle *handle)
                                                    handle->response);
 
     wallpaper_dialog_handle_free (handle);
+}
+
+static gboolean
+send_response_idle (gpointer data)
+{
+    send_response (data);
+
+    return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -106,62 +123,146 @@ set_gsettings (const gchar *uri)
     return FALSE;
 }
 
-static void
-on_file_copy_cb (GObject *source_object,
-                 GAsyncResult *result,
-                 gpointer data)
+// The stored copy comes from the same bytes the preview showed, so the app
+// can't swap the file after the user has accepted it.
+static guint
+store_wallpaper (WallpaperDialogHandle *handle)
 {
-    WallpaperDialogHandle *handle = data;
-    g_autoptr(GFile) destination = NULL;
-    GFile *picture_file = G_FILE (source_object);
+    g_autofree gchar *path = g_build_filename (g_get_user_config_dir (), "background", NULL);
+    g_autofree gchar *uri = NULL;
     g_autoptr(GError) error = NULL;
-    g_autofree gchar *source_uri = NULL;
-    g_autofree gchar *dest_uri = NULL;
-    gchar *contents = NULL;
-    gsize length = 0;
 
-    handle->response = 2;
-
-    source_uri = g_file_get_uri (picture_file);
-    if (!g_file_load_contents_finish (picture_file, result, &contents, &length, NULL, &error))
+    if (!g_file_set_contents (path,
+                              g_bytes_get_data (handle->image, NULL),
+                              g_bytes_get_size (handle->image),
+                              &error))
     {
-        g_warning ("Failed to copy '%s': %s", source_uri, error->message);
-
-        goto out;
+        g_warning ("Failed to store wallpaper as '%s': %s", path, error->message);
+        return 2;
     }
 
-    gchar *path = g_build_filename (g_get_user_config_dir (), "background", NULL);
+    uri = g_filename_to_uri (path, NULL, NULL);
 
-    destination = g_file_new_for_path (path);
-    g_file_replace_contents (destination,
-                             contents,
-                             length,
-                             NULL, FALSE,
-                             G_FILE_CREATE_REPLACE_DESTINATION,
-                             NULL, NULL,
-                             &error);
-    dest_uri = g_file_get_uri (destination);
+    return set_gsettings (uri) ? 0 : 2;
+}
 
-    if (set_gsettings (dest_uri))
-        handle->response = 0;
-    else
-        handle->response = 2;
+static void
+on_dialog_response (GtkDialog *dialog,
+                    gint response,
+                    WallpaperDialogHandle *handle)
+{
+    switch (response)
+    {
+        case GTK_RESPONSE_APPLY:
+            handle->response = store_wallpaper (handle);
+            break;
+        case GTK_RESPONSE_CANCEL:
+        case GTK_RESPONSE_DELETE_EVENT:
+            handle->response = 1;
+            break;
+        default:
+            g_warning ("Unexpected response: %d", response);
+            handle->response = 2;
+            break;
+    }
 
-out:
     send_response (handle);
 }
 
 static void
-set_wallpaper (WallpaperDialogHandle *handle,
-               const gchar *uri)
+on_dialog_ready (GObject *source_object,
+                 GAsyncResult *result,
+                 gpointer data)
 {
-    g_autoptr(GFile) source = NULL;
+    WallpaperDialogHandle *handle = data;
+    g_autoptr(GError) error = NULL;
 
-    source = g_file_new_for_uri (uri);
-    g_file_load_contents_async (source,
-                                NULL,
-                                on_file_copy_cb,
-                                handle);
+    handle->dialog = wallpaper_dialog_new_finish (result, &error);
+
+    if (handle->dialog == NULL)
+    {
+        if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+            g_warning ("Failed to load wallpaper preview: %s", error->message);
+
+        handle->response = 2;
+        send_response (handle);
+        return;
+    }
+
+    g_signal_connect (handle->dialog, "response", G_CALLBACK (on_dialog_response), handle);
+    gtk_widget_realize (handle->dialog);
+
+    if (handle->parent != NULL)
+        external_window_set_parent_of (handle->parent, gtk_widget_get_window (handle->dialog));
+
+    gtk_window_present (GTK_WINDOW (handle->dialog));
+}
+
+static void
+on_image_loaded (GObject *source_object,
+                 GAsyncResult *result,
+                 gpointer data)
+{
+    WallpaperDialogHandle *handle = data;
+    g_autoptr(GError) error = NULL;
+    GdkDisplay *display;
+    gchar *contents = NULL;
+    gsize length = 0;
+
+    if (!g_file_load_contents_finish (G_FILE (source_object), result, &contents, &length, NULL, &error))
+    {
+        if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+        {
+            g_autofree gchar *uri = g_file_get_uri (G_FILE (source_object));
+            g_warning ("Failed to load '%s': %s", uri, error->message);
+        }
+
+        handle->response = 2;
+        send_response (handle);
+        return;
+    }
+
+    handle->image = g_bytes_new_take (contents, length);
+
+    if (!handle->show_preview)
+    {
+        handle->response = store_wallpaper (handle);
+        send_response (handle);
+        return;
+    }
+
+    display = handle->parent != NULL ? external_window_get_display (handle->parent)
+                                     : gdk_display_get_default ();
+
+    if (display == NULL)
+    {
+        g_warning ("No display available for the wallpaper preview");
+
+        handle->response = 2;
+        send_response (handle);
+        return;
+    }
+
+    wallpaper_dialog_new_async (handle->image, display, handle->cancellable, on_dialog_ready, handle);
+}
+
+static gboolean
+handle_close (XdpImplRequest *object,
+              GDBusMethodInvocation *invocation,
+              WallpaperDialogHandle *handle)
+{
+    g_cancellable_cancel (handle->cancellable);
+
+    // Loading and decoding respond from their own callbacks once cancelled. The
+    // request is still mid-emission here, so the dialog case can't free it yet.
+    if (handle->dialog != NULL)
+    {
+        g_clear_pointer (&handle->dialog, gtk_widget_destroy);
+        handle->response = 2;
+        g_idle_add (send_response_idle, handle);
+    }
+
+    return FALSE;
 }
 
 static gboolean
@@ -174,6 +275,7 @@ handle_set_wallpaper_uri (XdpImplWallpaper *object,
                           GVariant *arg_options)
 {
     g_autoptr(Request) request = NULL;
+    g_autoptr(GFile) file = NULL;
     WallpaperDialogHandle *handle;
     const char *sender;
 
@@ -186,9 +288,18 @@ handle_set_wallpaper_uri (XdpImplWallpaper *object,
     handle->impl = object;
     handle->invocation = invocation;
     handle->request = g_object_ref (request);
+    handle->cancellable = g_cancellable_new ();
 
-    set_wallpaper (handle, g_strdup (arg_uri));
+    g_variant_lookup (arg_options, "show-preview", "b", &handle->show_preview);
+
+    if (handle->show_preview)
+        handle->parent = create_external_window_from_handle (arg_parent_window);
+
+    g_signal_connect (request, "handle-close", G_CALLBACK (handle_close), handle);
     request_export (request, g_dbus_method_invocation_get_connection (invocation));
+
+    file = g_file_new_for_uri (arg_uri);
+    g_file_load_contents_async (file, handle->cancellable, on_image_loaded, handle);
 
     return TRUE;
 }

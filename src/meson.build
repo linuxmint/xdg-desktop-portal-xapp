@@ -83,6 +83,7 @@ sources = built_sources + files(
   'settings.c',
   'utils.c',
   'wallpaper.c',
+  'wallpaperdialog.c',
   'xdg-desktop-portal-xapp.c',
 )
 
