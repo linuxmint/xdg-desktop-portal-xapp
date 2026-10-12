@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rm -f xdg-desktop-portal-xapp.pot
+touch xdg-desktop-portal-xapp.pot
+xgettext --language=C --add-comments --keyword=_ --keyword=N_ --output=xdg-desktop-portal-xapp.pot src/*.c

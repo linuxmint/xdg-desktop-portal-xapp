@@ -292,7 +292,7 @@ settings_handle_read (XdpImplSettings       *object,
         g_debug ("Attempted to read unknown namespace/key pair: %s %s", arg_namespace, arg_key);
         g_dbus_method_invocation_return_error_literal (invocation, XDG_DESKTOP_PORTAL_ERROR,
                                                        XDG_DESKTOP_PORTAL_ERROR_NOT_FOUND,
-                                                       _("Requested setting not found"));
+                                                       "Requested setting not found");
     }
 
     return TRUE;

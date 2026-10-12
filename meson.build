@@ -5,6 +5,8 @@ datadir = get_option('datadir')
 libdir = get_option('libdir')
 libexecdir = get_option('libexecdir')
 
+i18n = import('i18n')
+
 systemduserunitdir = get_option('systemduserunitdir')
 if systemduserunitdir == ''
   systemd = dependency('systemd', version: '>= 242')
@@ -20,7 +22,7 @@ if dbus_service_dir == ''
 endif
 
 subdir('data')
-# subdir('po')
+subdir('po')
 subdir('src')
 
 summary({
