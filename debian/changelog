@@ -1,3 +1,14 @@
+xdg-desktop-portal-xapp (1.1.5) adrien; urgency=medium
+
+  [ Michael Webster ]
+  * screenshot.c: Return the correct code for color-pick cancellation
+  * screenshot.c: complete each portal request exactly once
+  * Add external window helpers for parenting portal dialogs
+  * wallpaper: Add preview dialog.
+  * i18n: Add makepot, clean up old translation files.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Tue, 13 Oct 2026 13:34:55 +0100
+
 xdg-desktop-portal-xapp (1.1.4) alfa; urgency=medium
 
   [ Michael Webster ]
