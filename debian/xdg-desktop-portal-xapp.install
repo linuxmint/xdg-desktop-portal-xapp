@@ -3,3 +3,4 @@ usr/libexec/xdg-desktop-portal-xapp
 usr/share/applications/xdg-desktop-portal-xapp.desktop
 usr/share/dbus-1/services/org.freedesktop.impl.portal.desktop.xapp.service
 usr/share/xdg-desktop-portal/portals
+usr/share/locale
