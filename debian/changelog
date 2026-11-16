@@ -1,3 +1,9 @@
+xdg-desktop-portal-xapp (1.2.2) adrien; urgency=medium
+
+  * Fix debian build
+
+ -- Clement Lefebvre <root@linuxmint.com>  Mon, 16 Nov 2026 16:17:59 +0000
+
 xdg-desktop-portal-xapp (1.2.1) adrien; urgency=medium
 
   * l10n: Update translations
